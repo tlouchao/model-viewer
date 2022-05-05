@@ -1,0 +1,7 @@
+@use './variables/variables' as v;
+
+#app {
+    background-color: v.$bgcolor;
+    width: 100vw;
+    height: 100vh;
+}
