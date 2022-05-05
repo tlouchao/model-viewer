@@ -43,9 +43,11 @@ module: {
   }
   ]
 },
-plugins: [new HtmlWebpackPlugin({ 
-  favicon: './src/static/imgs/favicon.ico',
-  template: './src/index.html',
-  inject: 'body'
-})],
+plugins: [
+  new HtmlWebpackPlugin({ 
+    favicon: './public/favicon.ico',
+    template: './src/index.html',
+    inject: 'body'
+  })
+  ]
 }
