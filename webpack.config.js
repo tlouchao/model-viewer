@@ -1,5 +1,6 @@
 const dotenv = require("dotenv")
 const path = require('path')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 dotenv.config()
 
@@ -7,13 +8,10 @@ module.exports = {
   mode: 'development',
   entry: "./src/index.js",
   output: {
-  path: path.join(__dirname, '/build'),
+  path: path.join(__dirname, 'build'),
   filename: 'bundle.js'
 },
 devServer: {
-  static: {
-    directory: path.join(__dirname, 'public'),
-  },
   port: 3000
 },
 resolve: {
@@ -44,8 +42,12 @@ module: {
   ]
 },
 plugins: [
+  new CopyWebpackPlugin({
+    patterns: [
+    { from: `${__dirname}/public`, to: 'public' }
+    ]
+  }),
   new HtmlWebpackPlugin({ 
-    favicon: './public/favicon.ico',
     template: './src/index.html',
     inject: 'body'
   })
