@@ -1,0 +1,15 @@
+#actor-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    #actor-summary-header {
+        display: grid;
+        grid-template-columns: minmax(100px, 1fr) 3fr;
+        gap: 1em;
+        #actor-thumbnail {
+            width: 100%;
+            height: auto;
+            align-self: center;
+        }
+    }
+}

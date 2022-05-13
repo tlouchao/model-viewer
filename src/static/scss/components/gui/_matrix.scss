@@ -1,0 +1,21 @@
+.matrix {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: .75em;
+    padding-top: 1em;
+    .matrix-row {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: .5em;
+        flex-grow: 1;
+        input {
+            border: none;
+            font-size: 1em;
+            width: 1px; // allow flex grow to fill container
+            flex-grow: 1;
+        }
+    }
+}

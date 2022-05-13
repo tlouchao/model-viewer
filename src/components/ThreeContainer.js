@@ -36,6 +36,8 @@ class ThreeContainer extends React.Component {
                             this.state.renderer.setSize( this.state.width, this.state.height)
                             this.ref.appendChild( this.state.renderer.domElement )
                             this.state.camera.position.z = 3
+                            this.state.cube.rotation.x += .25;
+                            this.state.cube.rotation.y += Math.PI / 3;
                             this.animate()
                         })
         }

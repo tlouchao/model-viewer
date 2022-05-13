@@ -1,0 +1,18 @@
+@use "./../../variables/variables" as v;
+
+#outliner-container {
+    min-height: map-get(v.$heights, "outlinerheight");
+    @include v.container-flex(180px);
+    #outliner {
+        background-color: map-get(v.$colors, "containviewcolor");
+        overflow: auto;
+        flex-grow: 1;
+        @media only screen and (max-width: map-get(v.$breakpoints, "phone")) {
+            max-height: 270px;
+        }
+        .outliner-item {
+            white-space: pre;
+            padding: .15em .25em;
+        }
+    }
+}

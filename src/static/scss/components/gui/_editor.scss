@@ -1,0 +1,24 @@
+@use "./../../variables/variables" as v;
+
+#editor-container {
+    min-height: map-get(v.$heights, "outlinerheight");
+    @include v.container-flex(240px);
+    #editor {
+        background-color:  map-get(v.$colors, "containviewcolor");
+        overflow: auto;
+        display: flex;
+        flex-grow: 1;
+        justify-content: center;
+        padding: 1em;
+        @media only screen and (max-width: map-get(v.$breakpoints, "phone")) {
+            max-height: 360px;
+        }
+    }
+    .editor-empty {
+        display: flex;
+        padding: 0em 1em;
+        align-self: center;
+        text-align: center;
+        line-height: 1.5;
+    }
+}

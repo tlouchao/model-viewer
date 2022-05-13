@@ -6,11 +6,14 @@
     height: 100%;
     display: grid;
     grid-template-rows: map-get(v.$heights, "brandheight")
-                        minmax(map-get(v.$heights, "dropdownheight"), 20%)
-                        minmax(map-get(v.$heights, "outlinerheight"), 40%)
-                        minmax(map-get(v.$heights, "togglelayoutheight"), 15%)
-                        map-get(v.$heights, "buttonheight");
+                        map-get(v.$heights, "dropdownheight")
+                        minmax(map-get(v.$heights, "outlinerheight"), 50%)
+                        map-get(v.$heights, "togglelayoutheight")
+                        auto;
     padding: 2em 1.5em;
+    @media only screen and (max-width: map-get(v.$breakpoints, "phone")) {
+        padding: 2em 1em;
+    }
     @include v.phone-flex-column(flex-start);
     #brand {
         color:  map-get(v.$colors, "fontcolor");
@@ -29,20 +32,22 @@
     #gui-add {
         display: grid;
         grid-template-columns: 1fr 1fr;
+        gap: 1em;
         @include v.phone-flex-column(center);
     }
     #gui-browse {
         display: grid;
         grid-template-columns: 1fr 2fr;
+        gap: 1em;
         @include v.phone-flex-column(center);
     }
     #gui-toggle-layout {
         min-height: map-get(v.$heights, "togglelayoutheight");
         display: grid;
         grid-template-columns: [grid-empty] 1fr [grid-toggle] 2fr;
+        gap: 1em;
         @include v.phone-flex-column("center");
         #gui-toggle {
-            background-color: lightgreen;
             grid-column: grid-toggle;
             display: flex;
             flex-direction: column;
@@ -50,10 +55,9 @@
             align-items: stretch;
             margin-left: auto; 
             margin-right: 0;
-            padding: .5em;
-            gap: .25em;
-            @media only screen and (max-width: map-get(v.$breakpoints, "phone")) {
-                margin-left: auto; 
+            padding: .5em 0em;
+            gap: .5em;
+            @media only screen and (max-width: map-get(v.$breakpoints, "phone")) { 
                 margin-right: auto;
             }
         }
@@ -61,6 +65,8 @@
     #export {
         display: grid;
         grid-template-columns: [grid-empty] 1fr [grid-button] 2fr;
+        padding: .5em 0em;
+        gap: 1em;
         @include v.phone-flex-column("center");
         button {
             grid-column: grid-button;

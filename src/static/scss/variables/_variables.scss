@@ -4,21 +4,24 @@ $colors: (
     fontcolor: black,
     guicolor: #F2F2F2,
     buttoncolor: #C8C8C8,
-    labelcolor: #4F4F4F
+    labelcolor: #4F4F4F,
+    containviewcolor: #E0E0E0,
+    scrollcolor: #B4B4B4,
+    canvascolor: #E0E0E0 // duplicated in constants.js file
 );
 
 $breakpoints: (
     phone: 640px,
-    tablet: 768px,        
+    tablet: 768px,
     desktop: 1024px
 );
 
 $heights: (
     brandheight: 64px,
-    buttonheight: 24px,
-    dropdownheight: 100px,
+    buttonheight: 32px,
+    dropdownheight: 114px,
     outlinerheight: 240px,
-    togglelayoutheight: 48px
+    togglelayoutheight: 64px
 );
 
 @mixin phone-flex-column($justify-content-value) {
@@ -34,6 +37,6 @@ $heights: (
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: .5em;
+    padding: .5em 0em;
     gap: .5em;
 }

@@ -8,14 +8,14 @@ module.exports = {
   mode: 'development',
   entry: "./src/index.js",
   output: {
-  path: path.join(__dirname, 'build'),
+  path: path.resolve(__dirname, 'build'),
   filename: 'bundle.js'
 },
 devServer: {
   port: 3000
 },
 resolve: {
-  extensions: ['.js', 'jsx', 'sass', 'scss']
+  extensions: ['.js', 'jsx', 'sass', 'scss', '.svg', '.png']
 },
 module: {
   rules: [
@@ -32,19 +32,20 @@ module: {
       use: ['style-loader', 'css-loader', 'sass-loader']
     },
     {
-      test: /\.svg$/,
+      test: /\.png$/,
       exclude: /node_modules/,
-      use: {
-          loader: 'svg-inline-loader',
-          options: {},
+      use: ['url-loader'],
+      options: {
+        limit: 8192,
+      },
     },
-  }
   ]
 },
 plugins: [
   new CopyWebpackPlugin({
     patterns: [
-    { from: `${__dirname}/public`, to: 'public' }
+    { from: `${__dirname}/public`, to: 'public' },
+    { from: `${__dirname}/src/static/imgs`, to: 'public/assets' }
     ]
   }),
   new HtmlWebpackPlugin({ 
