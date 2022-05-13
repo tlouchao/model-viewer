@@ -1,0 +1,12 @@
+@use "./../../variables/variables" as v;
+
+#outliner-container {
+    background-color: magenta;
+    min-height: map-get(v.$heights, "outlinerheight");
+    @include v.container-flex(180px);
+    #outliner {
+        background-color: red;
+        overflow: auto;
+        flex-grow: 1;
+    }
+}

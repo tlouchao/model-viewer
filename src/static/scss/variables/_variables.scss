@@ -1,1 +1,39 @@
-$bgcolor: cyan;
+$colors: (
+    bgcolor: white,
+    disablecolor: grey,
+    fontcolor: black,
+    guicolor: #F2F2F2,
+    buttoncolor: #C8C8C8,
+    labelcolor: #4F4F4F
+);
+
+$breakpoints: (
+    phone: 640px,
+    tablet: 768px,        
+    desktop: 1024px
+);
+
+$heights: (
+    brandheight: 64px,
+    buttonheight: 24px,
+    dropdownheight: 100px,
+    outlinerheight: 240px,
+    togglelayoutheight: 64px
+);
+
+@mixin phone-flex-column($justify-content-value) {
+    @media only screen and (max-width: map-get($breakpoints, "phone")) {
+        display: flex;
+        justify-content: $justify-content-value;
+        flex-direction: column;
+    }
+}
+
+@mixin container-flex($min-height-value) {
+    min-height: $min-height-value;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: .5em;
+    gap: .5em;
+}

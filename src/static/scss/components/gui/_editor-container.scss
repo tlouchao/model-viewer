@@ -1,0 +1,12 @@
+@use "./../../variables/variables" as v;
+
+#editor-container {
+    background-color: orange;
+    min-height: map-get(v.$heights, "outlinerheight");
+    @include v.container-flex(240px);
+    #editor {
+        background-color: yellow;
+        overflow: auto;
+        flex-grow: 1;
+    }
+}

@@ -1,0 +1,1 @@
+export const THREE_BGCOLOR = 0xe0e0e0;

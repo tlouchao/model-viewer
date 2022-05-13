@@ -1,0 +1,10 @@
+@use "./../../variables/variables" as v;
+
+.dropdown-container {
+    background-color: cyan;
+    min-height: map-get(v.$heights, "dropdownheight");
+    @include v.container-flex(map-get(v.$heights, "dropdownheight"));
+    button {
+        align-self: flex-end;
+    }
+}

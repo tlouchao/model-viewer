@@ -2,6 +2,10 @@
 @use 'reset/reset';
 
 @use 'components/layout';
-@use 'components/user-interface';
 @use 'components/three-container';
+
+@use 'components/gui/gui-layout';
+@use 'components/gui/dropdown-container';
+@use 'components/gui/outliner-container';
+@use 'components/gui/editor-container';
 @use './app';

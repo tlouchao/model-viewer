@@ -1,11 +1,11 @@
 import React from "react"
 import ThreeContainer from "./ThreeContainer"
-import UserInterface from "./UserInterface"
+import GUILayout from "./gui/GuiLayout"
 
 const Layout = () => {
     return (
         <div id="layout">
-            <UserInterface />
+            <GUILayout />
             <ThreeContainer />
         </div>
     )

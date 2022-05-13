@@ -1,0 +1,67 @@
+@use "./../../variables/variables" as v;
+
+#gui-layout {
+    background-color: map-get(v.$colors, "guicolor");
+    height: 100%;
+    display: grid;
+    grid-template-rows: map-get(v.$heights, "brandheight")
+                        minmax(map-get(v.$heights, "dropdownheight"), 20%)
+                        minmax(map-get(v.$heights, "outlinerheight"), 40%)
+                        minmax(map-get(v.$heights, "togglelayoutheight"), 15%)
+                        map-get(v.$heights, "buttonheight");
+    padding: 2em 1.5em;
+    @include v.phone-flex-column("flex-start");
+    #brand {
+        color:  map-get(v.$colors, "fontcolor");
+        height: map-get(v.$heights, "brandheight");
+        font-size: 2.5em;
+        span {
+            font-weight: bold;
+        }
+        @media only screen and (max-width: map-get(v.$breakpoints, "phone")) {
+            display: flex;
+            justify-content: center;
+            flex-direction: row;
+            font-size: 2.5em;
+        }
+    }
+    #gui-add {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        @include v.phone-flex-column("center");
+    }
+    #gui-browse {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        @include v.phone-flex-column("center");
+    }
+    #gui-toggle-layout {
+        min-height: map-get(v.$heights, "togglelayoutheight");
+        display: grid;
+        grid-template-columns: [grid-empty] 1fr [grid-toggle] 2fr;
+        @include v.phone-flex-column("center");
+        #gui-toggle {
+            grid-column: grid-toggle;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            margin-left: auto; 
+            margin-right: 0;
+            padding: .5em;
+            gap: .25em;
+            @media only screen and (max-width: map-get(v.$breakpoints, "phone")) {
+                margin-left: auto; 
+                margin-right: auto;
+            }
+        }
+    }
+    #export {
+        display: grid;
+        grid-template-columns: [grid-empty] 1fr [grid-button] 2fr;
+        @include v.phone-flex-column("center");
+        button {
+            grid-column: grid-button;
+            align-self: stretch;
+        }
+    }
+}

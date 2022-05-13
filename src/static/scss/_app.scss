@@ -1,7 +1,48 @@
 @use './variables/variables' as v;
 
 #app {
-    background-color: v.$bgcolor;
+    background-color: map-get(v.$colors, "bgcolor");
+    color: map-get(v.$colors, "fontcolor");
+    font-family: Tahoma, Verdana, sans-serif;
     width: 100vw;
     height: 100vh;
+    .label-container {
+        color:  map-get(v.$colors, "fontcolor");
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 1em;
+    }
+    .button-group {
+        display: flex;
+        justify-content: flex-end;
+        gap: .5em;
+    }
+    button {
+        background-color: map-get(v.$colors, "buttoncolor");
+        line-height:  map-get(v.$heights, "buttonheight");
+        height: map-get(v.$heights, "buttonheight");
+        min-width: 40px;
+        border: none;
+        &:hover {
+            cursor: pointer;
+        }
+    }
+    label {
+        font-size: small;
+    }
+    select {
+        width: 100%;
+        &:invalid {
+            color: map-get(v.$colors, "disablecolor");
+        }
+        option {
+            color: map-get(v.$colors, "fontcolor");
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+    .toggle {
+        min-width: 80px;
+    }
 }
