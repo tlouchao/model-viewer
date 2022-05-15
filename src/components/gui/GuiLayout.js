@@ -5,12 +5,14 @@ import EditorContainer from "./EditorContainer"
 import Toggle from "./Toggle"
 
 const GUILayout = () => {
+    const primsOptions = ["Cube", "Cylinder", "Torus"]
+    const lightsOptions = ["Ambient Light", "Point Light"]
     return (
         <div id="gui-layout">
             <h1 id="brand"><span>Model</span>Viewer</h1>
             <div id="gui-add">
-                <DropdownContainer />
-                <DropdownContainer />
+                <DropdownContainer name="Add Primitives" options={primsOptions} />
+                <DropdownContainer name="Add Lights" options={lightsOptions}/>
             </div>
             <div id="gui-browse">
                 <OutlinerContainer />
@@ -18,8 +20,8 @@ const GUILayout = () => {
             </div>
             <div id="gui-toggle-layout">
                 <div id="gui-toggle">
-                    <Toggle />
-                    <Toggle />
+                    <Toggle label="Show Ground Plane" checked="checked" />
+                    <Toggle label="Show Wireframe" checked="" />
                 </div>
             </div>
             <div id="export">

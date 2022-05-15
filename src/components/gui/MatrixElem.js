@@ -1,6 +1,6 @@
 import React from "react"
 
-const MatrixElem = () => {
+const MatrixElem = (props) => {
 
     const handleBlur = (e) => {
         const t = e.target
@@ -19,9 +19,9 @@ const MatrixElem = () => {
             <input  onBlur={handleBlur}
                     type="number" 
                     step="0.01" 
-                    defaultValue="0.00" 
-                    min="-100.00" 
-                    max="100.00" 
+                    defaultValue={props.defaultValue} 
+                    min={props.min} 
+                    max={props.max}  
                     required 
             />
         </div>

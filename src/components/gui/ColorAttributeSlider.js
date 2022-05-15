@@ -6,7 +6,7 @@ const ColorAttributeSlider = (props) => {
         <div className="attr-slider">
             <input  className="attr-color"
                     type="color"
-                    value={props.color}
+                    defaultValue={props.color}
             />
             <input  className="attr-slider-range" 
                     type="range" 

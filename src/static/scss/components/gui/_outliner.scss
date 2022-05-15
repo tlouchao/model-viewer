@@ -7,13 +7,16 @@
         background-color: map-get(v.$colors, "containviewcolor");
         overflow: auto;
         flex-grow: 1;
-        padding: .25rem;
         @media only screen and (max-width: map-get(v.$breakpoints, "phone")) {
             max-height: 270px;
         }
         .outliner-item {
             white-space: pre;
-            padding: .125rem .25rem;
+            padding: .125rem .375rem;
+            &:hover, &:active {
+                cursor: pointer;
+                background-color: map-get(v.$colors, "themecolor");
+            }
         }
     }
 }

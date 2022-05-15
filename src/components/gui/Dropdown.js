@@ -1,13 +1,11 @@
 import React from "react"
 
-const Dropdown = () => {
+const Dropdown = (props) => {
     return (
         <div className="dropdown">
-            <select name="prims" id="prims" defaultValue = "" required>
+            <select name={props.name} id={props.name} defaultValue = "" required>
                 <option value="" disabled hidden>- Select -</option>
-                <option value="cube">Cube</option>
-                <option value="cylinder">Cylinder</option>
-                <option value="torus">Torus</option>
+                {props.options.map((x, i) => <option key={i} value={x}>{x}</option>)}
             </select>
         </div>
     )
