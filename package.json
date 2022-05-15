@@ -2,6 +2,7 @@
     "name": "model-viewer",
     "version": "1.0.0",
     "description": "Model Viewer",
+    "homepage": "https://tlouchao.github.io/model-viewer",
     "main": "index.js",
     "private": true,
     "scripts": {
