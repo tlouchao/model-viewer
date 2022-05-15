@@ -24,5 +24,8 @@
         .outliner-item-selected {
             background-color: map-get(v.$colors, "themecolortwo");
         }
+        .outliner-hidden {
+            color: map-get(v.$colors, "disablecolor");
+        }
     }
 }
