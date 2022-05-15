@@ -2,6 +2,7 @@ import React from "react"
 import Outliner from "./Outliner"
 
 const OutlinerContainer = () => {
+
     return (
         <div id="outliner-container">
             <h2 className="name-container">Outliner</h2>

@@ -2,7 +2,7 @@
 
 #editor-container {
     min-height: map-get(v.$heights, "outlinerheight");
-    @include v.container-flex(240px);
+    @include v.container-flex(map-get(v.$heights, "outlinerheight"));
     #editor {
         background-color:  map-get(v.$colors, "containviewcolor");
         overflow: auto;
@@ -11,14 +11,42 @@
         justify-content: center;
         padding: 1rem;
         @media only screen and (max-width: map-get(v.$breakpoints, "phone")) {
-            max-height: 360px;
+            max-height: 400px;
         }
-    }
-    .editor-empty {
-        display: flex;
-        padding: 0rem 1rem;
-        align-self: center;
-        text-align: center;
-        line-height: 1.5;
+        #editor-actor-summary {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1rem;
+            #editor-actor-summary-header {
+                display: grid;
+                grid-template-columns: [grid-thumb] minmax(map-get(v.$heights, "actorthumbheight"), 1fr)  
+                                       [grid-rest] 3fr;
+                gap: 1rem;
+                @media only screen and (max-width: map-get(v.$breakpoints, "desktop")) {
+                    display: flex;
+                    flex-direction: column;
+                }
+                #editor-actor-thumbnail {
+                    width: 100%;
+                    height: auto;
+                    align-self: center;
+                    @media only screen and (max-width: map-get(v.$breakpoints, "desktop")) {
+                        width: map-get(v.$heights, "actorthumbheight")
+                    }
+                }
+            }
+            #editor-actor-summary-attrs {
+                display: grid;
+                grid-template-columns: [grid-thumb] minmax(map-get(v.$heights, "actorthumbheight"), 1fr) 
+                                       [grid-rest] 3fr;
+                gap: .5rem;
+                @media only screen and (max-width: map-get(v.$breakpoints, "desktop")) {
+                    display: flex;
+                    flex-direction: column;
+                    gap: .25rem;
+                }
+            }
+        }
     }
 }

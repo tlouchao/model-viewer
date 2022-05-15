@@ -2,7 +2,7 @@
 
 #outliner-container {
     min-height: map-get(v.$heights, "outlinerheight");
-    @include v.container-flex(180px);
+    @include v.container-flex(map-get(v.$heights, "outlinerheight"));
     #outliner {
         background-color: map-get(v.$colors, "containviewcolor");
         overflow: auto;
@@ -15,8 +15,14 @@
             padding: .125rem .375rem;
             &:hover, &:active {
                 cursor: pointer;
-                background-color: map-get(v.$colors, "themecolor");
+                background-color: map-get(v.$colors, "themecolorhover");
             }
+        }
+        .outliner-category-selected {
+            background-color: map-get(v.$colors, "themecolorone");
+        }
+        .outliner-item-selected {
+            background-color: map-get(v.$colors, "themecolortwo");
         }
     }
 }

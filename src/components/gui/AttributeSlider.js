@@ -1,6 +1,6 @@
 import React from "react"
 
-const AttributeSlider = () => {
+const AttributeSlider = (props) => {
 
     const handleBlur = (e) => {
         const t = e.target
@@ -27,8 +27,8 @@ const AttributeSlider = () => {
             />
             <input  className="attr-slider-range" 
                     type="range" 
-                    id="radius_slider" 
-                    name="radius_slider" 
+                    id={props.id}
+                    name={props.id}
             />
         </div>
     )

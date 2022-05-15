@@ -6,12 +6,12 @@ const ColorAttributeSlider = (props) => {
         <div className="attr-slider">
             <input  className="attr-color"
                     type="color"
-                    defaultValue={props.color}
+                    defaultValue={props.defaultColor}
             />
             <input  className="attr-slider-range" 
                     type="range" 
-                    id="color_slider-range" 
-                    name="color_slider-range" 
+                    id={props.id}
+                    name={props.id}
             />
         </div>
     )

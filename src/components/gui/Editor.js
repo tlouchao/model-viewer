@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import ActorSummary from "./ActorSummary"
+import EditorActorSummary from "./EditorActorSummary"
 
 const Editor = (props) => {
 
@@ -10,7 +10,7 @@ const Editor = (props) => {
             Select an actor in the scene to view and edit its attributes.
             </p>       
     } else {
-        content = <ActorSummary />
+        content = <EditorActorSummary />
     }
 
     return (

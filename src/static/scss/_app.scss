@@ -113,6 +113,7 @@
         outline: none;
     }
 
+    /* Color Slider Global */
     input[type=color] {
         appearance: none;
         border: none;
@@ -126,6 +127,8 @@
     input[type=color]::-webkit-color-swatch {
         border: none;
     }
+
+    /* Toggle Global */
     input[type=checkbox] {
         -webkit-appearance: none;
         appearance: none;
@@ -136,6 +139,9 @@
         outline: 1px solid grey;
         margin: 0;
         margin-right: .5em;
+        &:hover {
+            cursor: pointer;
+        }
     }
 
     input[type=checkbox]:checked {
