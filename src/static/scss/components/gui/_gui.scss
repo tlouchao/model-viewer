@@ -10,9 +10,9 @@
                         minmax(map-get(v.$heights, "outlinerheight"), 50%)
                         map-get(v.$heights, "togglelayoutheight")
                         auto;
-    padding: 2em 1.5em;
+    padding: 2rem 1.5rem;
     @media only screen and (max-width: map-get(v.$breakpoints, "phone")) {
-        padding: 2em 1em;
+        padding: 2rem 1rem;
     }
     @include v.phone-flex-column(flex-start);
     #brand {
@@ -26,26 +26,26 @@
             display: flex;
             justify-content: center;
             flex-direction: row;
-            font-size: 2.5em;
+            font-size: 2.5rem;
         }
     }
     #gui-add {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 1em;
+        gap: 1rem;
         @include v.phone-flex-column(center);
     }
     #gui-browse {
         display: grid;
         grid-template-columns: 1fr 2fr;
-        gap: 1em;
+        gap: 1rem;
         @include v.phone-flex-column(center);
     }
     #gui-toggle-layout {
         min-height: map-get(v.$heights, "togglelayoutheight");
         display: grid;
         grid-template-columns: [grid-empty] 1fr [grid-toggle] 2fr;
-        gap: 1em;
+        gap: 1rem;
         @include v.phone-flex-column("center");
         #gui-toggle {
             grid-column: grid-toggle;
@@ -55,8 +55,8 @@
             align-items: stretch;
             margin-left: auto; 
             margin-right: 0;
-            padding: .5em 0em;
-            gap: .5em;
+            padding: .5rem 0rem;
+            gap: .5rem;
             @media only screen and (max-width: map-get(v.$breakpoints, "phone")) { 
                 margin-right: auto;
             }
@@ -65,8 +65,8 @@
     #export {
         display: grid;
         grid-template-columns: [grid-empty] 1fr [grid-button] 2fr;
-        padding: .5em 0em;
-        gap: 1em;
+        padding: .5rem 0rem;
+        gap: 1rem;
         @include v.phone-flex-column("center");
         button {
             grid-column: grid-button;

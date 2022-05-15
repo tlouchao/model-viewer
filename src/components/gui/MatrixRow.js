@@ -1,11 +1,15 @@
 import React from "react"
+import MatrixElem from "./MatrixElem"
 
 const MatrixRow = () => {
     return (
-        <div className="matrix-row">
-            <input type='number' defaultValue='0.0' />
-            <input type='number' defaultValue='0.0' />
-            <input type='number' defaultValue='0.0' />
+        <div className="matrix-row-container">
+            <p className="matrix-row-name">Translate</p>
+            <div className="matrix-row-elems">
+                <MatrixElem />
+                <MatrixElem />
+                <MatrixElem />
+            </div>
         </div>
     )
 }

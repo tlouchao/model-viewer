@@ -6,50 +6,68 @@
     font-family: Tahoma, Verdana, sans-serif;
     width: 100vw;
     height: 100vh;
-    .label-container {
+
+    /* Container Name Global */
+    .name-container {
         color:  map-get(v.$colors, "fontcolor");
         text-transform: uppercase;
         font-weight: bold;
     }
+
+    /* Button Global */
     .button-group {
         display: flex;
         justify-content: flex-end;
-        gap: .5em;
+        gap: .5rem;
     }
     button {
         background-color: map-get(v.$colors, "buttoncolor");
-        line-height:  map-get(v.$heights, "buttonheight");
+        min-width: map-get(v.$widths, "buttonwidth");
         height: map-get(v.$heights, "buttonheight");
-        min-width: 48px;
+        line-height:  map-get(v.$heights, "buttonheight");
         border: none;
-        font-size: 1em;
+        font-size: 1rem;
+        box-shadow: 2px 2px 4px grey;
         &:hover {
             cursor: pointer;
         }
+        &:active {
+            transform: translate(0px, 1px);
+        }
     }
-    label {
-        font-size: 1em;
-    }
+
+    /* Dropdown Global */
     select {
         width: 100%;
-        font-size: 1em;
-        padding: .25em;
+        font-size: 1rem;
+        padding: .25rem;
+        border: none;
+        &:hover {
+            cursor: pointer;
+        }
+        &:focus {
+            outline: none;
+        }
         &:invalid {
             color: map-get(v.$colors, "disablecolor");
         }
         option {
             color: map-get(v.$colors, "fontcolor");
-            padding: .25em;
+            padding: .25rem;
             &:hover {
                 cursor: pointer;
             }
         }
     }
+
+    /* Toggle Global */
     .toggle {
-        min-width: 80px;
+        min-width: map-get(v.$widths, "togglewidth");
     }
+
+    /* Scrollbar Global */
     ::-webkit-scrollbar {
-        width: 16px;
+        width: map-get(v.$widths, "scrollwidth");
         background-color: white;
     }
     ::-webkit-scrollbar-track {
@@ -59,10 +77,53 @@
         background-color: map-get(v.$colors, "scrollcolor");
     }
 
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
+    ::-webkit-outer-spin-button, ::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
     }
 
+    /* Slider Global */
+    input[type=range] {
+        -webkit-appearance: none;
+        background: transparent;
+        width: 100%;
+      }
+
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        background: map-get(v.$colors, "sliderthumbcolor");
+        width: map-get(v.$widths, "sliderthumbwidth");
+        height: map-get(v.$heights, "sliderthumbheight");
+        margin-top: calc(-1 * 
+                            ((map-get(v.$heights, "sliderthumbheight") / 2) - 
+                             (map-get(v.$heights, "slidertrackheight") / 2))
+                        );
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    input[type=range]::-webkit-slider-runnable-track {
+        width: 100%;
+        height: map-get(v.$heights, "slidertrackheight");
+        background: map-get(v.$colors, "slidertrackcolor");
+      }
+    
+    input[type=range]:focus {
+        outline: none;
+    }
+
+    input[type=color] {
+        appearance: none;
+        border: none;
+        padding: 0;
+    }
+
+    input[type=color]::-webkit-color-swatch-wrapper {
+        padding: 0;
+    }
+
+    input[type=color]::-webkit-color-swatch {
+        border: none;
+    }
 }

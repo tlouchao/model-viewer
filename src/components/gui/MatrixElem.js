@@ -1,6 +1,6 @@
 import React from "react"
 
-const AttributeSlider = () => {
+const MatrixElem = () => {
 
     const handleBlur = (e) => {
         const t = e.target
@@ -15,9 +15,8 @@ const AttributeSlider = () => {
     }
 
     return (
-        <div className="attr-slider">
-            <input  className="attr-num"
-                    onBlur={handleBlur}
+        <div className="matrix-elem">
+            <input  onBlur={handleBlur}
                     type="number" 
                     step="0.01" 
                     defaultValue="0.00" 
@@ -25,13 +24,8 @@ const AttributeSlider = () => {
                     max="100.00" 
                     required 
             />
-            <input  className="attr-slider-range" 
-                    type="range" 
-                    id="radius_slider" 
-                    name="radius_slider" 
-            />
         </div>
     )
 }
 
-export default AttributeSlider
+export default MatrixElem

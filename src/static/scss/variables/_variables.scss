@@ -3,10 +3,12 @@ $colors: (
     disablecolor: grey,
     fontcolor: black,
     guicolor: #F2F2F2,
-    buttoncolor: #C8C8C8,
-    labelcolor: #4F4F4F,
+    buttoncolor: #BBBBBB,
     containviewcolor: #E0E0E0,
-    scrollcolor: #B4B4B4,
+    scrollcolor: #BBBBBB,
+    inputcolor: #D0D0D0,
+    sliderthumbcolor: #4F4F4F,
+    slidertrackcolor: #BBBBBB,
     canvascolor: #E0E0E0 // duplicated in constants.js file
 );
 
@@ -16,12 +18,24 @@ $breakpoints: (
     desktop: 1024px
 );
 
+$widths: (
+    scrollwidth: 16px,
+    buttonwidth: 32px,
+    togglewidth: 80px,
+    attrmidwidth: 60px,
+    sliderthumbwidth: .5rem,
+);
+
 $heights: (
     brandheight: 64px,
     buttonheight: 32px,
     dropdownheight: 114px,
     outlinerheight: 240px,
-    togglelayoutheight: 64px
+    togglelayoutheight: 64px,
+    actorthumbheight: 95px,
+    attrheight: 26px,
+    slidertrackheight: .4rem,
+    sliderthumbheight: 1.75rem,
 );
 
 @mixin phone-flex-column($justify-content-value) {
@@ -37,6 +51,6 @@ $heights: (
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: .5em 0em;
-    gap: .5em;
+    padding: .5rem 0rem;
+    gap: .5rem;
 }

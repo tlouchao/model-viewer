@@ -34,10 +34,14 @@ module: {
     {
       test: /\.png$/,
       exclude: /node_modules/,
-      use: ['url-loader'],
-      options: {
-        limit: 8192,
-      },
+      use: [
+        {
+          loader: 'url-loader',
+          options: {
+            limit: 8192,
+          },
+        },
+      ],
     },
   ]
 },
