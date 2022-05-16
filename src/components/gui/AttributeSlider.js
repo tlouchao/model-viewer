@@ -1,34 +1,50 @@
-import React from "react"
+import React, { useState } from "react"
 
 const AttributeSlider = (props) => {
 
-    const handleBlur = (e) => {
-        const t = e.target
-        if (!t.value){
-            t.value = t.defaultValue
-        } else if (Number(t.value) < t.min){
-            t.value = t.min
-        } else if (Number(t.value) > t.max){
-            t.value = t.max
+    const [numValue, setNumValue] = useState(props.defaultValue)
+    const [sliderValue, setSliderValue] = useState(props.defaultValue)
+
+    const handleNumChange = (e) => {
+        setNumValue(e.target.value)
+        setSliderValue(formatAttr(Number(e.target.value)))
+    }
+
+    const handleChange = (e) => {
+        setNumValue(formatAttr(Number(e.target.value)))
+        setSliderValue(formatAttr(Number(e.target.value)))
+    }
+
+    const formatAttr = (v) => {
+        if (!v){
+            v = props.defaultValue
+        } else if (v < props.min){
+            v = props.min
+        } else if (v > props.max){
+            v = props.max
         }
-        t.value = parseFloat(t.value).toFixed(2)
+        return(parseFloat(v).toFixed(2))
     }
 
     return (
         <div className="attr-slider">
             <input  className="attr-num"
-                    onBlur={handleBlur}
                     type="number" 
-                    step="0.01" 
-                    defaultValue="0.00" 
-                    min="-100.00" 
-                    max="100.00" 
+                    onBlur={handleChange}
+                    onChange={handleNumChange}
+                    value={numValue}
+                    step={props.step} 
+                    min={props.min}  
+                    max={props.max} 
                     required 
             />
             <input  className="attr-slider-range" 
                     type="range" 
-                    id={props.id}
-                    name={props.id}
+                    onChange={handleChange}
+                    value={sliderValue} 
+                    step={props.step} 
+                    min={props.min}  
+                    max={props.max} 
             />
         </div>
     )

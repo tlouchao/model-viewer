@@ -1,11 +1,14 @@
-import React from "react"
+import React, { useState } from "react"
+import chroma from "chroma-js"
 import Matrix from "./Matrix"
-import AttributeName from "./AttributeName"
 import AttributeSlider from "./AttributeSlider"
 import ColorAttributeSlider from "./ColorAttributeSlider"
 import placeholderImg from "./../../static/imgs/cube-placeholder.png"
 
 const EditorActorSummary = () => {
+
+    const [actorColor, setActorColor] = useState(chroma("green").hex())
+
     return (
         <div id="editor-actor-summary">
             <div id="editor-actor-summary-header">
@@ -13,8 +16,26 @@ const EditorActorSummary = () => {
                 <Matrix />
             </div>
             <div id="editor-actor-summary-attrs">
-                <AttributeName id="color-slider" name="Color" /><ColorAttributeSlider id="color-slider" defaultColor="#00FF00"/>
-                <AttributeName id="radius-slider" name="Radius" /><AttributeSlider id="radius-slider" />
+                <div className="attr-name">
+                    <label>Color</label>
+                </div>
+                <ColorAttributeSlider
+                    defaultColor={actorColor}
+                    name="color-slider"
+                    min="0"
+                    max="100"
+                    step="1"
+                />
+                <div className="attr-name">
+                    <label>Radius</label>
+                </div>
+                <AttributeSlider
+                    defaultValue="0.00"
+                    name="radius-slider" 
+                    min="0.00"
+                    max="100.00"
+                    step="0.01"
+                />
             </div>
         </div>
     )
