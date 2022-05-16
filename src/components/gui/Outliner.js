@@ -1,6 +1,8 @@
 import React from "react"
 
 const Outliner = (props) => {
+
+    const indent = "  "
     
     return (
         <div id="outliner">
@@ -9,8 +11,9 @@ const Outliner = (props) => {
                      data-idx={i}>
                     <p  key={i}
                         data-idx={i}
-                        className={`outliner-category outliner-item 
-                                   ${(props.categoriesSelected[i]) ? "outliner-category-selected" : ""}`
+                        className={`outliner-category 
+                                   ${(props.categoriesSelected[i]) ? "outliner-category-selected" : ""} 
+                                   ${(props.categoriesVisible[i]) ? "" : "outliner-hidden"}`
                                   }
                         id={x.categoryId}
                         data-id={x.categoryId}
@@ -25,10 +28,11 @@ const Outliner = (props) => {
                                 data-id={y.id}
                                 data-name={y.name}
                                 className={`outliner-item 
-                                            ${(props.itemsSelected[i][j]) ? "outliner-item-selected" : ""}`
+                                            ${(props.itemsSelected[i][j]) ? "outliner-item-selected" : ""} 
+                                            ${(props.itemsVisible[i][j]) ? "" : "outliner-hidden"}`
                                           }
                                 onClick={props.handleItemClick}>
-                                {props.pre + y.name}
+                                {indent + y.name}
                             </li>
                         )}
                     </ul>

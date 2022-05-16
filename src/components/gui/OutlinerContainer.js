@@ -46,46 +46,44 @@ const OutlinerContainer = () => {
                     id: 8,
                     name: "Point",
                 },
-                {
-                    id: 9,
-                    name: "Point_01",
-                },
-                {
-                    id: 10,
-                    name: "Point_02",
-                },
-                {
-                    id: 11,
-                    name: "Point_03",
-                },
-                {
-                    id: 12,
-                    name: "Point_04",
-                },
             ]
         }
     ]
 
+    /* Selection state */
     const [categoriesSelected, setCategoriesSelected] = useState([...Array(payload.length)].fill(false))
     const [itemsSelected, setItemsSelected] = useState([...Array(payload.length)].map((x, i) => 
         [...Array(payload[i].items.length).fill(false)]))
-    const [categoriesHidden, setCategoriesHidden] = useState([...Array(payload.length)].fill(false))
-    const [itemsHidden, setItemsHidden] = useState([...Array(payload.length)].map((x, i) => 
-        [...Array(payload[i].items.length).fill(false)]))
+    
+    /* Visibility state */
+    const [categoriesVisible, setCategoriesVisible] = useState([...Array(payload.length)].fill(true))
+    const [itemsVisible, setItemsVisible] = useState([...Array(payload.length)].map((x, i) => 
+        [...Array(payload[i].items.length).fill(true)]))
 
     useEffect(() => {
         for (let i = 0; i < itemsSelected.length; i++) {
-            let selected = false;
+            let isSelected = false;
+            let isHidden = false;
+            // Category is selected, if all of its items are also selected //
             if (itemsSelected[i].every((x) => x)){
-                selected = true;
+                isSelected = true;
+            }
+            // Category is hidden, if all of its items are also hidden //
+            if (itemsVisible[i].every((x) => !x)){
+                isHidden = true;
             }
             setCategoriesSelected(prevState => (
                 [].concat(prevState.slice(0, i), 
-                          selected, 
+                          isSelected, 
+                          prevState.slice(i + 1, prevState.length))
+            ))
+            setCategoriesVisible(prevState => (
+                [].concat(prevState.slice(0, i), 
+                          !isHidden, 
                           prevState.slice(i + 1, prevState.length))
             ))
         }
-    }, [itemsSelected]);
+    }, [itemsSelected, itemsVisible]);
 
     const handleCategoryClick = (e) => {
         const idx = Number(e.target.dataset.idx)
@@ -115,20 +113,42 @@ const OutlinerContainer = () => {
         ))
     }
 
+    const handleVisible = () => {
+        setCategoriesVisible(prevState => 
+            categoriesSelected.map((x, i) => (x) ? true : prevState[i])
+        )
+        setItemsVisible(prevState => 
+            itemsSelected.map((x, i) => 
+                x.map((y, j) => (y) ? true : prevState[i][j])
+            )
+        )
+    }
+
+    const handleHidden = () => {
+        setCategoriesVisible(prevState => 
+            categoriesSelected.map((x, i) => (x) ? false : prevState[i])
+        )
+        setItemsVisible(prevState => 
+            itemsSelected.map((x, i) => 
+                x.map((y, j) => (y) ? false : prevState[i][j])
+            )
+        )
+    }
+
     return (
         <div id="outliner-container">
             <h2 className="name-container">Outliner</h2>
             <Outliner payload={payload}
-                      pre={pre}
                       categoriesSelected={categoriesSelected}
                       itemsSelected={itemsSelected}
-                      categoriesHidden={categoriesHidden}
-                      itemsHidden={itemsHidden}
+                      categoriesVisible={categoriesVisible}
+                      itemsVisible={itemsVisible}
                       handleCategoryClick={handleCategoryClick}
-                      handleItemClick={handleItemClick} />
+                      handleItemClick={handleItemClick} 
+            />
             <div className="button-group">
-                <button>Show</button>
-                <button>Hide</button>
+                <button onClick={handleVisible}>Show</button>
+                <button onClick={handleHidden}>Hide</button>
             </div>
         </div>
     )
