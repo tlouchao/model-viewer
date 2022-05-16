@@ -1,20 +1,21 @@
 import React from "react"
 
 const Dropdown = (props) => {
+    
     return (
         <div className="dropdown">
             <select name={props.name} 
-                    id={`select-${props.id}`} 
+                    id={`select-${props.suffix}`} 
                     defaultValue="" 
-                    onChange={props.onChange}
+                    onChange={props.handleChange}
                     required>
                 <option value="" 
                         disabled 
                         hidden>
                         - Select -
                 </option>
-                {props.options.map((x, i) => 
-                    <option key={i} value={x}>{x}</option>)
+                {props.optionValues.map((x, i) => 
+                    <option key={i} value={x}>{props.optionNames[i]}</option>)
                 }
             </select>
         </div>

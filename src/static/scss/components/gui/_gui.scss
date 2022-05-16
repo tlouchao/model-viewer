@@ -8,7 +8,7 @@
     grid-template-rows: map-get(v.$heights, "brandheight")
                         map-get(v.$heights, "dropdownheight")
                         minmax(map-get(v.$heights, "outlinerheight"), 50%)
-                        map-get(v.$heights, "togglelayoutheight")
+                        minmax(map-get(v.$heights, "togglelayoutheight"), 12%)
                         auto;
     padding: 2rem 1.5rem;
     @media only screen and (max-width: map-get(v.$breakpoints, "phone")) {

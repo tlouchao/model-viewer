@@ -53,7 +53,7 @@
         }
         option {
             color: map-get(v.$colors, "fontcolor");
-            padding: .25rem;
+            padding: 0rem;
             &:hover {
                 cursor: pointer;
             }

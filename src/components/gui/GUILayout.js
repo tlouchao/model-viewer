@@ -4,24 +4,48 @@ import OutlinerContainer from "./OutlinerContainer"
 import EditorContainer from "./EditorContainer"
 import Toggle from "./Toggle"
 
-const GUILayout = () => {
-    const primsOptions = ["Cube", "Cylinder", "Torus"]
-    const lightsOptions = ["Ambient Light", "Point Light"]
+const GUILayout = (props) => {
+
     return (
         <div id="gui-layout">
             <h1 id="brand"><span>Model</span>Viewer</h1>
             <div id="gui-add">
-                <DropdownContainer id="prim" name="Add Primitives" options={primsOptions} />
-                <DropdownContainer id="light" name="Add Lights" options={lightsOptions}/>
+                <DropdownContainer  name="Add Primitives" 
+                                    suffix="prim" 
+                                    handleClick={props.handleDropdownClick} 
+                                    optionValues={props.prims} 
+                                    optionNames={props.prims.map(x => x.charAt(0).toUpperCase() + x.slice(1))}
+                />
+                <DropdownContainer  name="Add Lights" 
+                                    suffix="light" 
+                                    optionValues={props.lights}
+                                    handleClick={props.handleDropdownClick} 
+                                    optionNames={props.lights.map(x => x.charAt(0).toUpperCase() + x.slice(1) + " Light")}
+                />
             </div>
             <div id="gui-browse">
-                <OutlinerContainer />
-                <EditorContainer />
+                <OutlinerContainer  actors={props.actors}
+                                    categoriesSelected={props.categoriesSelected}
+                                    categoryItemsSelected={props.categoryItemsSelected}
+                                    prevCategoryItemSelected={props.prevCategoryItemSelected}
+                                    handleCategoryClick={props.handleCategoryClick} 
+                />
+                <EditorContainer actors={props.actors} />
             </div>
             <div id="gui-toggle-layout">
                 <div id="gui-toggle">
-                    <Toggle label="Show Ground Plane" checked="checked" />
-                    <Toggle label="Show Wireframe" checked="" />
+                    <Toggle id="show-grid" 
+                            label="Show Grid" 
+                            handleChange={props.handleToggle} 
+                            checked={props.showGrid} />
+                    <Toggle id="show-axes" 
+                            label="Show Axes" 
+                            handleChange={props.handleToggle} 
+                            checked={props.showAxes} />
+                    <Toggle id="show-wireframe" 
+                            label="Show Wireframe" 
+                            handleChange={props.handleToggle} 
+                            checked={props.showWireframe} />
                 </div>
             </div>
             <div id="export">

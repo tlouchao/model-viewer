@@ -14,10 +14,10 @@ class ThreeContainer extends React.Component {
             material: new THREE.MeshStandardMaterial( { color: 0x0000ff } ),
             renderer: new THREE.WebGLRenderer(),
             scene: new THREE.Scene(),
+            light: new THREE.HemisphereLight(0xFFFFFF, 0x404040, 1),
             grid: new THREE.GridHelper ( 20, 20, 0x444444, 0x444444 ),
             axes: new THREE.AxesHelper( 50 ),
             camera: null,
-            light: null,
             cube: null,
             frameId: null,
             width: null,
@@ -32,7 +32,6 @@ class ThreeContainer extends React.Component {
                                 this.ref.clientWidth/window.innerHeight,
                                 0.1, 
                                 1000 ),
-                        light: new THREE.HemisphereLight(0xFFFFFF, 0x404040, 1),
                         cube: new THREE.Mesh(this.state.geometry, this.state.material)},
                         () => {
                             this.state.scene.background = new THREE.Color(THREE_SCENE_COLOR)
@@ -49,6 +48,16 @@ class ThreeContainer extends React.Component {
         }
         this.handleResize();
         window.addEventListener('resize', this.handleResize);
+    }
+
+    componentDidUpdate(prevProps) {
+        // Typical usage (don't forget to compare props):
+        if (this.props.showGrid !== prevProps.showGrid) {
+          this.state.grid.visible = this.props.showGrid
+        }
+        if (this.props.showAxes !== prevProps.showAxes) {
+            this.state.axes.visible = this.props.showAxes;
+        }
     }
 
     componentWillUnmount() {
@@ -69,15 +78,14 @@ class ThreeContainer extends React.Component {
     };
 
     handleResize() {
-        console.log(this.state.scene.getObjectByName( "light1" ))
         if (this.ref) {
             this.setState({width: this.ref.clientWidth,
-                        height: window.innerHeight},
-                        () => {
-                            this.state.renderer.setSize(this.state.width, this.state.height)  
-                            this.state.camera.aspect = this.state.width / this.state.height;
-                            this.state.camera.updateProjectionMatrix()       
-                        })
+                height: window.innerHeight},
+                () => {
+                    this.state.renderer.setSize(this.state.width, this.state.height)  
+                    this.state.camera.aspect = this.state.width / this.state.height;
+                    this.state.camera.updateProjectionMatrix()
+                })
         }
     }
 

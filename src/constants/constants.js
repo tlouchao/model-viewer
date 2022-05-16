@@ -5,11 +5,11 @@ export const DEF_TRANSLATE = 0;
 export const DEF_ROTATE = 0;
 export const DEF_SCALE= 1;
 
-export const MAX_TRANSLATE = 100;
+export const MAX_TRANSLATE = 50;
 export const MAX_ROTATE = 360;
 export const MAX_SCALE= 10;
 
-export const MIN_TRANSLATE = -100;
+export const MIN_TRANSLATE = -50;
 export const MIN_ROTATE = -360;
 export const MIN_SCALE= 0;
 

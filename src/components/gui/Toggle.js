@@ -1,20 +1,14 @@
-import React, { useState } from "react"
+import React from "react"
 
 const Toggle = (props) => {
-
-    const [checked, setChecked] = useState(props.checked)
-
-    const handleChange = (e) => {
-        setChecked(e.target.checked)
-    }
 
     return (
         <div className="toggle">
             <input  type="checkbox"
-                    onChange={handleChange}
-                    id={props.label} 
+                    onChange={props.handleChange}
+                    id={props.id} 
                     name={props.label}
-                    checked={checked}
+                    checked={props.checked}
             />
             <label htmlFor={props.label}>{props.label}</label>
         </div>

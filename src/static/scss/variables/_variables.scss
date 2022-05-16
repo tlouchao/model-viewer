@@ -12,7 +12,7 @@ $colors: (
     inputcolor: #C8C8C8,
     sliderthumbcolor: #4F4F4F,
     slidertrackcolor: #BBBBBB,
-    canvascolor: #E0E0E0 // duplicated in constants.js file
+    canvascolor: #888888 // duplicated in constants.js file
 );
 
 $breakpoints: (
@@ -34,7 +34,7 @@ $heights: (
     buttonheight: 32px,
     dropdownheight: 114px,
     outlinerheight: 240px,
-    togglelayoutheight: 64px,
+    togglelayoutheight: 96px,
     actorthumbheight: 108px,
     attrheight: 26px,
     slidertrackheight: .4rem,
