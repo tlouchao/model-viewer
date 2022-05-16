@@ -11,8 +11,8 @@ const GUILayout = () => {
         <div id="gui-layout">
             <h1 id="brand"><span>Model</span>Viewer</h1>
             <div id="gui-add">
-                <DropdownContainer name="Add Primitives" options={primsOptions} />
-                <DropdownContainer name="Add Lights" options={lightsOptions}/>
+                <DropdownContainer id="prim" name="Add Primitives" options={primsOptions} />
+                <DropdownContainer id="light" name="Add Lights" options={lightsOptions}/>
             </div>
             <div id="gui-browse">
                 <OutlinerContainer />

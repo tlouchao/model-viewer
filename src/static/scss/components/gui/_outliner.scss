@@ -13,15 +13,19 @@
         .outliner-category, .outliner-item {
             white-space: pre;
             padding: .125rem .375rem;
-            &:hover, &:active {
+            text-transform: capitalize;
+            &:hover {
                 cursor: pointer;
-                background-color: map-get(v.$colors, "themecolorhover");
             }
         }
-        .outliner-category-selected {
+
+        .outliner-item:hover {
+            background-color: map-get(v.$colors, "themecolorhover");
+        }
+        .outliner-category-selected, .outliner-category:active  {
             background-color: map-get(v.$colors, "themecolorone");
         }
-        .outliner-item-selected {
+        .outliner-item-selected, .outliner-item:active {
             background-color: map-get(v.$colors, "themecolortwo");
         }
         .outliner-hidden {

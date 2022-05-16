@@ -1,6 +1,6 @@
 import React from "react"
 import * as THREE from "three";
-import { THREE_BGCOLOR } from "./../constants/constants"
+import { THREE_SCENE_COLOR } from "./../constants/constants"
 
 class ThreeContainer extends React.Component {
     constructor(props){
@@ -11,10 +11,13 @@ class ThreeContainer extends React.Component {
         this.setCanvasRef = this.setCanvasRef.bind(this)
         this.state = {
             geometry: new THREE.BoxGeometry( 1, 1, 1 ),
-            material: new THREE.MeshBasicMaterial( { color: 0x00ff00 } ),
-            scene: new THREE.Scene(),
+            material: new THREE.MeshStandardMaterial( { color: 0x0000ff } ),
             renderer: new THREE.WebGLRenderer(),
+            scene: new THREE.Scene(),
+            grid: new THREE.GridHelper ( 20, 20, 0x444444, 0x444444 ),
+            axes: new THREE.AxesHelper( 50 ),
             camera: null,
+            light: null,
             cube: null,
             frameId: null,
             width: null,
@@ -29,15 +32,18 @@ class ThreeContainer extends React.Component {
                                 this.ref.clientWidth/window.innerHeight,
                                 0.1, 
                                 1000 ),
+                        light: new THREE.HemisphereLight(0xFFFFFF, 0x404040, 1),
                         cube: new THREE.Mesh(this.state.geometry, this.state.material)},
                         () => {
-                            this.state.scene.background = new THREE.Color(THREE_BGCOLOR)
+                            this.state.scene.background = new THREE.Color(THREE_SCENE_COLOR)
+                            this.state.scene.add(this.state.light)
+                            this.state.scene.add(this.state.grid)
+                            this.state.scene.add(this.state.axes)
                             this.state.scene.add(this.state.cube)
                             this.state.renderer.setSize( this.state.width, this.state.height)
                             this.ref.appendChild( this.state.renderer.domElement )
-                            this.state.camera.position.z = 3
-                            this.state.cube.rotation.x += Math.PI / 6;
-                            this.state.cube.rotation.y += Math.PI / 4;
+                            this.state.camera.position.set (-1.5, 1.5, 3)
+                            this.state.camera.lookAt(0, 0, 0)   
                             this.animate()
                         })
         }
@@ -57,12 +63,13 @@ class ThreeContainer extends React.Component {
 
     animate() {
         this.state.frameId = requestAnimationFrame( this.animate );
-        //this.state.cube.rotation.x += 0.01;
-        //this.state.cube.rotation.y += 0.01;
+        // this.state.cube.rotation.x += 0.01;
+        // this.state.cube.rotation.y += 0.01;
         this.state.renderer.render( this.state.scene, this.state.camera );
     };
 
     handleResize() {
+        console.log(this.state.scene.getObjectByName( "light1" ))
         if (this.ref) {
             this.setState({width: this.ref.clientWidth,
                         height: window.innerHeight},

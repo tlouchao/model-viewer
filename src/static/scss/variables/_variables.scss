@@ -1,15 +1,15 @@
 $colors: (
     bgcolor: white,
     disablecolor: grey,
+    fontcolor: black,
     themecolorone: #FF8800,
     themecolortwo: #FFAA00,
     themecolorhover: #FFCC00,
-    fontcolor: black,
     guicolor: #F2F2F2,
     buttoncolor: #BBBBBB,
     containviewcolor: #E0E0E0,
     scrollcolor: #8F8F8F,
-    inputcolor: #D0D0D0,
+    inputcolor: #C8C8C8,
     sliderthumbcolor: #4F4F4F,
     slidertrackcolor: #BBBBBB,
     canvascolor: #E0E0E0 // duplicated in constants.js file
@@ -25,7 +25,7 @@ $widths: (
     scrollwidth: 16px,
     buttonwidth: 32px,
     togglewidth: 80px,
-    attrmidwidth: 60px,
+    attrmidwidth: 64px,
     sliderthumbwidth: .5rem,
 );
 

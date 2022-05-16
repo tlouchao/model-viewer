@@ -54,36 +54,27 @@ const OutlinerContainer = () => {
     const [categoriesSelected, setCategoriesSelected] = useState([...Array(payload.length)].fill(false))
     const [itemsSelected, setItemsSelected] = useState([...Array(payload.length)].map((x, i) => 
         [...Array(payload[i].items.length).fill(false)]))
+    const [prevSelected, setPrevSelected] = useState(null)
     
     /* Visibility state */
     const [categoriesVisible, setCategoriesVisible] = useState([...Array(payload.length)].fill(true))
     const [itemsVisible, setItemsVisible] = useState([...Array(payload.length)].map((x, i) => 
         [...Array(payload[i].items.length).fill(true)]))
 
+    // Category is hidden, if all of its items are also hidden //
     useEffect(() => {
         for (let i = 0; i < itemsSelected.length; i++) {
-            let isSelected = false;
             let isHidden = false;
-            // Category is selected, if all of its items are also selected //
-            if (itemsSelected[i].every((x) => x)){
-                isSelected = true;
-            }
-            // Category is hidden, if all of its items are also hidden //
             if (itemsVisible[i].every((x) => !x)){
                 isHidden = true;
             }
-            setCategoriesSelected(prevState => (
-                [].concat(prevState.slice(0, i), 
-                          isSelected, 
-                          prevState.slice(i + 1, prevState.length))
-            ))
             setCategoriesVisible(prevState => (
                 [].concat(prevState.slice(0, i), 
                           !isHidden, 
                           prevState.slice(i + 1, prevState.length))
             ))
         }
-    }, [itemsSelected, itemsVisible]);
+    }, [itemsVisible]);
 
     const handleCategoryClick = (e) => {
         const idx = Number(e.target.dataset.idx)
@@ -94,43 +85,48 @@ const OutlinerContainer = () => {
                       prevState.slice(idx + 1, prevState.length))
         ))
         setItemsSelected(prevState => (
-            [].concat(prevState.slice(0, idx), 
+            [].concat(prevState.slice(0, idx)
+                        .map(x => (x.every(y => true)) ? x : [...Array(x.length)].fill(false)),
                       [[...Array(payload[idx].items.length)].fill(selected)],
-                      prevState.slice(idx + 1, prevState.length))
-        ))
+                      prevState.slice(idx + 1, prevState.length)
+                        .map(x => (x.every(y => true)) ? x : [...Array(x.length)].fill(false))
+        )))
+        setPrevSelected(e.target)
     }
 
     const handleItemClick = (e) => {
         const idx_i = Number(e.target.parentElement.parentElement.dataset.idx);
         const idx_j = Number(e.target.dataset.idx);
-        const selected = !itemsSelected[idx_i][idx_j]
+        const selected = (prevSelected.classList.contains("outliner-category")) ? true : !itemsSelected[idx_i][idx_j]
+        setCategoriesSelected(categoriesSelected.map(x => false))
         setItemsSelected(prevState => (
-            [].concat(prevState.slice(0, idx_i), 
-                      [[].concat(prevState[idx_i].slice(0, idx_j),
+            [].concat(prevState.slice(0, idx_i)
+                        .map((z) => [...Array(z.length)].fill(false)), 
+                      [[].concat(prevState[idx_i].slice(0, idx_j).fill(false),
                                 selected,
-                                prevState[idx_i].slice(idx_j + 1, prevState[idx_i].length))],
-                      prevState.slice(idx_i + 1, prevState.length))
-        ))
+                                prevState[idx_i].slice(idx_j + 1, prevState[idx_i].length).fill(false))],
+                      prevState.slice(idx_i + 1, prevState.length)
+                        .map((z) => [...Array(z.length)].fill(false))
+                    
+        )))
+        setPrevSelected(e.target)
     }
 
     const handleVisible = () => {
-        setCategoriesVisible(prevState => 
-            categoriesSelected.map((x, i) => (x) ? true : prevState[i])
-        )
-        setItemsVisible(prevState => 
-            itemsSelected.map((x, i) => 
-                x.map((y, j) => (y) ? true : prevState[i][j])
-            )
-        )
+        setVisibilityHelper(true)
     }
 
     const handleHidden = () => {
+        setVisibilityHelper(false)
+    }
+
+    const setVisibilityHelper = (boolValue) => {
         setCategoriesVisible(prevState => 
-            categoriesSelected.map((x, i) => (x) ? false : prevState[i])
+            categoriesSelected.map((x, i) => (x) ? boolValue : prevState[i])
         )
         setItemsVisible(prevState => 
             itemsSelected.map((x, i) => 
-                x.map((y, j) => (y) ? false : prevState[i][j])
+                x.map((y, j) => (y) ? boolValue : prevState[i][j])
             )
         )
     }

@@ -18,6 +18,9 @@
             flex-direction: column;
             align-items: stretch;
             gap: 1rem;
+            @media only screen and (max-width: map-get(v.$breakpoints, "desktop")) {
+                height: fit-content;
+            }
             #editor-actor-summary-header {
                 display: grid;
                 grid-template-columns: [grid-thumb] minmax(map-get(v.$heights, "actorthumbheight"), 1fr)  

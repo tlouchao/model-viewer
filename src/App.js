@@ -1,10 +1,10 @@
 import React from "react"
-import Layout from "./components/Layout"
+import AppState from "./components/AppState"
 
 const App = () => {
     return (
         <div id="app">
-            <Layout />
+            <AppState />
         </div>
     )
 }

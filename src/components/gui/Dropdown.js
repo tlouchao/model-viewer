@@ -4,8 +4,9 @@ const Dropdown = (props) => {
     return (
         <div className="dropdown">
             <select name={props.name} 
-                    id={props.name} 
+                    id={`select-${props.id}`} 
                     defaultValue="" 
+                    onChange={props.onChange}
                     required>
                 <option value="" 
                         disabled 
