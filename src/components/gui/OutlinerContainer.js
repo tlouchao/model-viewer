@@ -89,13 +89,13 @@ const OutlinerContainer = (props) => {
                       categoryItemsSelected={props.categoryItemsSelected}
                       prevCategoryItemSelected={props.prevCategoryItemSelected}
                       categoriesVisible={props.categoriesVisible}
-                      itemsVisible={props.itemsVisible}
+                      categoryItemsVisible={props.categoryItemsVisible}
                       handleCategoryClick={props.handleCategoryClick}
-                      handleItemClick={props.handleItemClick} 
+                      handleCategoryItemClick={props.handleCategoryItemClick} 
             />
             <div className="button-group">
-                <button onClick={props.handleVisible}>Show</button>
-                <button onClick={props.handleHidden}>Hide</button>
+                <button onClick={props.handleOutlinerVisible}>Show</button>
+                <button onClick={props.handleOutlinerHidden}>Hide</button>
             </div>
         </div>
     )

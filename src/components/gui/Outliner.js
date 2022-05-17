@@ -11,7 +11,7 @@ const Outliner = (props) => {
                      data-idx={i}>
                     <p  key={i}
                         data-idx={i}
-                        className={`outliner-category ${(props.categoriesSelected[x]) ? "outliner-category-selected" : ""}`} /*  ${(props.categoriesVisible[i]) ? "" : "outliner-hidden"}`} */
+                        className={`outliner-category ${(props.categoriesSelected[x]) ? "outliner-category-selected" : ""} ${(props.categoriesVisible[x]) ? "" : "outliner-hidden"}`}
                         id={`outliner-category-${x}`}
                         data-id={`outliner-category-${x}`}
                         data-type={x}
@@ -25,8 +25,8 @@ const Outliner = (props) => {
                                 data-id={x.id}
                                 data-type={y.type}
                                 data-categorytype={y.categoryType}
-                                className={`outliner-item ${(props.categoryItemsSelected[x][j]) ? "outliner-item-selected" : ""}`} /* ${(props.itemsVisible[i][j]) ? "" : "outliner-hidden"}`}*/
-                                onClick={props.handleItemClick}>
+                                className={`outliner-item ${(props.categoryItemsSelected[x][j]) ? "outliner-item-selected" : ""} ${(props.categoryItemsVisible[x][j]) ? "" : "outliner-hidden"}`}
+                                onClick={props.handleCategoryItemClick}>
                                 {indent + y.name}
                             </li>
                         )}

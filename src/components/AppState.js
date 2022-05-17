@@ -40,12 +40,22 @@ const AppState = () => {
         [CATEGORY_TYPES[1] + 's', []],
     ])
 
-    const initialCategories = Object.fromEntries([
+    const initialSelected = Object.fromEntries([
         [CATEGORY_TYPES[0] + 's', false],
         [CATEGORY_TYPES[1] + 's', false],
     ])
 
-    const initialCategoriesItems = Object.fromEntries([
+    const initialItemsSelected = Object.fromEntries([
+        [CATEGORY_TYPES[0] + 's', []],
+        [CATEGORY_TYPES[1] + 's', []],
+    ])
+
+    const initialVisible = Object.fromEntries([
+        [CATEGORY_TYPES[0] + 's', true],
+        [CATEGORY_TYPES[1] + 's', true],
+    ])
+
+    const initialItemsVisible = Object.fromEntries([
         [CATEGORY_TYPES[0] + 's', []],
         [CATEGORY_TYPES[1] + 's', []],
     ])
@@ -56,22 +66,30 @@ const AppState = () => {
     const [actors, setActors] = useState(initialActors)
     const [isInitialized, setIsInitialized] = useState(false)
 
-    const [categoriesSelected, setCategoriesSelected] = useState(initialCategories)
-    const [categoryItemsSelected, setCategoryItemsSelected] = useState(initialCategoriesItems)
+    const [categoriesSelected, setCategoriesSelected] = useState(initialSelected)
+    const [categoryItemsSelected, setCategoryItemsSelected] = useState(initialItemsSelected)
     const [prevCategoryItemSelected, setPrevCategoryItemSelected] = useState(null)
+
+    const [categoriesVisible, setCategoriesVisible] = useState(initialVisible)
+    const [categoryItemsVisible, setCategoryItemsVisible] = useState(initialItemsVisible)
 
     const [showGrid, setShowGrid] = useState(true)
     const [showAxes, setShowAxes] = useState(true)
     const [showWireframe, setShowWireframe] = useState(false)
 
+    /* Add one box to the scene */
     useEffect(() => {
         setActors(prevActors => ({
             ...prevActors,
             primitives: prevActors.primitives.concat(_makeActor("box", CATEGORY_TYPES[0]))
         }))
-        setCategoryItemsSelected(prevItems => ({
-            ...prevItems,
-            primitives: prevItems.primitives.concat(false)
+        setCategoryItemsSelected(prevSelected=> ({
+            ...prevSelected,
+            primitives: prevSelected.primitives.concat(false)
+        }))
+        setCategoryItemsVisible(prevVisible => ({
+            ...prevVisible,
+            primitives: prevVisible.primitives.concat(true)
         }))
         setIsInitialized(true)
     }, [])
@@ -80,7 +98,6 @@ const AppState = () => {
     useEffect(() => {
         if (isInitialized){
             console.log(actors)
-            console.log(actorNames)
         }
     }, [isInitialized, actors])
 
@@ -156,9 +173,13 @@ const AppState = () => {
                         ...prevActors,
                         primitives: prevActors.primitives.concat(_makeActor(e.target.value, CATEGORY_TYPES[0]))
                     }))
-                    setCategoryItemsSelected(prevItems => ({
-                        ...prevItems,
-                        primitives: prevItems.primitives.concat(categoriesSelected["primitives"])
+                    setCategoryItemsSelected(prevSelected => ({
+                        ...prevSelected,
+                        primitives: prevSelected.primitives.concat(categoriesSelected["primitives"])
+                    }))
+                    setCategoryItemsVisible(prevVisible => ({
+                        ...prevVisible,
+                        primitives: prevVisible.primitives.concat(categoriesVisible["primitives"])
                     }))
                     break
                 case "add-light":
@@ -166,9 +187,13 @@ const AppState = () => {
                         ...prevActors,
                         lights: prevActors.lights.concat(_makeActor(e.target.value, CATEGORY_TYPES[1]))
                     }))
-                    setCategoryItemsSelected(prevItems => ({
-                        ...prevItems,
-                        lights: prevItems.lights.concat(categoriesSelected["lights"])
+                    setCategoryItemsSelected(prevSelected => ({
+                        ...prevSelected,
+                        lights: prevSelected.lights.concat(categoriesSelected["lights"])
+                    }))
+                    setCategoryItemsVisible(prevVisible => ({
+                        ...prevVisible,
+                        lights: prevVisible.lights.concat(categoriesVisible["lights"])
                     }))
                     break
                 default:
@@ -185,15 +210,85 @@ const AppState = () => {
             ...prevState,
             [categoryType]: selected,
         }))
-        setCategoryItemsSelected(prevState => ({
-            ...prevState,
-            [categoryType]: [...Array(prevState[categoryType].length)].fill(selected),
-        }))
+
+        // build new state for category items
+        let nextState = []
+        const keys = Object.keys(categoryItemsSelected)
+        keys.map(x => {
+            let itemSelected;
+            if (x === categoryType) {
+                // copy currently selected category state
+                itemSelected = selected;
+            } else {
+                // preserve other category item states
+                itemSelected = categoriesSelected[x]
+            }
+            nextState.push([x, [...Array(categoryItemsSelected[x].length)].fill(itemSelected)])
+        })
+
+        // change into object for setState function
+        nextState = Object.fromEntries(nextState)
+        setCategoryItemsSelected(nextState)
+
+        // set previously selected target
         setPrevCategoryItemSelected(e.target)
     }
 
     const handleCategoryItemClick = (e) => {
-        const actorType = e.target.dataset.type
+        const idx = e.target.dataset.idx
+        const categoryType = e.target.dataset.categorytype
+
+        // if previously selected HTML element is a category, always select the item
+        let selected;
+        if (prevCategoryItemSelected && prevCategoryItemSelected.classList.contains("outliner-category")) {
+            selected = true
+        } else {
+            selected = !categoryItemsSelected[categoryType + 's'][idx]
+        }
+
+        // reset category state
+        setCategoriesSelected(initialSelected)
+
+        // build new state for category items
+        let nextState = []
+        const keys = Object.keys(categoryItemsSelected)
+        keys.map(x => 
+            nextState.push([x, [...Array(categoryItemsSelected[x].length)].fill(false)])
+        )
+
+        // change into object for setState function
+        nextState = Object.fromEntries(nextState)
+        nextState[categoryType + 's'][idx] = selected
+
+        // set the new state
+        setCategoryItemsSelected(nextState)
+
+        // set previously selected target
+        setPrevCategoryItemSelected(e.target)
+    }
+
+    const handleOutlinerVisible = (e) => {
+        console.log("show")
+        _setVisibilityHelper(true)
+    }
+
+    const handleOutlinerHidden = (e) => {
+        console.log("hide")
+        _setVisibilityHelper(false)
+    }
+
+    const _setVisibilityHelper = (boolValue) => {
+        const keys = Object.keys(categoriesSelected)
+        let nextVisibleState = []
+        let nextVisibleItemsState = []
+        keys.map((x) => {
+            nextVisibleState.push([x, categoriesSelected[x] ? boolValue : categoriesVisible[x]])
+            nextVisibleItemsState.push([x, [...Array(categoryItemsSelected[x].length)].map((y, j) => 
+                (categoryItemsSelected[x][j]) ? boolValue : categoryItemsVisible[x][j]
+            )])
+        })
+        setCategoriesVisible(Object.fromEntries(nextVisibleState))
+        setCategoryItemsVisible(Object.fromEntries(nextVisibleItemsState))
     }
 
     const handleToggle = (e) => {
@@ -219,9 +314,13 @@ const AppState = () => {
                             categoriesSelected={categoriesSelected}
                             categoryItemsSelected={categoryItemsSelected}
                             prevCategoryItemSelected={prevCategoryItemSelected}
+                            categoriesVisible={categoriesVisible}
+                            categoryItemsVisible={categoryItemsVisible}
                             handleDropdownClick={handleDropdownClick} 
                             handleCategoryClick={handleCategoryClick} 
                             handleCategoryItemClick={handleCategoryItemClick} 
+                            handleOutlinerVisible={handleOutlinerVisible}
+                            handleOutlinerHidden={handleOutlinerHidden}
                             showGrid={showGrid}
                             showAxes={showAxes}
                             showWireframe={showWireframe}

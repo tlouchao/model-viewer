@@ -28,7 +28,12 @@ const GUILayout = (props) => {
                                     categoriesSelected={props.categoriesSelected}
                                     categoryItemsSelected={props.categoryItemsSelected}
                                     prevCategoryItemSelected={props.prevCategoryItemSelected}
-                                    handleCategoryClick={props.handleCategoryClick} 
+                                    categoriesVisible={props.categoriesVisible}
+                                    categoryItemsVisible={props.categoryItemsVisible}
+                                    handleCategoryClick={props.handleCategoryClick}
+                                    handleCategoryItemClick={props.handleCategoryItemClick} 
+                                    handleOutlinerVisible={props.handleOutlinerVisible}
+                                    handleOutlinerHidden={props.handleOutlinerHidden} 
                 />
                 <EditorContainer actors={props.actors} />
             </div>
