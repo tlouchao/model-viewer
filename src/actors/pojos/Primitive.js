@@ -3,7 +3,6 @@ import Actor from './Actor'
 
 class Primitive extends Actor {
     color
-    type
     categoryType
     attributes = {}
     constructor(color=PRIM_COLOR){

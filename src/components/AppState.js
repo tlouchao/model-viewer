@@ -1,60 +1,60 @@
 import React, { useEffect, useState } from "react"
 import GUILayout from "./gui/GUILayout"
 import ThreeContainer from "./ThreeContainer"
-import { BoxPrimitive, CylinderPrimitive } from "./../actors/actors"
-import * as constants from "./../constants/constants"
+import * as ACTORS from "./../actors/actors"
+import * as CONSTS from "./../constants/constants"
 
 const AppState = () => {
 
     /* App constants */
     const PRIMS = Object.fromEntries([  
-        [constants.PRIMS_TYPES[0], {width: constants.BOX_DEF_WIDTH, 
-                          height: constants.BOX_DEF_HEIGHT, 
-                          length: constants.BOX_DEF_LENGTH }],
+        [CONSTS.PRIMS_TYPES[0], {width: CONSTS.BOX_DEF_WIDTH, 
+                          height: CONSTS.BOX_DEF_HEIGHT, 
+                          length: CONSTS.BOX_DEF_LENGTH }],
 
-        [constants.PRIMS_TYPES[1], {radius: constants.CYLINDER_DEF_RADIUS, 
-                          height: constants.CYLINDER_DEF_HEIGHT }],
+        [CONSTS.PRIMS_TYPES[1], {radius: CONSTS.CYLINDER_DEF_RADIUS, 
+                          height: CONSTS.CYLINDER_DEF_HEIGHT }],
 
-        [constants.PRIMS_TYPES[2], {radius: constants.TORUS_DEF_RADIUS, 
-                          tube: constants.TORUS_DEF_TUBE, 
-                          radialSegments: constants.TORUS_DEF_RADIUS_SEG, 
-                          tubularSegments: constants.TORUS_DEF_TUBE_SEG }],
+        [CONSTS.PRIMS_TYPES[2], {radius: CONSTS.TORUS_DEF_RADIUS, 
+                          tube: CONSTS.TORUS_DEF_TUBE, 
+                          radialSegments: CONSTS.TORUS_DEF_RADIUS_SEG, 
+                          tubularSegments: CONSTS.TORUS_DEF_TUBE_SEG }],
     ])
 
     const LIGHTS = Object.fromEntries([
-        [constants.LIGHTS_TYPES[0], { intensity: 1}],
-        [constants.LIGHTS_TYPES[1], { intensity: 1, distance: 0 }],
+        [CONSTS.LIGHTS_TYPES[0], { intensity: 1}],
+        [CONSTS.LIGHTS_TYPES[1], { intensity: 1, distance: 0 }],
     ])
 
     /* App state */
     const initialActorNames = Object.fromEntries([
-        [constants.CATEGORY_TYPES[0] + 's', Object.fromEntries(constants.PRIMS_TYPES.map(x => [x, 0]))],
-        [constants.CATEGORY_TYPES[1] + 's', Object.fromEntries(constants.LIGHTS_TYPES.map(x => [x, 0]))],
+        [CONSTS.CATEGORY_TYPES[0] + 's', Object.fromEntries(CONSTS.PRIMS_TYPES.map(x => [x, 0]))],
+        [CONSTS.CATEGORY_TYPES[1] + 's', Object.fromEntries(CONSTS.LIGHTS_TYPES.map(x => [x, 0]))],
     ])
 
     const initialActors = Object.fromEntries([
-        [constants.CATEGORY_TYPES[0] + 's', []],
-        [constants.CATEGORY_TYPES[1] + 's', []],
+        [CONSTS.CATEGORY_TYPES[0] + 's', []],
+        [CONSTS.CATEGORY_TYPES[1] + 's', []],
     ])
 
     const initialSelected = Object.fromEntries([
-        [constants.CATEGORY_TYPES[0] + 's', false],
-        [constants.CATEGORY_TYPES[1] + 's', false],
+        [CONSTS.CATEGORY_TYPES[0] + 's', false],
+        [CONSTS.CATEGORY_TYPES[1] + 's', false],
     ])
 
     const initialItemsSelected = Object.fromEntries([
-        [constants.CATEGORY_TYPES[0] + 's', []],
-        [constants.CATEGORY_TYPES[1] + 's', []],
+        [CONSTS.CATEGORY_TYPES[0] + 's', []],
+        [CONSTS.CATEGORY_TYPES[1] + 's', []],
     ])
 
     const initialVisible = Object.fromEntries([
-        [constants.CATEGORY_TYPES[0] + 's', true],
-        [constants.CATEGORY_TYPES[1] + 's', true],
+        [CONSTS.CATEGORY_TYPES[0] + 's', true],
+        [CONSTS.CATEGORY_TYPES[1] + 's', true],
     ])
 
     const initialItemsVisible = Object.fromEntries([
-        [constants.CATEGORY_TYPES[0] + 's', []],
-        [constants.CATEGORY_TYPES[1] + 's', []],
+        [CONSTS.CATEGORY_TYPES[0] + 's', []],
+        [CONSTS.CATEGORY_TYPES[1] + 's', []],
     ])
 
     // auto-increment ID
@@ -78,7 +78,7 @@ const AppState = () => {
     useEffect(() => {
         setActors(prevActors => ({
             ...prevActors,
-            primitives: prevActors.primitives.concat(_makeActor("box", constants.CATEGORY_TYPES[0]))
+            primitives: prevActors.primitives.concat(_makeActor("box"))
         }))
         setCategoryItemsSelected(prevSelected=> ({
             ...prevSelected,
@@ -94,18 +94,12 @@ const AppState = () => {
     /* Debug log after initialization */
     useEffect(() => {
         if (isInitialized){
-            let box = new BoxPrimitive()
-            console.log(box)
-            let boxObj = { ...box, 
-                    matrix: {
-                        ...box.matrix,
-                        translate: {...box.matrix.translate},
-                        scale: {...box.matrix.scale},
-                        rotate: {...box.matrix.rotate}  
-                    }
-            }
-            console.log(boxObj)
-            console.log(Object.assign({}, box))
+            let box = new ACTORS.BoxPrimitive()
+            let ambient = new ACTORS.AmbientLight()
+            let point = new ACTORS.PointLight()
+            console.log(JSON.parse(JSON.stringify(box)))
+            console.log(JSON.parse(JSON.stringify(ambient)))
+            console.log(JSON.parse(JSON.stringify(point)))
             console.log(actors)
         }
     }, [isInitialized, actors])
@@ -117,13 +111,13 @@ const AppState = () => {
             categoryType: categoryType,
             type: actorType,
             matrix: {
-                translate: constants.ARR_DEF_TRANSLATE,
-                rotate: constants.ARR_DEF_ROTATE,
-                scale: constants.ARR_DEF_SCALE,
+                translate: CONSTS.ARR_DEF_TRANSLATE,
+                rotate: CONSTS.ARR_DEF_ROTATE,
+                scale: CONSTS.ARR_DEF_SCALE,
             },
             // pick random color
-            color: constants.ACTOR_COLORS[Math.floor(Math.random() * 
-                                          constants.ACTOR_COLORS.length)],
+            color: CONSTS.ACTOR_COLORS[Math.floor(Math.random() * 
+                                          CONSTS.ACTOR_COLORS.length)],
             attributes: _selectAttributes(actorType)
         }
         setActorId(prevState => prevState + 1)
@@ -178,7 +172,7 @@ const AppState = () => {
                 case "add-prim":
                     setActors(prevActors => ({
                         ...prevActors,
-                        primitives: prevActors.primitives.concat(_makeActor(e.target.value, constants.CATEGORY_TYPES[0]))
+                        primitives: prevActors.primitives.concat(_makeActor(e.target.value, CONSTS.CATEGORY_TYPES[0]))
                     }))
                     setCategoryItemsSelected(prevSelected => ({
                         ...prevSelected,
@@ -192,7 +186,7 @@ const AppState = () => {
                 case "add-light":
                     setActors(prevActors => ({
                         ...prevActors,
-                        lights: prevActors.lights.concat(_makeActor(e.target.value, constants.CATEGORY_TYPES[1]))
+                        lights: prevActors.lights.concat(_makeActor(e.target.value, CONSTS.CATEGORY_TYPES[1]))
                     }))
                     setCategoryItemsSelected(prevSelected => ({
                         ...prevSelected,
@@ -315,9 +309,9 @@ const AppState = () => {
         <div id="app-state">
             <div id="layout">
                 <GUILayout  actors={actors}
-                            prims={constants.PRIMS_TYPES}
-                            lights={constants.LIGHTS_TYPES}
-                            categories={constants.CATEGORY_TYPES}
+                            prims={CONSTS.PRIMS_TYPES}
+                            lights={CONSTS.LIGHTS_TYPES}
+                            categories={CONSTS.CATEGORY_TYPES}
                             categoriesSelected={categoriesSelected}
                             categoryItemsSelected={categoryItemsSelected}
                             prevCategoryItemSelected={prevCategoryItemSelected}
@@ -334,8 +328,8 @@ const AppState = () => {
                             handleToggle={handleToggle}
                 />
                 <ThreeContainer actors={actors}
-                                prims={constants.PRIMS_TYPES}
-                                lights={constants.LIGHTS_TYPES}
+                                prims={CONSTS.PRIMS_TYPES}
+                                lights={CONSTS.LIGHTS_TYPES}
                                 showGrid={showGrid}
                                 showAxes={showAxes}
                                 showWireframe={showWireframe}

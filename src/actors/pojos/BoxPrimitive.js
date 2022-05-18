@@ -13,7 +13,7 @@ class BoxPrimitive extends Primitive {
                 length=BOX_DEF_LENGTH){
         super(color)
         this.name=(PRIMS_TYPES.includes("box")) ? "box" : null
-        this.type=(PRIMS_TYPES.includes("box")) ? "box" : null
+        this.actorType=(PRIMS_TYPES.includes("box")) ? "box" : null
         this.attributes["width"]    = width, 
         this.attributes["height"]   = height, 
         this.attributes["length"]   = length 

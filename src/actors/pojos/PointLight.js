@@ -1,13 +1,19 @@
-import { LIGHT_COLOR } from './../../constants/constants.js'
+import {LIGHTS_TYPES, 
+    LIGHT_COLOR, 
+    POINT_DEF_INTENSITY,
+    POINT_DEF_DISTANCE} 
+    from './../../constants/constants.js'
 import Light from './Light'
 
 class PointLight extends Light {
-    intensity
-    distance
-    constructor(color=LIGHT_COLOR, intensity=1, distance=1){
-        super(color)
-        this.intensity = intensity
-        this.distance = distance
+    constructor(color=LIGHT_COLOR,
+            intensity=POINT_DEF_INTENSITY,
+            distance=POINT_DEF_DISTANCE){
+    super(color)
+    this.name=(LIGHTS_TYPES.includes("point")) ? "point" : null
+    this.actorType=(LIGHTS_TYPES.includes("point")) ? "point" : null
+    this.attributes["intensity"] = intensity
+    this.attributes["distance"] = distance
     }
 }
 

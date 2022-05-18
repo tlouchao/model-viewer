@@ -24,6 +24,10 @@ export const TORUS_DEF_TUBE = .5;
 export const TORUS_DEF_RADIUS_SEG = 8;
 export const TORUS_DEF_TUBE_SEG = 16;
 
+export const AMBIENT_DEF_INTENSITY = 1;
+export const POINT_DEF_INTENSITY = 1;
+export const POINT_DEF_DISTANCE = 0;
+
 export const ARR_DEF_TRANSLATE = 
     [...Array(MAT_ROW_LEN)].fill(DEF_TRANSLATE)
 export const ARR_DEF_ROTATE = 
