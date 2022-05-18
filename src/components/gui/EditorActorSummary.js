@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import chroma from "chroma-js"
-import Matrix from "./Matrix"
+import EditorMatrix from "./EditorMatrix"
 import AttributeSlider from "./AttributeSlider"
 import ColorAttributeSlider from "./ColorAttributeSlider"
 import placeholderImg from "./../../static/imgs/cube-placeholder.png"
@@ -13,7 +13,7 @@ const EditorActorSummary = () => {
         <div id="editor-actor-summary">
             <div id="editor-actor-summary-header">
                 <img id="editor-actor-thumbnail" src={placeholderImg} alt="actor thumbnail" />
-                <Matrix />
+                <EditorMatrix />
             </div>
             <div id="editor-actor-summary-attrs">
                 <div className="attr-name">

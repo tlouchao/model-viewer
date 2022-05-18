@@ -1,63 +1,60 @@
 import React, { useEffect, useState } from "react"
 import GUILayout from "./gui/GUILayout"
 import ThreeContainer from "./ThreeContainer"
+import { BoxPrimitive, CylinderPrimitive } from "./../actors/actors"
 import * as constants from "./../constants/constants"
 
 const AppState = () => {
 
     /* App constants */
-    const CATEGORY_TYPES = ["primitive", "light"]
-    const PRIMS_TYPES = ["box", "cylinder", "torus"]
-    const LIGHTS_TYPES = ["ambient", "point"]
-
     const PRIMS = Object.fromEntries([  
-        [PRIMS_TYPES[0], {width: constants.BOX_DEF_WIDTH, 
+        [constants.PRIMS_TYPES[0], {width: constants.BOX_DEF_WIDTH, 
                           height: constants.BOX_DEF_HEIGHT, 
                           length: constants.BOX_DEF_LENGTH }],
 
-        [PRIMS_TYPES[1], {radius: constants.CYLINDER_DEF_RADIUS, 
+        [constants.PRIMS_TYPES[1], {radius: constants.CYLINDER_DEF_RADIUS, 
                           height: constants.CYLINDER_DEF_HEIGHT }],
 
-        [PRIMS_TYPES[2], {radius: constants.TORUS_DEF_RADIUS, 
+        [constants.PRIMS_TYPES[2], {radius: constants.TORUS_DEF_RADIUS, 
                           tube: constants.TORUS_DEF_TUBE, 
                           radialSegments: constants.TORUS_DEF_RADIUS_SEG, 
                           tubularSegments: constants.TORUS_DEF_TUBE_SEG }],
     ])
 
     const LIGHTS = Object.fromEntries([
-        [LIGHTS_TYPES[0], { intensity: 1}],
-        [LIGHTS_TYPES[1], { intensity: 1, distance: 0 }],
+        [constants.LIGHTS_TYPES[0], { intensity: 1}],
+        [constants.LIGHTS_TYPES[1], { intensity: 1, distance: 0 }],
     ])
 
     /* App state */
     const initialActorNames = Object.fromEntries([
-        [CATEGORY_TYPES[0] + 's', Object.fromEntries(PRIMS_TYPES.map(x => [x, 0]))],
-        [CATEGORY_TYPES[1] + 's', Object.fromEntries(LIGHTS_TYPES.map(x => [x, 0]))],
+        [constants.CATEGORY_TYPES[0] + 's', Object.fromEntries(constants.PRIMS_TYPES.map(x => [x, 0]))],
+        [constants.CATEGORY_TYPES[1] + 's', Object.fromEntries(constants.LIGHTS_TYPES.map(x => [x, 0]))],
     ])
 
     const initialActors = Object.fromEntries([
-        [CATEGORY_TYPES[0] + 's', []],
-        [CATEGORY_TYPES[1] + 's', []],
+        [constants.CATEGORY_TYPES[0] + 's', []],
+        [constants.CATEGORY_TYPES[1] + 's', []],
     ])
 
     const initialSelected = Object.fromEntries([
-        [CATEGORY_TYPES[0] + 's', false],
-        [CATEGORY_TYPES[1] + 's', false],
+        [constants.CATEGORY_TYPES[0] + 's', false],
+        [constants.CATEGORY_TYPES[1] + 's', false],
     ])
 
     const initialItemsSelected = Object.fromEntries([
-        [CATEGORY_TYPES[0] + 's', []],
-        [CATEGORY_TYPES[1] + 's', []],
+        [constants.CATEGORY_TYPES[0] + 's', []],
+        [constants.CATEGORY_TYPES[1] + 's', []],
     ])
 
     const initialVisible = Object.fromEntries([
-        [CATEGORY_TYPES[0] + 's', true],
-        [CATEGORY_TYPES[1] + 's', true],
+        [constants.CATEGORY_TYPES[0] + 's', true],
+        [constants.CATEGORY_TYPES[1] + 's', true],
     ])
 
     const initialItemsVisible = Object.fromEntries([
-        [CATEGORY_TYPES[0] + 's', []],
-        [CATEGORY_TYPES[1] + 's', []],
+        [constants.CATEGORY_TYPES[0] + 's', []],
+        [constants.CATEGORY_TYPES[1] + 's', []],
     ])
 
     // auto-increment ID
@@ -81,7 +78,7 @@ const AppState = () => {
     useEffect(() => {
         setActors(prevActors => ({
             ...prevActors,
-            primitives: prevActors.primitives.concat(_makeActor("box", CATEGORY_TYPES[0]))
+            primitives: prevActors.primitives.concat(_makeActor("box", constants.CATEGORY_TYPES[0]))
         }))
         setCategoryItemsSelected(prevSelected=> ({
             ...prevSelected,
@@ -97,6 +94,18 @@ const AppState = () => {
     /* Debug log after initialization */
     useEffect(() => {
         if (isInitialized){
+            let box = new BoxPrimitive()
+            console.log(box)
+            let boxObj = { ...box, 
+                    matrix: {
+                        ...box.matrix,
+                        translate: {...box.matrix.translate},
+                        scale: {...box.matrix.scale},
+                        rotate: {...box.matrix.rotate}  
+                    }
+            }
+            console.log(boxObj)
+            console.log(Object.assign({}, box))
             console.log(actors)
         }
     }, [isInitialized, actors])
@@ -107,8 +116,6 @@ const AppState = () => {
             name: _makeName(actorType),
             categoryType: categoryType,
             type: actorType,
-            selected: false,
-            visible: true,
             matrix: {
                 translate: constants.ARR_DEF_TRANSLATE,
                 rotate: constants.ARR_DEF_ROTATE,
@@ -171,7 +178,7 @@ const AppState = () => {
                 case "add-prim":
                     setActors(prevActors => ({
                         ...prevActors,
-                        primitives: prevActors.primitives.concat(_makeActor(e.target.value, CATEGORY_TYPES[0]))
+                        primitives: prevActors.primitives.concat(_makeActor(e.target.value, constants.CATEGORY_TYPES[0]))
                     }))
                     setCategoryItemsSelected(prevSelected => ({
                         ...prevSelected,
@@ -185,7 +192,7 @@ const AppState = () => {
                 case "add-light":
                     setActors(prevActors => ({
                         ...prevActors,
-                        lights: prevActors.lights.concat(_makeActor(e.target.value, CATEGORY_TYPES[1]))
+                        lights: prevActors.lights.concat(_makeActor(e.target.value, constants.CATEGORY_TYPES[1]))
                     }))
                     setCategoryItemsSelected(prevSelected => ({
                         ...prevSelected,
@@ -308,9 +315,9 @@ const AppState = () => {
         <div id="app-state">
             <div id="layout">
                 <GUILayout  actors={actors}
-                            prims={PRIMS_TYPES}
-                            lights={LIGHTS_TYPES}
-                            categories={CATEGORY_TYPES}
+                            prims={constants.PRIMS_TYPES}
+                            lights={constants.LIGHTS_TYPES}
+                            categories={constants.CATEGORY_TYPES}
                             categoriesSelected={categoriesSelected}
                             categoryItemsSelected={categoryItemsSelected}
                             prevCategoryItemSelected={prevCategoryItemSelected}
@@ -327,8 +334,8 @@ const AppState = () => {
                             handleToggle={handleToggle}
                 />
                 <ThreeContainer actors={actors}
-                                prims={PRIMS_TYPES}
-                                lights={LIGHTS_TYPES}
+                                prims={constants.PRIMS_TYPES}
+                                lights={constants.LIGHTS_TYPES}
                                 showGrid={showGrid}
                                 showAxes={showAxes}
                                 showWireframe={showWireframe}

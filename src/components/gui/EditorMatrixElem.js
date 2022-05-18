@@ -1,6 +1,6 @@
 import React from "react"
 
-const MatrixElem = (props) => {
+const EditorMatrixElem = (props) => {
 
     const handleBlur = (e) => {
         const t = e.target
@@ -28,4 +28,4 @@ const MatrixElem = (props) => {
     )
 }
 
-export default MatrixElem
+export default EditorMatrixElem

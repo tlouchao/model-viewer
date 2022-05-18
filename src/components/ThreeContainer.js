@@ -11,7 +11,7 @@ class ThreeContainer extends React.Component {
         this.setCanvasRef = this.setCanvasRef.bind(this)
         this.state = {
             geometry: new THREE.BoxGeometry( 1, 1, 1 ),
-            material: new THREE.MeshStandardMaterial( { color: 0x0000ff } ),
+            material: new THREE.MeshStandardMaterial( { color: 0x00ff00 } ),
             renderer: new THREE.WebGLRenderer(),
             scene: new THREE.Scene(),
             light: new THREE.HemisphereLight(0xFFFFFF, 0x404040, 1),
@@ -72,8 +72,6 @@ class ThreeContainer extends React.Component {
 
     animate() {
         this.state.frameId = requestAnimationFrame( this.animate );
-        // this.state.cube.rotation.x += 0.01;
-        // this.state.cube.rotation.y += 0.01;
         this.state.renderer.render( this.state.scene, this.state.camera );
     };
 

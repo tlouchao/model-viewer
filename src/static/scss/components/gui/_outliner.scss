@@ -19,8 +19,11 @@
             }
         }
 
+        .outliner-category:hover {
+            background-color: map-get(v.$colors, "themecolorhoverone");
+        }
         .outliner-item:hover {
-            background-color: map-get(v.$colors, "themecolorhover");
+            background-color: map-get(v.$colors, "themecolorhovertwo");
         }
         .outliner-category-selected, .outliner-category:active  {
             background-color: map-get(v.$colors, "themecolorone");

@@ -6,6 +6,7 @@ const Outliner = (props) => {
 
     return (
         <div id="outliner">
+            <div>
             {Object.keys(props.actors).map((x, i) => 
                 <div key={i}
                      data-idx={i}>
@@ -33,6 +34,7 @@ const Outliner = (props) => {
                     </ul>
                 </div>
             )}
+            </div>
         </div>
     )
 }

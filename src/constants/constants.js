@@ -1,4 +1,3 @@
-export const THREE_SCENE_COLOR = 0x888888;
 export const MAT_ROW_LEN = 3;
 
 export const DEF_TRANSLATE = 0;
@@ -32,5 +31,12 @@ export const ARR_DEF_ROTATE =
 export const ARR_DEF_SCALE = 
     [...Array(MAT_ROW_LEN)].fill(DEF_SCALE)
 
+export const THREE_SCENE_COLOR = "#888888";
+export const PRIM_COLOR = "#00ff00";
+export const LIGHT_COLOR = "#ffffff";
 export const ACTOR_COLORS = 
     ["#FF595E", "#FFCA3A", "#8AC926", "#1982C4", "#6A4C93"]
+
+export const CATEGORY_TYPES = ["primitive", "light"]
+export const PRIMS_TYPES = ["box", "cylinder", "torus"]
+export const LIGHTS_TYPES = ["ambient", "point"]
