@@ -5,7 +5,7 @@ const Dropdown = (props) => {
     return (
         <div className="dropdown">
             <select name={props.name} 
-                    id={`select-${props.suffix}`} 
+                    data-categorytype={props.categoryType} 
                     defaultValue="" 
                     onChange={props.handleChange}
                     required>

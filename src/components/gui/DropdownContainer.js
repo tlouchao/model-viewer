@@ -15,12 +15,12 @@ const DropdownContainer = (props) => {
                 {props.name}
             </h2>
             <Dropdown name={props.name}
-                suffix={props.suffix}
+                categoryType={props.categoryType}
                 handleChange={handleChange}
                 optionValues={props.optionValues}
                 optionNames={props.optionNames} 
             />
-            <button id={`add-${props.suffix}`} 
+            <button data-categorytype={props.categoryType} 
                 value={selectedValue} 
                 onClick={props.handleClick}>
                 Add

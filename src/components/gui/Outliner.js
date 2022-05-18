@@ -15,7 +15,7 @@ const Outliner = (props) => {
                         className={`outliner-category ${(props.categoriesSelected[x]) ? "outliner-category-selected" : ""} ${(props.categoriesVisible[x]) ? "" : "outliner-hidden"}`}
                         id={`outliner-category-${x}`}
                         data-id={`outliner-category-${x}`}
-                        data-type={x}
+                        data-categorytype={x}
                         onClick={props.handleCategoryClick}>
                         {x}
                     </p>

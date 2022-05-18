@@ -10,18 +10,17 @@ const GUILayout = (props) => {
         <div id="gui-layout">
             <h1 id="brand"><span>Model</span>Viewer</h1>
             <div id="gui-add">
-                <DropdownContainer  name="Add Primitives" 
-                                    suffix="prim" 
-                                    handleClick={props.handleDropdownClick} 
-                                    optionValues={props.prims} 
-                                    optionNames={props.prims.map(x => x.charAt(0).toUpperCase() + x.slice(1))}
-                />
-                <DropdownContainer  name="Add Lights" 
-                                    suffix="light" 
-                                    optionValues={props.lights}
-                                    handleClick={props.handleDropdownClick} 
-                                    optionNames={props.lights.map(x => x.charAt(0).toUpperCase() + x.slice(1) + " Light")}
-                />
+                {props.categoryTypes.map((x, i) => 
+                    <DropdownContainer key={i} name={`add ${props.categoryTypes[i]}s`}
+                        categoryType={props.categoryTypes[i]}
+                        handleClick={props.handleDropdownClick} 
+                        optionValues={props.actorTypes[i]} 
+                        optionNames={(x != "light") ?
+                                      props.actorTypes[i].map(x => x.charAt(0).toUpperCase() + x.slice(1)) :
+                                      props.actorTypes[i].map(x => x.charAt(0).toUpperCase() + x.slice(1) + " Light")
+                                    }
+                    />
+                )}
             </div>
             <div id="gui-browse">
                 <OutlinerContainer  actors={props.actors}

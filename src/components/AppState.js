@@ -6,70 +6,61 @@ import * as CONSTS from "./../constants/constants"
 
 const AppState = () => {
 
-    /* Setup hashmap to refer to when creating a new Actor instance */
-    /* key=actorType, value=Function() which creates the new Actor instance */
-    const primsClasses = Object.values(ACTORS).filter((x) => ACTORS.Primitive.isPrototypeOf(x))
-    const primsClassMap = [...Array(primsClasses.length)].map((x, i) => [primsClasses[i].name.split(/(?=[A-Z])/)[0].toLowerCase(), primsClasses[i]])
-    const lightsClasses = Object.values(ACTORS).filter((x) => ACTORS.Light.isPrototypeOf(x))
-    const lightsClassMap = [...Array(lightsClasses.length)].map((x, i) => [lightsClasses[i].name.split(/(?=[A-Z])/)[0].toLowerCase(), lightsClasses[i]])
+    /*------------------------------------------------------------------------------------------*/
+
+    /* Temporaries */
+
+    const _primsClasses = Object.values(ACTORS).filter((x) => ACTORS.Primitive.isPrototypeOf(x))
+    const _primsClassMap = [...Array(_primsClasses.length)].map((x, i) => 
+        [_primsClasses[i].name.split(/(?=[A-Z])/)[0].toLowerCase(), _primsClasses[i]])
+        
+    const _lightsClasses = Object.values(ACTORS).filter((x) => ACTORS.Light.isPrototypeOf(x))
+    const _lightsClassMap = [...Array(_lightsClasses.length)].map((x, i) => 
+        [_lightsClasses[i].name.split(/(?=[A-Z])/)[0].toLowerCase(), _lightsClasses[i]])
+
+    const _initialActorNamesValues = [CONSTS.PRIMS_TYPES.map(x => [x, 0]), CONSTS.LIGHTS_TYPES.map(x => [x, 0])]
     
-    const actorsClassMap = Object.fromEntries([].concat(primsClassMap, lightsClassMap))
+    /*------------------------------------------------------------------------------------------*/
 
+    /* App constants / Initial state helper */
+    const categoryKeys = CONSTS.CATEGORY_TYPES.map((x, i) => x + 's')
+    const actorTypes = [CONSTS.PRIMS_TYPES, CONSTS.LIGHTS_TYPES]
+
+    // Set up a hashmap where key=actorType, value=Function() which creates a new Actor instance
+    const actorsClassMap = Object.fromEntries([].concat(_primsClassMap, _lightsClassMap))
+    const initialActorNames = Object.fromEntries(categoryKeys.map((x, i) => [x, Object.fromEntries(_initialActorNamesValues[i])]))
+    const makeActorMap = (initialValue) => Object.fromEntries(categoryKeys.map((x, i) => [x, initialValue]))
+
+    /*------------------------------------------------------------------------------------------*/
+    
     /* App state */
-    const initialActorNames = Object.fromEntries([
-        [CONSTS.CATEGORY_TYPES[0] + 's', 
-            Object.fromEntries(CONSTS.PRIMS_TYPES.map(x => [x, 0]))],
-        [CONSTS.CATEGORY_TYPES[1] + 's', 
-            Object.fromEntries(CONSTS.LIGHTS_TYPES.map(x => [x, 0]))],
-    ])
-
-    const initialActors = Object.fromEntries([
-        [CONSTS.CATEGORY_TYPES[0] + 's', []],
-        [CONSTS.CATEGORY_TYPES[1] + 's', []],
-    ])
-
-    const initialSelected = Object.fromEntries([
-        [CONSTS.CATEGORY_TYPES[0] + 's', false],
-        [CONSTS.CATEGORY_TYPES[1] + 's', false],
-    ])
-
-    const initialItemsSelected = Object.fromEntries([
-        [CONSTS.CATEGORY_TYPES[0] + 's', []],
-        [CONSTS.CATEGORY_TYPES[1] + 's', []],
-    ])
-
-    const initialVisible = Object.fromEntries([
-        [CONSTS.CATEGORY_TYPES[0] + 's', true],
-        [CONSTS.CATEGORY_TYPES[1] + 's', true],
-    ])
-
-    const initialItemsVisible = Object.fromEntries([
-        [CONSTS.CATEGORY_TYPES[0] + 's', []],
-        [CONSTS.CATEGORY_TYPES[1] + 's', []],
-    ])
 
     // auto-increment ID
-    const [actorId, setActorId] = useState(1)
     const [actorNames, setActorNames] = useState(initialActorNames)
-    const [actors, setActors] = useState(initialActors)
-    const [isInitialized, setIsInitialized] = useState(false)
+    const [actorId, setActorId] = useState(1)
+    const [actors, setActors] = useState(makeActorMap([]))
+    const [isAppStateInitialized, setIsAppStateInitialized] = useState(false)
 
-    const [categoriesSelected, setCategoriesSelected] = useState(initialSelected)
-    const [categoryItemsSelected, setCategoryItemsSelected] = useState(initialItemsSelected)
+    const [categoriesSelected, setCategoriesSelected] = useState(makeActorMap(false))
+    const [categoryItemsSelected, setCategoryItemsSelected] = useState(makeActorMap([]))
     const [prevCategoryItemSelected, setPrevCategoryItemSelected] = useState(null)
 
-    const [categoriesVisible, setCategoriesVisible] = useState(initialVisible)
-    const [categoryItemsVisible, setCategoryItemsVisible] = useState(initialItemsVisible)
+    const [categoriesVisible, setCategoriesVisible] = useState(makeActorMap(true))
+    const [categoryItemsVisible, setCategoryItemsVisible] = useState(makeActorMap([]))
 
     const [showGrid, setShowGrid] = useState(true)
     const [showAxes, setShowAxes] = useState(true)
     const [showWireframe, setShowWireframe] = useState(false)
 
-    /* Add one box to the scene */
+    /*------------------------------------------------------------------------------------------*/
+
+    /* Side Effects */
+
+    // Add one box to the scene
     useEffect(() => {
         setActors(prevActors => ({
             ...prevActors,
-            primitives: prevActors.primitives.concat(_makeActor("box"))
+            primitives: prevActors.primitives.concat(makeActor("box"))
         }))
         setCategoryItemsSelected(prevSelected=> ({
             ...prevSelected,
@@ -79,29 +70,33 @@ const AppState = () => {
             ...prevVisible,
             primitives: prevVisible.primitives.concat(true)
         }))
-        setIsInitialized(true)
+        setIsAppStateInitialized(true)
     }, [])
 
-    /* Debug log after initialization */
+    // Debug log after initialization
     useEffect(() => {
-        if (isInitialized){
+        if (isAppStateInitialized){
             console.log(actors)
         }
-    }, [isInitialized, actors])
+    }, [isAppStateInitialized, actors])
 
-    const _makeActor = (actorType) => {
+    /*------------------------------------------------------------------------------------------*/
+
+    /* Initialize actor helpers */
+
+    const makeActor = (actorType) => {
         let actor = JSON.parse(JSON.stringify(new actorsClassMap[actorType]))
         actor = {
             ...actor,
             id: actorId,
-            name: _makeName(actorType),
+            name: makeActorName(actorType),
             color: CONSTS.ACTOR_COLORS[Math.floor(Math.random() * CONSTS.ACTOR_COLORS.length)],
         }
         setActorId(prevState => prevState + 1)
         return actor
     }
 
-    const _makeName = (actorType) => {
+    const makeActorName = (actorType) => {
         let num;
         if (CONSTS.PRIMS_TYPES.includes(actorType)){
             num = actorNames.primitives[actorType]
@@ -131,45 +126,32 @@ const AppState = () => {
         }
     }
 
+    /*------------------------------------------------------------------------------------------*/
+
+    /* Event listeners */
+
     const handleDropdownClick = (e) => {
         if (e.target.value) {
-            switch (e.target.id) {
-                case "add-prim":
-                    setActors(prevActors => ({
-                        ...prevActors,
-                        primitives: prevActors.primitives.concat(_makeActor(e.target.value, CONSTS.CATEGORY_TYPES[0]))
-                    }))
-                    setCategoryItemsSelected(prevSelected => ({
-                        ...prevSelected,
-                        primitives: prevSelected.primitives.concat(categoriesSelected["primitives"])
-                    }))
-                    setCategoryItemsVisible(prevVisible => ({
-                        ...prevVisible,
-                        primitives: prevVisible.primitives.concat(categoriesVisible["primitives"])
-                    }))
-                    break
-                case "add-light":
-                    setActors(prevActors => ({
-                        ...prevActors,
-                        lights: prevActors.lights.concat(_makeActor(e.target.value, CONSTS.CATEGORY_TYPES[1]))
-                    }))
-                    setCategoryItemsSelected(prevSelected => ({
-                        ...prevSelected,
-                        lights: prevSelected.lights.concat(categoriesSelected["lights"])
-                    }))
-                    setCategoryItemsVisible(prevVisible => ({
-                        ...prevVisible,
-                        lights: prevVisible.lights.concat(categoriesVisible["lights"])
-                    }))
-                    break
-                default:
-                    throw new Error("Did not add dropdown value")
-            }
+            const categoryType = e.target.dataset.categorytype + 's'
+            setActors(prevActors => ({
+                ...prevActors,
+                [categoryType]: prevActors[categoryType].concat(makeActor(e.target.value))
+            }))
+            setCategoryItemsSelected(prevSelected => ({
+                ...prevSelected,
+                [categoryType]: prevSelected[categoryType].concat(categoriesSelected[categoryType])
+            }))
+            setCategoryItemsVisible(prevVisible => ({
+                ...prevVisible,
+                [categoryType]: prevVisible[categoryType].concat(categoriesVisible[categoryType])
+            }))
+        } else {
+            throw new Error("Did not add dropdown value")
         }
     }
 
     const handleCategoryClick = (e) => {
-        const categoryType = e.target.dataset.type
+        const categoryType = e.target.dataset.categorytype
         const selected = !categoriesSelected[categoryType]
         setCategoriesSelected(prevState => ({
             ...prevState,
@@ -212,7 +194,7 @@ const AppState = () => {
         }
 
         // reset category state
-        setCategoriesSelected(initialSelected)
+        setCategoriesSelected(makeActorMap(false))
 
         // build new state for category items
         let nextState = []
@@ -267,13 +249,16 @@ const AppState = () => {
         }
     }
 
+    /*------------------------------------------------------------------------------------------*/
+
     return (
         <div id="app-state">
             <div id="layout">
                 <GUILayout  actors={actors}
                             prims={CONSTS.PRIMS_TYPES}
                             lights={CONSTS.LIGHTS_TYPES}
-                            categories={CONSTS.CATEGORY_TYPES}
+                            categoryTypes={CONSTS.CATEGORY_TYPES}
+                            actorTypes={actorTypes}
                             categoriesSelected={categoriesSelected}
                             categoryItemsSelected={categoryItemsSelected}
                             prevCategoryItemSelected={prevCategoryItemSelected}
