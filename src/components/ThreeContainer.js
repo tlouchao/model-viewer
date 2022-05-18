@@ -1,8 +1,10 @@
 import React from "react"
 import * as THREE from "three";
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { THREE_SCENE_COLOR } from "./../constants/constants"
 
 class ThreeContainer extends React.Component {
+
     constructor(props){
         super(props)
         this.ref = null
@@ -16,7 +18,8 @@ class ThreeContainer extends React.Component {
             scene: new THREE.Scene(),
             light: new THREE.HemisphereLight(0xFFFFFF, 0x404040, 1),
             grid: new THREE.GridHelper ( 20, 20, 0x444444, 0x444444 ),
-            axes: new THREE.AxesHelper( 50 ),
+            axes: new THREE.AxesHelper( 1000 ),
+            controls: null,
             camera: null,
             cube: null,
             frameId: null,
@@ -42,7 +45,12 @@ class ThreeContainer extends React.Component {
                             this.state.renderer.setSize( this.state.width, this.state.height)
                             this.ref.appendChild( this.state.renderer.domElement )
                             this.state.camera.position.set (-1.5, 1.5, 3)
-                            this.state.camera.lookAt(0, 0, 0)   
+                            this.state.camera.lookAt(0, 0, 0)
+
+                            this.state.controls = new OrbitControls(this.state.camera, this.state.renderer.domElement );
+                            this.state.controls.enableZoom = true;
+                            this.state.controls.enablePan = false;
+                            this.state.controls.maxDistance = 50;
                             this.animate()
                         })
         }

@@ -6,30 +6,21 @@ import * as CONSTS from "./../constants/constants"
 
 const AppState = () => {
 
-    /* App constants */
-    const PRIMS = Object.fromEntries([  
-        [CONSTS.PRIMS_TYPES[0], {width: CONSTS.BOX_DEF_WIDTH, 
-                          height: CONSTS.BOX_DEF_HEIGHT, 
-                          length: CONSTS.BOX_DEF_LENGTH }],
-
-        [CONSTS.PRIMS_TYPES[1], {radius: CONSTS.CYLINDER_DEF_RADIUS, 
-                          height: CONSTS.CYLINDER_DEF_HEIGHT }],
-
-        [CONSTS.PRIMS_TYPES[2], {radius: CONSTS.TORUS_DEF_RADIUS, 
-                          tube: CONSTS.TORUS_DEF_TUBE, 
-                          radialSegments: CONSTS.TORUS_DEF_RADIUS_SEG, 
-                          tubularSegments: CONSTS.TORUS_DEF_TUBE_SEG }],
-    ])
-
-    const LIGHTS = Object.fromEntries([
-        [CONSTS.LIGHTS_TYPES[0], { intensity: 1}],
-        [CONSTS.LIGHTS_TYPES[1], { intensity: 1, distance: 0 }],
-    ])
+    /* Setup hashmap to refer to when creating a new Actor instance */
+    /* key=actorType, value=Function() which creates the new Actor instance */
+    const primsClasses = Object.values(ACTORS).filter((x) => ACTORS.Primitive.isPrototypeOf(x))
+    const primsClassMap = [...Array(primsClasses.length)].map((x, i) => [primsClasses[i].name.split(/(?=[A-Z])/)[0].toLowerCase(), primsClasses[i]])
+    const lightsClasses = Object.values(ACTORS).filter((x) => ACTORS.Light.isPrototypeOf(x))
+    const lightsClassMap = [...Array(lightsClasses.length)].map((x, i) => [lightsClasses[i].name.split(/(?=[A-Z])/)[0].toLowerCase(), lightsClasses[i]])
+    
+    const actorsClassMap = Object.fromEntries([].concat(primsClassMap, lightsClassMap))
 
     /* App state */
     const initialActorNames = Object.fromEntries([
-        [CONSTS.CATEGORY_TYPES[0] + 's', Object.fromEntries(CONSTS.PRIMS_TYPES.map(x => [x, 0]))],
-        [CONSTS.CATEGORY_TYPES[1] + 's', Object.fromEntries(CONSTS.LIGHTS_TYPES.map(x => [x, 0]))],
+        [CONSTS.CATEGORY_TYPES[0] + 's', 
+            Object.fromEntries(CONSTS.PRIMS_TYPES.map(x => [x, 0]))],
+        [CONSTS.CATEGORY_TYPES[1] + 's', 
+            Object.fromEntries(CONSTS.LIGHTS_TYPES.map(x => [x, 0]))],
     ])
 
     const initialActors = Object.fromEntries([
@@ -94,31 +85,17 @@ const AppState = () => {
     /* Debug log after initialization */
     useEffect(() => {
         if (isInitialized){
-            let box = new ACTORS.BoxPrimitive()
-            let ambient = new ACTORS.AmbientLight()
-            let point = new ACTORS.PointLight()
-            console.log(JSON.parse(JSON.stringify(box)))
-            console.log(JSON.parse(JSON.stringify(ambient)))
-            console.log(JSON.parse(JSON.stringify(point)))
             console.log(actors)
         }
     }, [isInitialized, actors])
 
-    const _makeActor = (actorType, categoryType) => {
-        const actor = {
+    const _makeActor = (actorType) => {
+        let actor = JSON.parse(JSON.stringify(new actorsClassMap[actorType]))
+        actor = {
+            ...actor,
             id: actorId,
             name: _makeName(actorType),
-            categoryType: categoryType,
-            type: actorType,
-            matrix: {
-                translate: CONSTS.ARR_DEF_TRANSLATE,
-                rotate: CONSTS.ARR_DEF_ROTATE,
-                scale: CONSTS.ARR_DEF_SCALE,
-            },
-            // pick random color
-            color: CONSTS.ACTOR_COLORS[Math.floor(Math.random() * 
-                                          CONSTS.ACTOR_COLORS.length)],
-            attributes: _selectAttributes(actorType)
+            color: CONSTS.ACTOR_COLORS[Math.floor(Math.random() * CONSTS.ACTOR_COLORS.length)],
         }
         setActorId(prevState => prevState + 1)
         return actor
@@ -126,7 +103,7 @@ const AppState = () => {
 
     const _makeName = (actorType) => {
         let num;
-        if (PRIMS.hasOwnProperty(actorType)){
+        if (CONSTS.PRIMS_TYPES.includes(actorType)){
             num = actorNames.primitives[actorType]
             setActorNames(prevActorNames => ({
                 ...prevActorNames,
@@ -135,7 +112,7 @@ const AppState = () => {
                     [actorType]: prevActorNames.primitives[actorType] + 1
                 }
             }))
-        } else if (LIGHTS.hasOwnProperty(actorType)){
+        } else if (CONSTS.LIGHTS_TYPES.includes(actorType)){
             num = actorNames.lights[actorType]
             setActorNames(prevActorNames => ({
                 ...prevActorNames,
@@ -152,18 +129,6 @@ const AppState = () => {
         } else {
             return actorType + '_' + String(num).padStart(2, '0')
         }
-    }
-
-    const _selectAttributes = (actorType) => {
-        let attrs;
-        if (PRIMS.hasOwnProperty(actorType)){
-            attrs = PRIMS[actorType]
-        } else if (LIGHTS.hasOwnProperty(actorType)){
-            attrs = LIGHTS[actorType]
-        } else {
-            throw new Error("Did not select actor name")
-        }
-        return attrs;
     }
 
     const handleDropdownClick = (e) => {
@@ -201,7 +166,6 @@ const AppState = () => {
                     throw new Error("Did not add dropdown value")
             }
         }
-        console.log(actors)
     }
 
     const handleCategoryClick = (e) => {
@@ -269,12 +233,10 @@ const AppState = () => {
     }
 
     const handleOutlinerVisible = (e) => {
-        console.log("show")
         _setVisibilityHelper(true)
     }
 
     const handleOutlinerHidden = (e) => {
-        console.log("hide")
         _setVisibilityHelper(false)
     }
 
