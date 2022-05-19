@@ -7,8 +7,8 @@ const EditorContainer = (props) => {
             <h2 className="name-container">Editor</h2>
             <Editor actors={props.actors} currentSelected={props.currentSelected} />
             <div className="button-group">
-                <button>Save</button>
-                <button>Delete</button>
+                <button disabled>Save</button>
+                <button disabled>Delete</button>
             </div>
         </div>
     )

@@ -12,8 +12,8 @@ class ThreeContainer extends React.Component {
         this.handleResize = this.handleResize.bind(this)
         this.setCanvasRef = this.setCanvasRef.bind(this)
         this.state = {
-            geometry: [new THREE.BoxGeometry(1,1,1), new THREE.CylinderGeometry(.75, .75, 1.5, 16), new THREE.TorusGeometry(.75, .375, 16, 32)],
-            material: ACTOR_COLORS,
+            geometry: [new THREE.BoxGeometry(1,1,1), new THREE.CylinderGeometry(.75, .75, 1.5, 16), new THREE.TorusGeometry(.75, .375, 12, 24)][Math.floor(Math.random() * 3)],
+            material: new THREE.MeshStandardMaterial({color: ACTOR_COLORS[Math.floor(Math.random() * ACTOR_COLORS.length)], wireframe: this.props.showWireframe}),
             renderer: new THREE.WebGLRenderer(),
             scene: new THREE.Scene(),
             light: new THREE.HemisphereLight(0xFFFFFF, 0x404040, 1),
@@ -35,7 +35,8 @@ class ThreeContainer extends React.Component {
                                 this.ref.clientWidth/window.innerHeight,
                                 0.1, 
                                 1000 ),
-                        mesh: new THREE.Mesh(this.state.geometry[Math.floor(Math.random() * 3)], new THREE.MeshStandardMaterial({color: this.state.material[Math.floor(Math.random() * ACTOR_COLORS.length)]}))},
+                        mesh: new THREE.Mesh(this.state.geometry, this.state.material)},
+
                         () => {
                             this.state.scene.background = new THREE.Color(THREE_SCENE_COLOR)
                             this.state.scene.add(this.state.light)
@@ -64,6 +65,10 @@ class ThreeContainer extends React.Component {
         }
         if (this.props.showAxes !== prevProps.showAxes) {
             this.state.axes.visible = this.props.showAxes;
+        }
+        if (this.props.showWireframe !== prevProps.showWireframe) {
+            console.log( this.state.material.wireframe)
+            this.state.material.wireframe = this.props.showWireframe;
         }
     }
 

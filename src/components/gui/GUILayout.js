@@ -53,7 +53,7 @@ const GUILayout = (props) => {
                 </div>
             </div>
             <div id="export">
-                <button>Export</button>     
+                <button disabled>Export</button>     
             </div>     
         </div>
     )

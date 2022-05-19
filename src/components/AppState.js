@@ -281,6 +281,7 @@ const AppState = () => {
                                 lights={CONSTS.LIGHTS_TYPES}
                                 showGrid={showGrid}
                                 showAxes={showAxes}
+                                showWireframe={showWireframe}
 
                 />
             </div>
