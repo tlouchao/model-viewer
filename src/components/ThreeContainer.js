@@ -1,7 +1,7 @@
 import React from "react"
 import * as THREE from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { THREE_SCENE_COLOR } from "./../constants/constants"
+import { THREE_SCENE_COLOR, ACTOR_COLORS } from "./../constants/constants"
 
 class ThreeContainer extends React.Component {
 
@@ -12,8 +12,8 @@ class ThreeContainer extends React.Component {
         this.handleResize = this.handleResize.bind(this)
         this.setCanvasRef = this.setCanvasRef.bind(this)
         this.state = {
-            geometry: new THREE.BoxGeometry( 1, 1, 1 ),
-            material: new THREE.MeshStandardMaterial( { color: 0x00ff00 } ),
+            geometry: [new THREE.BoxGeometry(1,1,1), new THREE.CylinderGeometry(.75, .75, 1.5, 16), new THREE.TorusGeometry(.75, .375, 16, 32)],
+            material: ACTOR_COLORS,
             renderer: new THREE.WebGLRenderer(),
             scene: new THREE.Scene(),
             light: new THREE.HemisphereLight(0xFFFFFF, 0x404040, 1),
@@ -24,19 +24,18 @@ class ThreeContainer extends React.Component {
             mesh: null,
             frameId: null,
             width: null,
-            height: null
+            height: null,
         }
     }
     componentDidMount() {
         if (this.ref){
-            console.log("three" + this.props.actors)
             this.setState({width: this.ref.clientWidth,
                         height: window.innerHeight,
                         camera: new THREE.PerspectiveCamera( 75, 
                                 this.ref.clientWidth/window.innerHeight,
                                 0.1, 
                                 1000 ),
-                        mesh: new THREE.Mesh(this.state.geometry, this.state.material)},
+                        mesh: new THREE.Mesh(this.state.geometry[Math.floor(Math.random() * 3)], new THREE.MeshStandardMaterial({color: this.state.material[Math.floor(Math.random() * ACTOR_COLORS.length)]}))},
                         () => {
                             this.state.scene.background = new THREE.Color(THREE_SCENE_COLOR)
                             this.state.scene.add(this.state.light)
