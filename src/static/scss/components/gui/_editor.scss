@@ -13,6 +13,10 @@
         @media only screen and (max-width: map-get(v.$breakpoints, "phone")) {
             max-height: 400px;
         }
+        #editor-empty {
+            text-align: center;
+            align-self: center;
+        }
         #editor-actor-summary {
             display: flex;
             flex-direction: column;
@@ -21,34 +25,28 @@
             @media only screen and (max-width: map-get(v.$breakpoints, "desktop")) {
                 height: fit-content;
             }
-            #editor-actor-summary-header {
-                display: grid;
-                grid-template-columns: [grid-thumb] minmax(map-get(v.$heights, "actorthumbheight"), 1fr)  
-                                       [grid-rest] 3fr;
-                gap: 1rem;
-                @media only screen and (max-width: map-get(v.$breakpoints, "desktop")) {
-                    display: flex;
-                    flex-direction: column;
-                }
-                #editor-actor-thumbnail {
-                    width: 100%;
-                    height: auto;
-                    align-self: center;
-                    @media only screen and (max-width: map-get(v.$breakpoints, "desktop")) {
-                        width: map-get(v.$heights, "actorthumbheight")
-                    }
-                }
+        }
+        #editor-actor-summary-header, #editor-actor-summary-attrs {
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+        }
+        #editor-thumbnail {
+            width: 100%;
+            height: auto;
+            align-self: center;
+            @media only screen and (max-width: map-get(v.$breakpoints, "desktop")) {
+                width: map-get(v.$heights, "actorthumbheight")
             }
-            #editor-actor-summary-attrs {
-                display: grid;
-                grid-template-columns: [grid-thumb] minmax(map-get(v.$heights, "actorthumbheight"), 1fr) 
-                                       [grid-rest] 3fr;
-                gap: .5rem;
-                @media only screen and (max-width: map-get(v.$breakpoints, "desktop")) {
-                    display: flex;
-                    flex-direction: column;
-                    gap: .25rem;
-                }
+        }
+        .editor-item {
+            display: grid;
+            grid-template-columns: [grid-thumb] minmax(map-get(v.$heights, "actorthumbheight"), 1fr)  
+                                    [grid-rest] 3fr;
+            gap: 1rem;
+            @media only screen and (max-width: map-get(v.$breakpoints, "desktop")) {
+                display: flex;
+                flex-direction: column;
             }
         }
     }

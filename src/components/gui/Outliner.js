@@ -13,22 +13,22 @@ const Outliner = (props) => {
                     <p  key={i}
                         data-idx={i}
                         className={`outliner-category ${(props.categoriesSelected[x]) ? "outliner-category-selected" : ""} ${(props.categoriesVisible[x]) ? "" : "outliner-hidden"}`}
-                        id={`outliner-category-${x}`}
-                        data-id={`outliner-category-${x}`}
                         data-categorytype={x}
+                        data-elemtype="category"
                         onClick={props.handleCategoryClick}>
                         {x}
                     </p>
                     <ul>
                         {props.actors[x].map((y, j) => 
                             <li key={j}
+                                data-id={y.id}
                                 data-idx={j}
-                                data-id={x.id}
-                                data-type={y.type}
+                                data-actortype={y.actorType}
                                 data-categorytype={y.categoryType}
+                                data-elemtype="item"
                                 className={`outliner-item ${(props.categoryItemsSelected[x][j]) ? "outliner-item-selected" : ""} ${(props.categoryItemsVisible[x][j]) ? "" : "outliner-hidden"}`}
                                 onClick={props.handleCategoryItemClick}>
-                                {indent + y.name}
+                                <span>{indent}</span>{y.name}
                             </li>
                         )}
                     </ul>

@@ -6,10 +6,10 @@ const OutlinerContainer = (props) => {
         <div id="outliner-container">
             <h2 className="name-container">Outliner</h2>
             <Outliner actors={props.actors}
+                      actorTypes={props.actorTypes}
                       categoryTypes={props.categoryTypes}
                       categoriesSelected={props.categoriesSelected}
                       categoryItemsSelected={props.categoryItemsSelected}
-                      prevCategoryItemSelected={props.prevCategoryItemSelected}
                       categoriesVisible={props.categoriesVisible}
                       categoryItemsVisible={props.categoryItemsVisible}
                       handleCategoryClick={props.handleCategoryClick}

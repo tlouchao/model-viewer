@@ -2,8 +2,8 @@ import React, { useState } from "react"
 
 const AttributeSlider = (props) => {
 
-    const [numValue, setNumValue] = useState(props.defaultValue)
-    const [sliderValue, setSliderValue] = useState(props.defaultValue)
+    const [numValue, setNumValue] = useState(props.value)
+    const [sliderValue, setSliderValue] = useState(props.value)
 
     const handleNumChange = (e) => {
         setNumValue(e.target.value)
@@ -32,7 +32,7 @@ const AttributeSlider = (props) => {
                     type="number" 
                     onBlur={handleChange}
                     onChange={handleNumChange}
-                    value={numValue}
+                    value={parseFloat(numValue).toFixed(2)}
                     step={props.step} 
                     min={props.min}  
                     max={props.max} 

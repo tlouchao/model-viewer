@@ -43,7 +43,7 @@ const AppState = () => {
 
     const [categoriesSelected, setCategoriesSelected] = useState(makeActorMap(false))
     const [categoryItemsSelected, setCategoryItemsSelected] = useState(makeActorMap([]))
-    const [prevCategoryItemSelected, setPrevCategoryItemSelected] = useState(null)
+    const [currentSelected, setCurrentSelected] = useState(null)
 
     const [categoriesVisible, setCategoriesVisible] = useState(makeActorMap(true))
     const [categoryItemsVisible, setCategoryItemsVisible] = useState(makeActorMap([]))
@@ -85,7 +85,8 @@ const AppState = () => {
     /* Initialize actor helpers */
 
     const makeActor = (actorType) => {
-        let actor = JSON.parse(JSON.stringify(new actorsClassMap[actorType]))
+        let actor = JSON.parse(JSON.stringify(
+            new actorsClassMap[actorType]))
         actor = {
             ...actor,
             id: actorId,
@@ -146,7 +147,7 @@ const AppState = () => {
                 [categoryType]: prevVisible[categoryType].concat(categoriesVisible[categoryType])
             }))
         } else {
-            throw new Error("Did not add dropdown value")
+            console.warn("Did not add dropdown value")
         }
     }
 
@@ -178,7 +179,8 @@ const AppState = () => {
         setCategoryItemsSelected(nextState)
 
         // set previously selected target
-        setPrevCategoryItemSelected(e.target)
+        setCurrentSelected(e.target)
+        
     }
 
     const handleCategoryItemClick = (e) => {
@@ -187,7 +189,7 @@ const AppState = () => {
 
         // if previously selected HTML element is a category, always select the item
         let selected;
-        if (prevCategoryItemSelected && prevCategoryItemSelected.classList.contains("outliner-category")) {
+        if (currentSelected && currentSelected.dataset.elemtype === "category") {
             selected = true
         } else {
             selected = !categoryItemsSelected[categoryType + 's'][idx]
@@ -211,18 +213,18 @@ const AppState = () => {
         setCategoryItemsSelected(nextState)
 
         // set previously selected target
-        setPrevCategoryItemSelected(e.target)
+        setCurrentSelected(e.target)
     }
 
-    const handleOutlinerVisible = (e) => {
-        _setVisibilityHelper(true)
+    const handleVisible = (e) => {
+        handleVisibilityHelper(true)
     }
 
-    const handleOutlinerHidden = (e) => {
-        _setVisibilityHelper(false)
+    const handleHidden = (e) => {
+        handleVisibilityHelper(false)
     }
 
-    const _setVisibilityHelper = (boolValue) => {
+    const handleVisibilityHelper = (boolValue) => {
         const keys = Object.keys(categoriesSelected)
         let nextVisibleState = []
         let nextVisibleItemsState = []
@@ -261,14 +263,14 @@ const AppState = () => {
                             actorTypes={actorTypes}
                             categoriesSelected={categoriesSelected}
                             categoryItemsSelected={categoryItemsSelected}
-                            prevCategoryItemSelected={prevCategoryItemSelected}
+                            currentSelected={currentSelected}
                             categoriesVisible={categoriesVisible}
                             categoryItemsVisible={categoryItemsVisible}
                             handleDropdownClick={handleDropdownClick} 
                             handleCategoryClick={handleCategoryClick} 
                             handleCategoryItemClick={handleCategoryItemClick} 
-                            handleOutlinerVisible={handleOutlinerVisible}
-                            handleOutlinerHidden={handleOutlinerHidden}
+                            handleOutlinerVisible={handleVisible}
+                            handleOutlinerHidden={handleHidden}
                             showGrid={showGrid}
                             showAxes={showAxes}
                             showWireframe={showWireframe}

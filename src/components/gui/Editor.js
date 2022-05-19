@@ -1,16 +1,17 @@
-import React, { useState } from "react"
+import React from "react"
 import EditorActorSummary from "./EditorActorSummary"
 
 const Editor = (props) => {
-
-    const [isEmpty, setIsEmpty] = useState(false)
     let content;
-    if (isEmpty) {
-        content = <p className="editor-empty">
-            Select an actor in the scene to view and edit its attributes.
+    if (!props.currentSelected || props.currentSelected.dataset.elemtype === "category") {
+        content = <p id="editor-empty">
+            Select an actor in the Outliner to view and edit its attributes.
             </p>       
     } else {
-        content = <EditorActorSummary />
+        const idx = props.currentSelected.dataset.idx
+        const categoryType = props.currentSelected.dataset.categorytype
+        const actor = props.actors[categoryType + 's'][idx]
+        content = <EditorActorSummary actor={actor} />
     }
 
     return (

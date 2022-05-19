@@ -26,7 +26,6 @@ const GUILayout = (props) => {
                 <OutlinerContainer  actors={props.actors}
                                     categoriesSelected={props.categoriesSelected}
                                     categoryItemsSelected={props.categoryItemsSelected}
-                                    prevCategoryItemSelected={props.prevCategoryItemSelected}
                                     categoriesVisible={props.categoriesVisible}
                                     categoryItemsVisible={props.categoryItemsVisible}
                                     handleCategoryClick={props.handleCategoryClick}
@@ -34,7 +33,8 @@ const GUILayout = (props) => {
                                     handleOutlinerVisible={props.handleOutlinerVisible}
                                     handleOutlinerHidden={props.handleOutlinerHidden} 
                 />
-                <EditorContainer actors={props.actors} />
+                <EditorContainer actors={props.actors}
+                                 currentSelected={props.currentSelected} />
             </div>
             <div id="gui-toggle-layout">
                 <div id="gui-toggle">

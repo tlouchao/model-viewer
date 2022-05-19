@@ -2,10 +2,9 @@ import React, { useState } from "react"
 import chroma from "chroma-js"
 
 const ColorAttributeSlider = (props) => {
-    
-    const [actorColor, setActorColor] = useState("#00FF00")
-    const [actorSat, setActorSat] = useState(chroma("#00FF00").get('hsl.s'))
-    const [actorHue, setActorHue] = useState(chroma("#00FF00").get('hsl.h'))
+    const [actorColor, setActorColor] = useState(props.color)
+    const [actorSat, setActorSat] = useState(chroma(props.color).get('hsl.s'))
+    const [actorHue, setActorHue] = useState(chroma(props.color).get('hsl.h'))
 
     const handleColorInput = (e) => {
         setActorColor(e.target.value)

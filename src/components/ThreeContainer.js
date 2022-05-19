@@ -21,7 +21,7 @@ class ThreeContainer extends React.Component {
             axes: new THREE.AxesHelper( 1000 ),
             controls: null,
             camera: null,
-            cube: null,
+            mesh: null,
             frameId: null,
             width: null,
             height: null
@@ -29,19 +29,20 @@ class ThreeContainer extends React.Component {
     }
     componentDidMount() {
         if (this.ref){
+            console.log("three" + this.props.actors)
             this.setState({width: this.ref.clientWidth,
                         height: window.innerHeight,
                         camera: new THREE.PerspectiveCamera( 75, 
                                 this.ref.clientWidth/window.innerHeight,
                                 0.1, 
                                 1000 ),
-                        cube: new THREE.Mesh(this.state.geometry, this.state.material)},
+                        mesh: new THREE.Mesh(this.state.geometry, this.state.material)},
                         () => {
                             this.state.scene.background = new THREE.Color(THREE_SCENE_COLOR)
                             this.state.scene.add(this.state.light)
                             this.state.scene.add(this.state.grid)
                             this.state.scene.add(this.state.axes)
-                            this.state.scene.add(this.state.cube)
+                            this.state.scene.add(this.state.mesh)
                             this.state.renderer.setSize( this.state.width, this.state.height)
                             this.ref.appendChild( this.state.renderer.domElement )
                             this.state.camera.position.set (-1.5, 1.5, 3)
@@ -59,7 +60,6 @@ class ThreeContainer extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        // Typical usage (don't forget to compare props):
         if (this.props.showGrid !== prevProps.showGrid) {
           this.state.grid.visible = this.props.showGrid
         }
