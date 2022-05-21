@@ -28,19 +28,7 @@ export const AMBIENT_DEF_INTENSITY = 1;
 export const POINT_DEF_INTENSITY = 1;
 export const POINT_DEF_DISTANCE = 0;
 
-export const ARR_DEF_TRANSLATE = 
-    [...Array(MAT_ROW_LEN)].fill(DEF_TRANSLATE)
-export const ARR_DEF_ROTATE = 
-    [...Array(MAT_ROW_LEN)].fill(DEF_ROTATE)
-export const ARR_DEF_SCALE = 
-    [...Array(MAT_ROW_LEN)].fill(DEF_SCALE)
-
 export const THREE_SCENE_COLOR = "#888888";
 export const PRIM_COLOR = "#00ff00";
 export const LIGHT_COLOR = "#ffffff";
-export const ACTOR_COLORS = 
-    ["#FF595E", "#FFCA3A", "#8AC926", "#1982C4", "#6A4C93"]
-
-export const CATEGORY_TYPES = ["primitive", "light"]
-export const PRIMS_TYPES = ["box", "cylinder", "torus"]
-export const LIGHTS_TYPES = ["ambient", "point"]
+export const ACTOR_COLORS = ["#ffbe0b","#fb5607","#ff006e","#8338ec","#3a86ff"]

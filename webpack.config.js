@@ -19,6 +19,11 @@ module.exports = (env, argv) => {
       port: 3000
     },
     resolve: {
+      alias: {
+        actors: path.resolve(__dirname, '/src/actors'),
+        constants: path.resolve(__dirname, '/src/constants'),
+        components: path.resolve(__dirname, '/src/components')
+      },
       extensions: ['.js', 'jsx', 'sass', 'scss', '.svg', '.png']
     },
     module: {

@@ -22,7 +22,7 @@ const AppState = () => {
     
     /*------------------------------------------------------------------------------------------*/
 
-    /* App constants / Initial state helper */
+    /* App constants & initial state helper */
     const categoryKeys = CONSTS.CATEGORY_TYPES.map((x, i) => x + 's')
     const actorTypes = [CONSTS.PRIMS_TYPES, CONSTS.LIGHTS_TYPES]
 
@@ -184,7 +184,7 @@ const AppState = () => {
     }
 
     const handleCategoryItemClick = (e) => {
-        const idx = e.target.dataset.idx
+        const idx = e.target.dataset.idx // todo
         const categoryType = e.target.dataset.categorytype
 
         // if previously selected HTML element is a category, always select the item
@@ -248,6 +248,7 @@ const AppState = () => {
                 break
             case "show-wireframe":
                 setShowWireframe(e.target.checked)
+                break
         }
     }
 

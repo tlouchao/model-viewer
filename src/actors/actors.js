@@ -1,9 +1,22 @@
-import Light from './pojos/Light'
-import Primitive from './pojos/Primitive'
-import AmbientLight from './pojos/AmbientLight'
-import PointLight from './pojos/PointLight'
-import BoxPrimitive from './pojos/BoxPrimitive'
-import CylinderPrimitive from './pojos/CylinderPrimitive'
-import TorusPrimitive from './pojos/TorusPrimitive'
+import Actor from './models/Actor'
+import Matrix from './models/Matrix'
+import Vector from './models/Vector'
+import Light from './models/Light'
+import Primitive from './models/Primitive'
+import AmbientLight from './models/AmbientLight'
+import PointLight from './models/PointLight'
+import BoxPrimitive from './models/BoxPrimitive'
+import CylinderPrimitive from './models/CylinderPrimitive'
+import TorusPrimitive from './models/TorusPrimitive'
 
-export { Primitive, TorusPrimitive, BoxPrimitive, CylinderPrimitive, Light, AmbientLight, PointLight }
+export { Actor,
+         Matrix,
+         Vector,
+         Light, 
+         Primitive,
+         AmbientLight, 
+         PointLight,
+         TorusPrimitive, 
+         BoxPrimitive, 
+         CylinderPrimitive
+}
