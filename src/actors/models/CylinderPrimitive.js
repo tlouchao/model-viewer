@@ -1,9 +1,9 @@
 import {PRIM_COLOR, 
         CYLINDER_DEF_HEIGHT,
         CYLINDER_DEF_RADIUS } 
-from 'constants/constants.js'
-import Primitive from './Primitive'
-import Matrix from './Matrix'
+from "constants/constants.js"
+import Primitive from "./Primitive"
+import Matrix from "./Matrix"
 
 class CylinderPrimitive extends Primitive {
     constructor(matrix=new Matrix(),

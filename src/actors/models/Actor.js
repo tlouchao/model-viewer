@@ -1,4 +1,4 @@
-import Matrix from './Matrix'
+import Matrix from "./Matrix"
 
 class Actor {
     color
@@ -8,7 +8,7 @@ class Actor {
     attributes = {}
     constructor(matrix=new Matrix(), color="#000000"){
         if (new.target === Actor){
-            throw new TypeError(`implement abstract class Actor`)
+            throw new TypeError("implement abstract class Actor")
         }
         this.color=color
         this.matrix=matrix

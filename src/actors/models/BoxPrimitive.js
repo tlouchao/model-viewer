@@ -2,9 +2,9 @@ import {PRIM_COLOR,
         BOX_DEF_WIDTH, 
         BOX_DEF_HEIGHT, 
         BOX_DEF_LENGTH } 
-    from 'constants/constants.js'
-import Primitive from './Primitive'
-import Matrix from './Matrix'
+    from "constants/constants.js"
+import Primitive from "./Primitive"
+import Matrix from "./Matrix"
 
 class BoxPrimitive extends Primitive {
     constructor(matrix=new Matrix(),

@@ -5,9 +5,9 @@ import {DEF_TRANSLATE,
 import Vector from "./Vector"
 
 class Matrix {
-    translate;
-    rotate;
-    scale;
+    translate
+    rotate
+    scale
     constructor(translate=new Vector(DEF_TRANSLATE, DEF_TRANSLATE, DEF_TRANSLATE),
                 rotate=new Vector(DEF_ROTATE, DEF_ROTATE, DEF_ROTATE),
                 scale=new Vector(DEF_SCALE, DEF_SCALE, DEF_SCALE)){

@@ -1,7 +1,8 @@
 module.exports = {
     "env": {
         "browser": true,
-        "es2021": true
+        "es2021": true,
+        "jest": true
     },
     "extends": [
         "eslint:recommended",
@@ -18,5 +19,12 @@ module.exports = {
         "react"
     ],
     "rules": {
+        "semi": [2, "never"],
+        "quotes": ["error", "double"]
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
     }
 }

@@ -10,11 +10,11 @@ const AppState = () => {
 
     /* Temporaries */
 
-    const _primsClasses = Object.values(ACTORS).filter((x) => ACTORS.Primitive.isPrototypeOf(x))
+    const _primsClasses = Object.values(ACTORS).filter((x) => Object.prototype.isPrototypeOf.call(ACTORS.Primitive, x))
     const _primsClassMap = [...Array(_primsClasses.length)].map((x, i) => 
         [_primsClasses[i].name.split(/(?=[A-Z])/)[0].toLowerCase(), _primsClasses[i]])
         
-    const _lightsClasses = Object.values(ACTORS).filter((x) => ACTORS.Light.isPrototypeOf(x))
+    const _lightsClasses = Object.values(ACTORS).filter((x) => Object.prototype.isPrototypeOf.call(ACTORS.Light, x))
     const _lightsClassMap = [...Array(_lightsClasses.length)].map((x, i) => 
         [_lightsClasses[i].name.split(/(?=[A-Z])/)[0].toLowerCase(), _lightsClasses[i]])
 
@@ -23,13 +23,13 @@ const AppState = () => {
     /*------------------------------------------------------------------------------------------*/
 
     /* App constants & initial state helper */
-    const categoryKeys = CONSTS.CATEGORY_TYPES.map((x, i) => x + 's')
+    const categoryKeys = CONSTS.CATEGORY_TYPES.map(x => x + "s")
     const actorTypes = [CONSTS.PRIMS_TYPES, CONSTS.LIGHTS_TYPES]
 
     // Set up a hashmap where key=actorType, value=Function() which creates a new Actor instance
     const actorsClassMap = Object.fromEntries([].concat(_primsClassMap, _lightsClassMap))
     const initialActorNames = Object.fromEntries(categoryKeys.map((x, i) => [x, Object.fromEntries(_initialActorNamesValues[i])]))
-    const makeActorMap = (initialValue) => Object.fromEntries(categoryKeys.map((x, i) => [x, initialValue]))
+    const makeActorMap = (initialValue) => Object.fromEntries(categoryKeys.map(x => [x, initialValue]))
 
     /*------------------------------------------------------------------------------------------*/
     
@@ -98,7 +98,7 @@ const AppState = () => {
     }
 
     const makeActorName = (actorType) => {
-        let num;
+        let num
         if (CONSTS.PRIMS_TYPES.includes(actorType)){
             num = actorNames.primitives[actorType]
             setActorNames(prevActorNames => ({
@@ -123,7 +123,7 @@ const AppState = () => {
         if (num === 0){
             return actorType
         } else {
-            return actorType + '_' + String(num).padStart(2, '0')
+            return actorType + "_" + String(num).padStart(2, "0")
         }
     }
 
@@ -133,7 +133,7 @@ const AppState = () => {
 
     const handleDropdownClick = (e) => {
         if (e.target.value) {
-            const categoryType = e.target.dataset.categorytype + 's'
+            const categoryType = e.target.dataset.categorytype + "s"
             setActors(prevActors => ({
                 ...prevActors,
                 [categoryType]: prevActors[categoryType].concat(makeActor(e.target.value))
@@ -163,10 +163,10 @@ const AppState = () => {
         let nextState = []
         const keys = Object.keys(categoryItemsSelected)
         keys.map(x => {
-            let itemSelected;
+            let itemSelected
             if (x === categoryType) {
                 // copy currently selected category state
-                itemSelected = selected;
+                itemSelected = selected
             } else {
                 // preserve other category item states
                 itemSelected = categoriesSelected[x]
@@ -188,11 +188,11 @@ const AppState = () => {
         const categoryType = e.target.dataset.categorytype
 
         // if previously selected HTML element is a category, always select the item
-        let selected;
+        let selected
         if (currentSelected && currentSelected.dataset.elemtype === "category") {
             selected = true
         } else {
-            selected = !categoryItemsSelected[categoryType + 's'][idx]
+            selected = !categoryItemsSelected[categoryType + "s"][idx]
         }
 
         // reset category state
@@ -207,7 +207,7 @@ const AppState = () => {
 
         // change into object for setState function
         nextState = Object.fromEntries(nextState)
-        nextState[categoryType + 's'][idx] = selected
+        nextState[categoryType + "s"][idx] = selected
 
         // set the new state
         setCategoryItemsSelected(nextState)
@@ -216,11 +216,11 @@ const AppState = () => {
         setCurrentSelected(e.target)
     }
 
-    const handleVisible = (e) => {
+    const handleVisible = () => {
         handleVisibilityHelper(true)
     }
 
-    const handleHidden = (e) => {
+    const handleHidden = () => {
         handleVisibilityHelper(false)
     }
 
@@ -242,7 +242,7 @@ const AppState = () => {
         switch (e.target.id) {
             case "show-grid":
                 setShowGrid(e.target.checked)
-                break;
+                break
             case "show-axes":
                 setShowAxes(e.target.checked)
                 break

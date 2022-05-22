@@ -1,8 +1,8 @@
 import {LIGHT_COLOR, 
         AMBIENT_DEF_INTENSITY} 
-        from 'constants/constants.js'
-import Light from './Light'
-import Matrix from './Matrix'
+        from "constants/constants.js"
+import Light from "./Light"
+import Matrix from "./Matrix"
 
 class AmbientLight extends Light {
     constructor(matrix=new Matrix(), 

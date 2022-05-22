@@ -3,9 +3,9 @@ import {PRIM_COLOR,
         TORUS_DEF_TUBE,
         TORUS_DEF_RADIUS_SEG,
         TORUS_DEF_TUBE_SEG } 
-from 'constants/constants.js'
-import Primitive from './Primitive'
-import Matrix from './Matrix'
+from "constants/constants.js"
+import Primitive from "./Primitive"
+import Matrix from "./Matrix"
 
 class TorusPrimitive extends Primitive {
     constructor(matrix=new Matrix(),
