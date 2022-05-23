@@ -5,12 +5,12 @@ import Light from "./Light"
 import Matrix from "./Matrix"
 
 class AmbientLight extends Light {
+    static actorType="ambient"
     constructor(matrix=new Matrix(), 
                 color=LIGHT_COLOR,
                 intensity=AMBIENT_DEF_INTENSITY){
     super(matrix, color)
     this.actorName="ambient"
-    this.actorType="ambient"
     this.attributes["intensity"] = intensity
     }
 }

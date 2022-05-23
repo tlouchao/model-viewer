@@ -1,52 +1,31 @@
 import React, { useEffect, useState } from "react"
+import { actorColorHelper,
+         categoryMapHelper,
+         categoryTypes, 
+         actorTypes, 
+         actorClasses,
+         initialActorNames } from "./helpers"
 import GUILayout from "./gui/GUILayout"
 import ThreeContainer from "./ThreeContainer"
-import * as ACTORS from "./../actors/actors"
-import * as CONSTS from "./../constants/constants"
 
 const AppState = () => {
 
     /*------------------------------------------------------------------------------------------*/
-
-    /* Temporaries */
-
-    const _primsClasses = Object.values(ACTORS).filter((x) => Object.prototype.isPrototypeOf.call(ACTORS.Primitive, x))
-    const _primsClassMap = [...Array(_primsClasses.length)].map((x, i) => 
-        [_primsClasses[i].name.split(/(?=[A-Z])/)[0].toLowerCase(), _primsClasses[i]])
-        
-    const _lightsClasses = Object.values(ACTORS).filter((x) => Object.prototype.isPrototypeOf.call(ACTORS.Light, x))
-    const _lightsClassMap = [...Array(_lightsClasses.length)].map((x, i) => 
-        [_lightsClasses[i].name.split(/(?=[A-Z])/)[0].toLowerCase(), _lightsClasses[i]])
-
-    const _initialActorNamesValues = [CONSTS.PRIMS_TYPES.map(x => [x, 0]), CONSTS.LIGHTS_TYPES.map(x => [x, 0])]
-    
-    /*------------------------------------------------------------------------------------------*/
-
-    /* App constants & initial state helper */
-    const categoryKeys = CONSTS.CATEGORY_TYPES.map(x => x + "s")
-    const actorTypes = [CONSTS.PRIMS_TYPES, CONSTS.LIGHTS_TYPES]
-
-    // Set up a hashmap where key=actorType, value=Function() which creates a new Actor instance
-    const actorsClassMap = Object.fromEntries([].concat(_primsClassMap, _lightsClassMap))
-    const initialActorNames = Object.fromEntries(categoryKeys.map((x, i) => [x, Object.fromEntries(_initialActorNamesValues[i])]))
-    const makeActorMap = (initialValue) => Object.fromEntries(categoryKeys.map(x => [x, initialValue]))
-
-    /*------------------------------------------------------------------------------------------*/
     
     /* App state */
+    const [isAppStateInitialized, setIsAppStateInitialized] = useState(false)
 
     // auto-increment ID
     const [actorNames, setActorNames] = useState(initialActorNames)
-    const [actorId, setActorId] = useState(1)
-    const [actors, setActors] = useState(makeActorMap([]))
-    const [isAppStateInitialized, setIsAppStateInitialized] = useState(false)
+    const [internalId, setInternalId] = useState(1)
+    const [actorIds, setActorIds] = useState(categoryMapHelper([]))
+    const [actors, setActors] = useState(categoryMapHelper({}))
 
-    const [categoriesSelected, setCategoriesSelected] = useState(makeActorMap(false))
-    const [categoryItemsSelected, setCategoryItemsSelected] = useState(makeActorMap([]))
+    const [categoriesSelected, setCategoriesSelected] = useState(categoryMapHelper(false))
+    const [categoryItemsSelected, setCategoryItemsSelected] = useState(categoryMapHelper([]))
+    const [categoriesVisible, setCategoriesVisible] = useState(categoryMapHelper(true))
+    const [categoryItemsVisible, setCategoryItemsVisible] = useState(categoryMapHelper([]))
     const [currentSelected, setCurrentSelected] = useState(null)
-
-    const [categoriesVisible, setCategoriesVisible] = useState(makeActorMap(true))
-    const [categoryItemsVisible, setCategoryItemsVisible] = useState(makeActorMap([]))
 
     const [showGrid, setShowGrid] = useState(true)
     const [showAxes, setShowAxes] = useState(true)
@@ -58,17 +37,24 @@ const AppState = () => {
 
     // Add one box to the scene
     useEffect(() => {
+        const actorType = "box"
+        if (!actorClasses[actorType]){
+            throw new TypeError(actorType + " is not a valid actor type")
+        }    
         setActors(prevActors => ({
             ...prevActors,
-            primitives: prevActors.primitives.concat(makeActor("box"))
+            primitives: {
+                ...prevActors.primitives,
+                [internalId]: buildActor(actorType)
+            }
         }))
-        setCategoryItemsSelected(prevSelected=> ({
-            ...prevSelected,
-            primitives: prevSelected.primitives.concat(false)
+        setCategoryItemsSelected(prevState => ({
+            ...prevState,
+            primitives: prevState.primitives.concat(false)
         }))
-        setCategoryItemsVisible(prevVisible => ({
-            ...prevVisible,
-            primitives: prevVisible.primitives.concat(true)
+        setCategoryItemsVisible(prevState => ({
+            ...prevState,
+            primitives: prevState.primitives.concat(true)
         }))
         setIsAppStateInitialized(true)
     }, [])
@@ -76,54 +62,78 @@ const AppState = () => {
     // Debug log after initialization
     useEffect(() => {
         if (isAppStateInitialized){
-            console.log(actors)
         }
     }, [isAppStateInitialized, actors])
 
     /*------------------------------------------------------------------------------------------*/
 
-    /* Initialize actor helpers */
+    /* Helpers */
 
-    const makeActor = (actorType) => {
-        let actor = JSON.parse(JSON.stringify(
-            new actorsClassMap[actorType]))
+    const buildActor = (actorType, color=undefined) => {
+
+        // get static property of parent
+        const categoryType = Object.getPrototypeOf(actorClasses[actorType]).categoryType
+
+        let actor = JSON.parse(JSON.stringify(new actorClasses[actorType]))
+
         actor = {
             ...actor,
-            id: actorId,
-            name: makeActorName(actorType),
-            color: CONSTS.ACTOR_COLORS[Math.floor(Math.random() * CONSTS.ACTOR_COLORS.length)],
+            id: getActorId(categoryType),
+            name: buildActorName(actorType),
+            color: (color) ? color : actorColorHelper(),
+            actorType: actorType,
+            categoryType: categoryType,
+            selected: getSelected(categoryType),
+            visible: getVisible(categoryType),
         }
-        setActorId(prevState => prevState + 1)
         return actor
     }
 
-    const makeActorName = (actorType) => {
-        let num
-        if (CONSTS.PRIMS_TYPES.includes(actorType)){
-            num = actorNames.primitives[actorType]
-            setActorNames(prevActorNames => ({
-                ...prevActorNames,
-                primitives: {
-                    ...prevActorNames.primitives,
-                    [actorType]: prevActorNames.primitives[actorType] + 1
-                }
-            }))
-        } else if (CONSTS.LIGHTS_TYPES.includes(actorType)){
-            num = actorNames.lights[actorType]
-            setActorNames(prevActorNames => ({
-                ...prevActorNames,
-                lights: {
-                    ...prevActorNames.lights,
-                    [actorType]: prevActorNames.lights[actorType] + 1
-                }
-            }))
+    const buildActorName = (actorType) => {
+
+        // get static property of parent
+        const categoryType = Object.getPrototypeOf(actorClasses[actorType]).categoryType + 's'
+
+        let num = actorNames[categoryType][actorType]
+
+        setActorNames(prevActorNames => ({
+            ...prevActorNames,
+            [categoryType]: {
+                ...prevActorNames[categoryType],
+                [actorType]: prevActorNames[categoryType][actorType] + 1
+            }
+        }))
+
+        if (num === 0) {
+            return actorType 
         } else {
-            throw new Error("Did not select actor name")
+            return actorType + "_" + String(actorNames[categoryType][actorType]).padStart(2, "0")
         }
-        if (num === 0){
-            return actorType
+    }
+
+    const getActorId = (categoryType) => {
+        const actorId = internalId
+        setActorIds(prevState => ({
+            ...prevState,
+            [categoryType + 's']: prevState[categoryType + 's'].concat(internalId)
+        }))
+        setInternalId(prevState => prevState + 1)
+        return actorId
+    }
+
+    const getSelected = (categoryType) => {
+        if (currentSelected && currentSelected.dataset.elemtype === "category"){
+            return categoriesSelected[categoryType + 's']
         } else {
-            return actorType + "_" + String(num).padStart(2, "0")
+            return false
+        }
+    }
+
+    const getVisible = (categoryType) => {
+        if (currentSelected && currentSelected.dataset.elemtype === "category"){
+            return categoriesVisible[categoryType + 's']
+        } else {
+            return true
         }
     }
 
@@ -132,19 +142,23 @@ const AppState = () => {
     /* Event listeners */
 
     const handleDropdownClick = (e) => {
-        if (e.target.value) {
-            const categoryType = e.target.dataset.categorytype + "s"
+        const actorType = e.target.value
+        if (actorType) {
+            const categoryType = e.target.dataset.categorytype
             setActors(prevActors => ({
                 ...prevActors,
-                [categoryType]: prevActors[categoryType].concat(makeActor(e.target.value))
+                [categoryType]: {
+                    ...prevActors[categoryType],
+                   [internalId]: buildActor(actorType)
+                }
             }))
-            setCategoryItemsSelected(prevSelected => ({
-                ...prevSelected,
-                [categoryType]: prevSelected[categoryType].concat(categoriesSelected[categoryType])
+            setCategoryItemsSelected(prevState => ({
+                ...prevState,
+                [categoryType]: prevState[categoryType].concat(categoriesSelected[categoryType])
             }))
-            setCategoryItemsVisible(prevVisible => ({
-                ...prevVisible,
-                [categoryType]: prevVisible[categoryType].concat(categoriesVisible[categoryType])
+            setCategoryItemsVisible(prevState => ({
+                ...prevState,
+                [categoryType]: prevState[categoryType].concat(categoriesVisible[categoryType])
             }))
         } else {
             console.warn("Did not add dropdown value")
@@ -179,8 +193,7 @@ const AppState = () => {
         setCategoryItemsSelected(nextState)
 
         // set previously selected target
-        setCurrentSelected(e.target)
-        
+        setCurrentSelected(e.target)     
     }
 
     const handleCategoryItemClick = (e) => {
@@ -196,7 +209,7 @@ const AppState = () => {
         }
 
         // reset category state
-        setCategoriesSelected(makeActorMap(false))
+        setCategoriesSelected(categoryMapHelper(false))
 
         // build new state for category items
         let nextState = []
@@ -258,9 +271,8 @@ const AppState = () => {
         <div id="app-state">
             <div id="layout">
                 <GUILayout  actors={actors}
-                            prims={CONSTS.PRIMS_TYPES}
-                            lights={CONSTS.LIGHTS_TYPES}
-                            categoryTypes={CONSTS.CATEGORY_TYPES}
+                            actorIds={actorIds}
+                            categoryTypes={categoryTypes}
                             actorTypes={actorTypes}
                             categoriesSelected={categoriesSelected}
                             categoryItemsSelected={categoryItemsSelected}
@@ -278,8 +290,6 @@ const AppState = () => {
                             handleToggle={handleToggle}
                 />
                 <ThreeContainer actors={actors}
-                                prims={CONSTS.PRIMS_TYPES}
-                                lights={CONSTS.LIGHTS_TYPES}
                                 showGrid={showGrid}
                                 showAxes={showAxes}
                                 showWireframe={showWireframe}

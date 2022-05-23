@@ -5,7 +5,7 @@ import ColorAttributeSlider from "./ColorAttributeSlider"
 import boxThumb from "./../../static/imgs/box-thumb.png"
 import cylinderThumb from "./../../static/imgs/cylinder-thumb.png"
 import torusThumb from "./../../static/imgs/torus-thumb.png"
-import * as CONSTS from "./../../constants/constants"
+import * as CONSTS from "constants/constants"
 
 const EditorActorSummary = (props) => {
 

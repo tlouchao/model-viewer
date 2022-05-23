@@ -8,10 +8,8 @@ const Outliner = (props) => {
         <div id="outliner">
             <div>
             {Object.keys(props.actors).map((x, i) => 
-                <div key={i}
-                     data-idx={i}>
+                <div key={i}>
                     <p  key={i}
-                        data-idx={i}
                         className={`outliner-category ${(props.categoriesSelected[x]) ? "outliner-category-selected" : ""} ${(props.categoriesVisible[x]) ? "" : "outliner-hidden"}`}
                         data-categorytype={x}
                         data-elemtype="category"
@@ -19,16 +17,15 @@ const Outliner = (props) => {
                         {x}
                     </p>
                     <ul>
-                        {props.actors[x].map((y, j) => 
+                        {props.actorIds[x].map((y, j) => 
                             <li key={j}
-                                data-id={y.id}
-                                data-idx={j}
-                                data-actortype={y.actorType}
-                                data-categorytype={y.categoryType}
+                                data-id={props.actors[x][y].id}
+                                data-actortype={props.actors[x][y].actorType}
+                                data-categorytype={props.actors[x][y].categoryType}
                                 data-elemtype="item"
                                 className={`outliner-item ${(props.categoryItemsSelected[x][j]) ? "outliner-item-selected" : ""} ${(props.categoryItemsVisible[x][j]) ? "" : "outliner-hidden"}`}
                                 onClick={props.handleCategoryItemClick}>
-                                <span>{indent}</span>{y.name}
+                                <span>{indent}</span>{props.actors[x][y].name}
                             </li>
                         )}
                     </ul>

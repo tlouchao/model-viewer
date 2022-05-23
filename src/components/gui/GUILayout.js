@@ -10,20 +10,21 @@ const GUILayout = (props) => {
         <div id="gui-layout">
             <h1 id="brand"><span>Model</span>Viewer</h1>
             <div id="gui-add">
-                {props.categoryTypes.map((x, i) => 
-                    <DropdownContainer key={i} name={`add ${props.categoryTypes[i]}s`}
-                        categoryType={props.categoryTypes[i]}
+                {props.categoryTypes.map(x => 
+                    <DropdownContainer key={`add ${x}`} name={`add ${x}`}
+                        categoryType={x}
                         handleClick={props.handleDropdownClick} 
-                        optionValues={props.actorTypes[i]} 
+                        optionValues={props.actorTypes[x]} 
                         optionNames={(x != "light") ?
-                                      props.actorTypes[i].map(x => x.charAt(0).toUpperCase() + x.slice(1)) :
-                                      props.actorTypes[i].map(x => x.charAt(0).toUpperCase() + x.slice(1) + " Light")
+                                      props.actorTypes[x].map(y => y.charAt(0).toUpperCase() + y.slice(1)) :
+                                      props.actorTypes[x].map(y => y.charAt(0).toUpperCase() + y.slice(1) + " Light")
                                     }
                     />
                 )}
             </div>
             <div id="gui-browse">
                 <OutlinerContainer  actors={props.actors}
+                                    actorIds={props.actorIds}
                                     categoriesSelected={props.categoriesSelected}
                                     categoryItemsSelected={props.categoryItemsSelected}
                                     categoriesVisible={props.categoriesVisible}
@@ -34,6 +35,7 @@ const GUILayout = (props) => {
                                     handleOutlinerHidden={props.handleOutlinerHidden} 
                 />
                 <EditorContainer actors={props.actors}
+                                 actorIds={props.actorIds}
                                  currentSelected={props.currentSelected} />
             </div>
             <div id="gui-toggle-layout">

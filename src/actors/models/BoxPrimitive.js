@@ -7,6 +7,7 @@ import Primitive from "./Primitive"
 import Matrix from "./Matrix"
 
 class BoxPrimitive extends Primitive {
+    static actorType="box"
     constructor(matrix=new Matrix(),
                 color=PRIM_COLOR,
                 width=BOX_DEF_WIDTH,
@@ -14,7 +15,6 @@ class BoxPrimitive extends Primitive {
                 length=BOX_DEF_LENGTH){
         super(matrix, color)
         this.actorName="box"
-        this.actorType="box"
         this.attributes["width"]    = width, 
         this.attributes["height"]   = height, 
         this.attributes["length"]   = length 

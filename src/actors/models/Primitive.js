@@ -3,7 +3,7 @@ import Actor from "./Actor"
 import Matrix from "./Matrix"
 
 class Primitive extends Actor {
-    categoryType = "primitive"
+    static categoryType = "primitive"
     constructor(matrix=new Matrix(), color=PRIM_COLOR){
         super(matrix, color)
         if (new.target === Primitive){

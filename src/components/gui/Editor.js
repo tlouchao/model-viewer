@@ -8,9 +8,9 @@ const Editor = (props) => {
             Select an actor in the Outliner to view and edit its attributes.
             </p>       
     } else {
-        const idx = props.currentSelected.dataset.idx
+        const id = props.currentSelected.dataset.id
         const categoryType = props.currentSelected.dataset.categorytype
-        const actor = props.actors[categoryType + 's'][idx]
+        const actor = props.actors[categoryType + 's'][id]
         content = <EditorActorSummary actor={actor} />
     }
 

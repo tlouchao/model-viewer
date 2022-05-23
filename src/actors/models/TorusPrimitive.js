@@ -8,6 +8,7 @@ import Primitive from "./Primitive"
 import Matrix from "./Matrix"
 
 class TorusPrimitive extends Primitive {
+    static actorType = "torus"
     constructor(matrix=new Matrix(),
                 color=PRIM_COLOR,
                 radius=TORUS_DEF_RADIUS,
@@ -16,7 +17,6 @@ class TorusPrimitive extends Primitive {
                 tubeSeg=TORUS_DEF_TUBE_SEG){
     super(matrix, color)
     this.actorName="torus"
-    this.actorType="torus"
     this.attributes["radius"]   = radius, 
     this.attributes["tube"]     = tube, 
     this.attributes["radiusSeg"]   = radiusSeg, 

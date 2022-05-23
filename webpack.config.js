@@ -22,7 +22,8 @@ module.exports = (env, argv) => {
       alias: {
         actors: path.resolve(__dirname, '/src/actors'),
         constants: path.resolve(__dirname, '/src/constants'),
-        components: path.resolve(__dirname, '/src/components')
+        components: path.resolve(__dirname, '/src/components'),
+        static: path.resolve(__dirname, '/src/static')
       },
       extensions: ['.js', 'jsx', 'sass', 'scss', '.svg', '.png']
     },

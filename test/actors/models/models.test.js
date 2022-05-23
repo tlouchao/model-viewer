@@ -27,7 +27,7 @@ describe("light properties", () => {
     const a = new ACTORS.AmbientLight()
     test("ambient", () => {
          expect(a.actorName).toEqual("ambient")
-         expect(a.actorType).toEqual("ambient")
+         expect(a.constructor.actorType).toEqual("ambient")
          expect(Object.keys(a.attributes).length).not.toEqual(0)
          expect(a.attributes.intensity).toEqual(CONSTS.AMBIENT_DEF_INTENSITY)
     })
@@ -37,10 +37,19 @@ describe("prim properties", () => {
     const c = new ACTORS.CylinderPrimitive()
     test("cylinder", () => {
          expect(c.actorName).toEqual("cylinder")
-         expect(c.actorType).toEqual("cylinder")
+         expect(c.constructor.actorType).toEqual("cylinder")
          expect(Object.keys(c.attributes).length).not.toEqual(0)
          expect(c.attributes.radius).toEqual(CONSTS.CYLINDER_DEF_RADIUS)
          expect(c.attributes.height).toEqual(CONSTS.CYLINDER_DEF_HEIGHT)
+    })
+})
+
+describe("stringify & parse static properties", () => {
+    test("box", () => {
+        const b1 = new ACTORS.BoxPrimitive()
+        const b2 = JSON.parse(JSON.stringify(b1))
+        expect(b1.constructor.actorType).toEqual("box")
+        expect(b2.hasOwnProperty("actorType")).toEqual(false)
     })
 })
 

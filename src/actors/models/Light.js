@@ -3,7 +3,7 @@ import Actor from "./Actor"
 import Matrix from "./Matrix"
 
 class Light extends Actor {
-    categoryType = "light"
+    static categoryType = "light"
     constructor(matrix=new Matrix(), color=LIGHT_COLOR){
         super(matrix, color)
         if (new.target === Light){

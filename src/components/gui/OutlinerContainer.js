@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import Outliner from "./Outliner"
 
 const OutlinerContainer = (props) => {
@@ -6,6 +6,7 @@ const OutlinerContainer = (props) => {
         <div id="outliner-container">
             <h2 className="name-container">Outliner</h2>
             <Outliner actors={props.actors}
+                      actorIds={props.actorIds}
                       actorTypes={props.actorTypes}
                       categoryTypes={props.categoryTypes}
                       categoriesSelected={props.categoriesSelected}

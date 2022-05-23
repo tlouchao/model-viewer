@@ -3,7 +3,7 @@ import Matrix from "./Matrix"
 class Actor {
     color
     actorName
-    actorType
+    static actorType
     matrix
     attributes = {}
     constructor(matrix=new Matrix(), color="#000000"){
