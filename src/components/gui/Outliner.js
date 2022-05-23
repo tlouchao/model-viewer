@@ -17,13 +17,13 @@ const Outliner = (props) => {
                         {x}
                     </p>
                     <ul>
-                        {props.actorIds[x].map((y, j) => 
-                            <li key={j}
+                        {props.actorIds[x].map(y => 
+                            <li key={y}
                                 data-id={props.actors[x][y].id}
                                 data-actortype={props.actors[x][y].actorType}
                                 data-categorytype={props.actors[x][y].categoryType}
                                 data-elemtype="item"
-                                className={`outliner-item ${(props.categoryItemsSelected[x][j]) ? "outliner-item-selected" : ""} ${(props.categoryItemsVisible[x][j]) ? "" : "outliner-hidden"}`}
+                                className={`outliner-item ${(props.categoryItemsSelected[x][y]) ? "outliner-item-selected" : ""} ${(props.categoryItemsVisible[x][y]) ? "" : "outliner-hidden"}`}
                                 onClick={props.handleCategoryItemClick}>
                                 <span>{indent}</span>{props.actors[x][y].name}
                             </li>

@@ -50,11 +50,17 @@ const AppState = () => {
         }))
         setCategoryItemsSelected(prevState => ({
             ...prevState,
-            primitives: prevState.primitives.concat(false)
+            primitives: ({
+                ...prevState.primitives,
+                [internalId]: false
+            })
         }))
         setCategoryItemsVisible(prevState => ({
             ...prevState,
-            primitives: prevState.primitives.concat(true)
+            primitives: ({
+                ...prevState.primitives,
+                [internalId]: true
+            })
         }))
         setIsAppStateInitialized(true)
     }, [])
@@ -79,17 +85,15 @@ const AppState = () => {
         actor = {
             ...actor,
             id: getActorId(categoryType),
-            name: buildActorName(actorType),
+            name: getActorName(actorType),
             color: (color) ? color : actorColorHelper(),
             actorType: actorType,
             categoryType: categoryType,
-            selected: getSelected(categoryType),
-            visible: getVisible(categoryType),
         }
         return actor
     }
 
-    const buildActorName = (actorType) => {
+    const getActorName = (actorType) => {
 
         // get static property of parent
         const categoryType = Object.getPrototypeOf(actorClasses[actorType]).categoryType + 's'
@@ -121,22 +125,6 @@ const AppState = () => {
         return actorId
     }
 
-    const getSelected = (categoryType) => {
-        if (currentSelected && currentSelected.dataset.elemtype === "category"){
-            return categoriesSelected[categoryType + 's']
-        } else {
-            return false
-        }
-    }
-
-    const getVisible = (categoryType) => {
-        if (currentSelected && currentSelected.dataset.elemtype === "category"){
-            return categoriesVisible[categoryType + 's']
-        } else {
-            return true
-        }
-    }
-
     /*------------------------------------------------------------------------------------------*/
 
     /* Event listeners */
@@ -147,18 +135,24 @@ const AppState = () => {
             const categoryType = e.target.dataset.categorytype
             setActors(prevActors => ({
                 ...prevActors,
-                [categoryType]: {
+                [categoryType]: ({
                     ...prevActors[categoryType],
                    [internalId]: buildActor(actorType)
-                }
+                })
             }))
             setCategoryItemsSelected(prevState => ({
                 ...prevState,
-                [categoryType]: prevState[categoryType].concat(categoriesSelected[categoryType])
+                [categoryType]: ({
+                    ...prevState[categoryType],
+                    [internalId]: categoriesSelected[categoryType]
+                })
             }))
             setCategoryItemsVisible(prevState => ({
                 ...prevState,
-                [categoryType]: prevState[categoryType].concat(categoriesVisible[categoryType])
+                [categoryType]: ({
+                    ...prevState[categoryType],
+                    [internalId]: categoriesVisible[categoryType]
+                })
             }))
         } else {
             console.warn("Did not add dropdown value")
@@ -185,7 +179,9 @@ const AppState = () => {
                 // preserve other category item states
                 itemSelected = categoriesSelected[x]
             }
-            nextState.push([x, [...Array(categoryItemsSelected[x].length)].fill(itemSelected)])
+            nextState.push([x, Object.fromEntries(
+                Object.keys(categoryItemsSelected[x]).map(y => [y, itemSelected])
+            )])
         })
 
         // change into object for setState function
@@ -197,15 +193,15 @@ const AppState = () => {
     }
 
     const handleCategoryItemClick = (e) => {
-        const idx = e.target.dataset.idx // todo
+        const id = e.target.dataset.id
         const categoryType = e.target.dataset.categorytype
 
         // if previously selected HTML element is a category, always select the item
         let selected
-        if (currentSelected && currentSelected.dataset.elemtype === "category") {
+        if (currentSelected && !currentSelected.hasAttribute("data-actortype")) {
             selected = true
         } else {
-            selected = !categoryItemsSelected[categoryType + "s"][idx]
+            selected = !categoryItemsSelected[categoryType + 's'][id]
         }
 
         // reset category state
@@ -214,13 +210,13 @@ const AppState = () => {
         // build new state for category items
         let nextState = []
         const keys = Object.keys(categoryItemsSelected)
-        keys.map(x => 
-            nextState.push([x, [...Array(categoryItemsSelected[x].length)].fill(false)])
-        )
+        keys.map(x => nextState.push([x, 
+            Object.fromEntries(Object.keys(categoryItemsSelected[x]).map(y => [y, false]))
+        ]))
 
         // change into object for setState function
         nextState = Object.fromEntries(nextState)
-        nextState[categoryType + "s"][idx] = selected
+        nextState[categoryType + "s"][id] = selected
 
         // set the new state
         setCategoryItemsSelected(nextState)
@@ -241,12 +237,14 @@ const AppState = () => {
         const keys = Object.keys(categoriesSelected)
         let nextVisibleState = []
         let nextVisibleItemsState = []
-        keys.map((x) => {
+        keys.map(x => {
             nextVisibleState.push([x, categoriesSelected[x] ? boolValue : categoriesVisible[x]])
-            nextVisibleItemsState.push([x, [...Array(categoryItemsSelected[x].length)].map((y, j) => 
-                (categoryItemsSelected[x][j]) ? boolValue : categoryItemsVisible[x][j]
+            nextVisibleItemsState.push([x, Object.keys(categoryItemsSelected[x]).map(y => 
+                (categoryItemsSelected[x][y]) ? [y, boolValue] : [y, categoryItemsVisible[x][y]]
             )])
         })
+        console.log(nextVisibleState)
+        console.log(nextVisibleItemsState)
         setCategoriesVisible(Object.fromEntries(nextVisibleState))
         setCategoryItemsVisible(Object.fromEntries(nextVisibleItemsState))
     }

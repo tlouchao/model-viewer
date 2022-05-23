@@ -13,7 +13,8 @@ module.exports = (env, argv) => {
     entry: "./src/index.js",
     output: {
     path: path.resolve(__dirname, 'build'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    assetModuleFilename: 'assets/[name][ext]'
     },
     devServer: {
       port: 3000
@@ -44,14 +45,7 @@ module.exports = (env, argv) => {
         {
           test: /\.png$/,
           exclude: /node_modules/,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                limit: 30000,
-              },
-            },
-          ],
+          type: 'asset/resource',
         },
       ]
     },
@@ -59,7 +53,6 @@ module.exports = (env, argv) => {
       new CopyWebpackPlugin({
         patterns: [
         { from: `${__dirname}/public`, to: 'public' },
-        { from: `${__dirname}/src/static/imgs`, to: 'public/assets' }
         ]
       }),
       new HtmlWebpackPlugin({ 

@@ -1,11 +1,12 @@
-import React, { useState } from "react"
+import React from "react"
 import EditorMatrix from "./EditorMatrix"
 import AttributeSlider from "./AttributeSlider"
 import ColorAttributeSlider from "./ColorAttributeSlider"
-import boxThumb from "./../../static/imgs/box-thumb.png"
-import cylinderThumb from "./../../static/imgs/cylinder-thumb.png"
-import torusThumb from "./../../static/imgs/torus-thumb.png"
-import * as CONSTS from "constants/constants"
+import boxThumb from "static/imgs/box-thumb.png"
+import cylinderThumb from "static/imgs/cylinder-thumb.png"
+import torusThumb from "static/imgs/torus-thumb.png"
+import ambientThumb from "static/imgs/ambient-thumb.png"
+import pointThumb from "static/imgs/point-thumb.png"
 
 const EditorActorSummary = (props) => {
 
@@ -19,6 +20,12 @@ const EditorActorSummary = (props) => {
             break;
         case "torus":
             thumb=torusThumb
+            break;
+        case "ambient":
+            thumb=ambientThumb
+            break;
+        case "point":
+            thumb=pointThumb
             break;
         default:
             console.warn("image not available for actor type " + props.actor.actorType)

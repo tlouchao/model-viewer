@@ -7,8 +7,6 @@ const OutlinerContainer = (props) => {
             <h2 className="name-container">Outliner</h2>
             <Outliner actors={props.actors}
                       actorIds={props.actorIds}
-                      actorTypes={props.actorTypes}
-                      categoryTypes={props.categoryTypes}
                       categoriesSelected={props.categoriesSelected}
                       categoryItemsSelected={props.categoryItemsSelected}
                       categoriesVisible={props.categoriesVisible}
@@ -17,6 +15,7 @@ const OutlinerContainer = (props) => {
                       handleCategoryItemClick={props.handleCategoryItemClick} 
             />
             <div className="button-group">
+                <button onClick={props.handleOutlinerVisible}>Sort</button>
                 <button onClick={props.handleOutlinerVisible}>Show</button>
                 <button onClick={props.handleOutlinerHidden}>Hide</button>
             </div>
