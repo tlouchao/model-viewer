@@ -29,9 +29,9 @@ export const POINT_DEF_INTENSITY = 1
 export const POINT_DEF_DISTANCE = 0
 
 export const MAX_SCENE_LIGHTS = 8
-export const MAX_SCENE_PRIMS = 32
+export const MAX_SCENE_PRIMS = 16
 
 export const THREE_SCENE_COLOR = "#888888"
-export const PRIM_COLOR = "#00ff00"
 export const LIGHT_COLOR = "#ffffff"
+export const PRIM_COLOR = "#00ff00"
 export const ACTOR_COLORS = ["#ffbe0b","#fb5607","#ff006e","#8338ec","#3a86ff"]

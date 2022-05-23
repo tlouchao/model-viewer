@@ -4,6 +4,19 @@ const Outliner = (props) => {
 
     const indent = "  "
 
+    const spanHelper = (x, val) => {
+        if (Object.keys(props.actors[x]).length < Number(props.categoryCapacity[x])) {
+            return (<span onClick={handleSpanClick} className="category-max"></span>)
+        } else {
+            return (<span onClick={handleSpanClick} className="category-max">{val}</span>)
+        }
+    }
+
+    const handleSpanClick = (e) => {
+        e.stopPropagation()
+        e.target.parentElement.click()
+    }
+
     return (
         <div id="outliner">
             <div>
@@ -15,6 +28,9 @@ const Outliner = (props) => {
                         data-elemtype="category"
                         onClick={props.handleCategoryClick}>
                         {x}
+                        {spanHelper(x, " (Max: ")}
+                        {spanHelper(x, props.categoryCapacity[x])}
+                        {spanHelper(x, ")")}
                     </p>
                     <ul>
                         {props.actorIds[x].map(y => 

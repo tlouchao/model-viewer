@@ -25,12 +25,14 @@ const GUILayout = (props) => {
             <div id="gui-browse">
                 <OutlinerContainer  actors={props.actors}
                                     actorIds={props.actorIds}
+                                    categoryCapacity={props.categoryCapacity}
                                     categoriesSelected={props.categoriesSelected}
                                     categoryItemsSelected={props.categoryItemsSelected}
                                     categoriesVisible={props.categoriesVisible}
                                     categoryItemsVisible={props.categoryItemsVisible}
                                     handleCategoryClick={props.handleCategoryClick}
-                                    handleCategoryItemClick={props.handleCategoryItemClick} 
+                                    handleCategoryItemClick={props.handleCategoryItemClick}
+                                    handleOutlinerSort={props.handleOutlinerSort} 
                                     handleOutlinerVisible={props.handleOutlinerVisible}
                                     handleOutlinerHidden={props.handleOutlinerHidden} 
                 />

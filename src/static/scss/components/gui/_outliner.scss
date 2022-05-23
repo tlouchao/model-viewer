@@ -17,6 +17,10 @@
             &:hover {
                 cursor: pointer;
             }
+            .category-max {
+                text-transform: none;
+                color: map-get(v.$colors, "errorcolor");
+            }
         }
 
         .outliner-category:hover {

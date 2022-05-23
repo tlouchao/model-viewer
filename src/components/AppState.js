@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { actorColorHelper,
          categoryMapHelper,
+         categoryCapacity,
          categoryTypes, 
          actorTypes, 
          actorClasses,
@@ -133,27 +134,29 @@ const AppState = () => {
         const actorType = e.target.value
         if (actorType) {
             const categoryType = e.target.dataset.categorytype
-            setActors(prevActors => ({
-                ...prevActors,
-                [categoryType]: ({
-                    ...prevActors[categoryType],
-                   [internalId]: buildActor(actorType)
-                })
-            }))
-            setCategoryItemsSelected(prevState => ({
-                ...prevState,
-                [categoryType]: ({
-                    ...prevState[categoryType],
-                    [internalId]: categoriesSelected[categoryType]
-                })
-            }))
-            setCategoryItemsVisible(prevState => ({
-                ...prevState,
-                [categoryType]: ({
-                    ...prevState[categoryType],
-                    [internalId]: categoriesVisible[categoryType]
-                })
-            }))
+            if (Object.keys(actors[categoryType]).length < categoryCapacity[categoryType]){
+                setActors(prevActors => ({
+                    ...prevActors,
+                    [categoryType]: ({
+                        ...prevActors[categoryType],
+                    [internalId]: buildActor(actorType)
+                    })
+                }))
+                setCategoryItemsSelected(prevState => ({
+                    ...prevState,
+                    [categoryType]: ({
+                        ...prevState[categoryType],
+                        [internalId]: categoriesSelected[categoryType]
+                    })
+                }))
+                setCategoryItemsVisible(prevState => ({
+                    ...prevState,
+                    [categoryType]: ({
+                        ...prevState[categoryType],
+                        [internalId]: categoriesVisible[categoryType]
+                    })
+                }))
+            }
         } else {
             console.warn("Did not add dropdown value")
         }
@@ -225,6 +228,10 @@ const AppState = () => {
         setCurrentSelected(e.target)
     }
 
+    const handleSort = () => {
+        let nextActorIds = []
+    }
+
     const handleVisible = () => {
         handleVisibilityHelper(true)
     }
@@ -239,14 +246,22 @@ const AppState = () => {
         let nextVisibleItemsState = []
         keys.map(x => {
             nextVisibleState.push([x, categoriesSelected[x] ? boolValue : categoriesVisible[x]])
-            nextVisibleItemsState.push([x, Object.keys(categoryItemsSelected[x]).map(y => 
+            nextVisibleItemsState.push([x, Object.fromEntries(Object.keys(categoryItemsSelected[x]).map(y => 
                 (categoryItemsSelected[x][y]) ? [y, boolValue] : [y, categoryItemsVisible[x][y]]
-            )])
+            ))])
         })
         console.log(nextVisibleState)
         console.log(nextVisibleItemsState)
         setCategoriesVisible(Object.fromEntries(nextVisibleState))
         setCategoryItemsVisible(Object.fromEntries(nextVisibleItemsState))
+    }
+
+    const handleDelete = (e) => {
+        const id = e.target.id
+        const categoryType = e.target.dataset.categorytype + 's'
+        if (currentSelected && !currentSelected.hasAttribute("data-actortype")) {
+            console.log("delete me at " + id)
+        }
     }
 
     const handleToggle = (e) => {
@@ -272,6 +287,7 @@ const AppState = () => {
                             actorIds={actorIds}
                             categoryTypes={categoryTypes}
                             actorTypes={actorTypes}
+                            categoryCapacity={categoryCapacity}
                             categoriesSelected={categoriesSelected}
                             categoryItemsSelected={categoryItemsSelected}
                             currentSelected={currentSelected}
@@ -280,6 +296,7 @@ const AppState = () => {
                             handleDropdownClick={handleDropdownClick} 
                             handleCategoryClick={handleCategoryClick} 
                             handleCategoryItemClick={handleCategoryItemClick} 
+                            handleOutlinerSort={handleSort}
                             handleOutlinerVisible={handleVisible}
                             handleOutlinerHidden={handleHidden}
                             showGrid={showGrid}

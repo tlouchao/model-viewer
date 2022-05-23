@@ -3,29 +3,34 @@ import * as CONSTS from "constants/constants"
 
 // get classes in which actor is direct ancestor
 const categoriesClasses = Object.values(ACTORS).filter(x => Object.getPrototypeOf(x) === ACTORS.Actor)
-const categoriesKeys = categoriesClasses.map(x => x.categoryType + 's')
 
-// get nested classes in which category is direct ancestor
+// key names for nested maps
+const categoryTypes = categoriesClasses.map(x => x.categoryType + 's')
+
+// nested classes in which category is direct ancestor
 const categoryActorClassMap = nestedMapHelper()
 
-// get flattened concrete class map
+// flattened concrete class map
 const actorClasses = Object.fromEntries(Object.keys(categoryActorClassMap).reduce((acc, x) =>
     acc.concat(Object.keys(categoryActorClassMap[x]).map(y => [y, categoryActorClassMap[x][y]])), []
 ))
-
-const initialActorNames = nestedMapHelper(0)
-
-/*------------------------------------------------------------------------------------------*/
-
-// build initial app state helpers //
-
-const categoryTypes = categoriesKeys
+// nested actor types
 const actorTypes = Object.fromEntries(categoriesClasses.map(x => 
     [x.categoryType + 's', Object.values(ACTORS).filter(y => 
         Object.getPrototypeOf(y) === x).map(z => z.actorType)
     ]
 ))
- 
+
+const initialActorNames = nestedMapHelper(0)
+
+// max lights in scene = 8, max prims in scene = 32
+let categoryCapacity = categoryMapHelper(0)
+categoryCapacity['lights'] = CONSTS.MAX_SCENE_LIGHTS // these are hardcoded
+categoryCapacity['primitives'] = CONSTS.MAX_SCENE_PRIMS // these are hardcoded
+
+/*------------------------------------------------------------------------------------------*/
+
+// initial app state helpers //
 
 function categoryMapHelper(initialValue){ return Object.fromEntries(categoryTypes.map(x => [x, initialValue]))}
 
@@ -45,4 +50,4 @@ function actorColorHelper(){
 
 /*------------------------------------------------------------------------------------------*/
 
-export { categoryTypes, actorTypes, actorClasses, initialActorNames, actorColorHelper, categoryMapHelper }
+export { categoryTypes, actorTypes, categoryCapacity, actorClasses, initialActorNames, actorColorHelper, categoryMapHelper }
