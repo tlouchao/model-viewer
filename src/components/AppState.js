@@ -70,7 +70,7 @@ const AppState = () => {
         actor = {
             ...actor,
             id: getActorId(categoryType + 's'),
-            name: getActorName(actorType, categoryType + 's'),
+            actorName: getActorName(actorType, categoryType + 's'),
             color: (color) ? color : actorColorHelper(),
             actorType: actorType,
             categoryType: categoryType,
@@ -192,7 +192,29 @@ const AppState = () => {
     }
 
     const handleSort = () => {
-        console.log("sort")
+        if (currentSelected && !currentSelected.hasAttribute("data-actortype")) {
+            const nextActorIds = Object.fromEntries(
+                Object.keys(actorIds).map(x => {
+                    let val
+                    if (categoriesSelected[x]){
+                        val = Object.entries(actors[x])
+                            .sort((a, b) => {
+                                if (a[1].actorName < b[1].actorName){
+                                    return -1
+                                }
+                                if (a[1].actorName > b[1].actorName){
+                                    return 1
+                                }
+                                return 0
+                            }).map(y => Number(y[0]))
+                    } else { 
+                        val = actorIds[x]
+                    }
+                    return [x, val]
+                })
+            )
+            setActorIds(nextActorIds)
+        }
     }
 
     const handleVisible = () => {
@@ -205,16 +227,30 @@ const AppState = () => {
 
     const handleVisibilityHelper = (boolValue) => {
         let nextActors = {...actors}
-        let nextVisible = []
+        let nextCategoriesVisible = categoryMapHelper(false)
         Object.keys(nextActors).forEach(x => {
-            nextVisible.push([x, (categoriesSelected[x]) ? boolValue : categoriesVisible[x]])
-            Object.keys(nextActors[x]).forEach(y => 
-                nextActors[x][y].isVisible = 
-                    (nextActors[x][y].isSelected) ? boolValue : nextActors[x][y].isVisible
-            )
+            let isAllItemsHidden = true
+            nextCategoriesVisible[x] = (categoriesSelected[x]) ? boolValue : categoriesVisible[x]
+            Object.keys(nextActors[x]).forEach(y => {
+                // if at least one item is visible, then category is visible
+                if (nextActors[x][y].isSelected && boolValue){
+                    nextCategoriesVisible[x] = boolValue
+                }
+                // if item is selected, then set to value sent by button click
+                if (nextActors[x][y].isSelected){
+                    nextActors[x][y].isVisible = boolValue
+                }
+                // check if at least one item is visible
+                if (nextActors[x][y].isVisible){
+                    isAllItemsHidden = false
+                }
+            })
+            // if all items are hidden, then the category is also hidden
+            if (isAllItemsHidden){
+                nextCategoriesVisible[x] = false
+            }
         })
-        nextVisible = Object.fromEntries(nextVisible)
-        setCategoriesVisible(nextVisible)
+        setCategoriesVisible(nextCategoriesVisible)
         setActors(nextActors)
     }
 

@@ -23,7 +23,8 @@ const DropdownContainer = (props) => {
             />
             <button data-categorytype={props.categoryType} 
                 value={selectedValue} 
-                onClick={props.handleClick}>
+                onClick={props.handleClick}
+                disabled={selectedValue === null}>
                 Add
             </button>
         </div>

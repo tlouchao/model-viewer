@@ -40,7 +40,7 @@ const Outliner = (props) => {
                                 data-categorytype={props.actors[x][y].categoryType}
                                 className={`outliner-item ${(props.actors[x][y].isSelected) ? "outliner-item-selected" : ""} ${(props.actors[x][y].isVisible) ? "" : "outliner-hidden"}`}
                                 onClick={props.handleCategoryItemClick}>
-                                <span>{indent}</span>{props.actors[x][y].name}
+                                <span>{indent}</span>{props.actors[x][y].actorName}
                             </li>
                         )}
                     </ul>
