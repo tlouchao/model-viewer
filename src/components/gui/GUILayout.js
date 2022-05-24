@@ -27,9 +27,7 @@ const GUILayout = (props) => {
                                     actorIds={props.actorIds}
                                     categoryCapacity={props.categoryCapacity}
                                     categoriesSelected={props.categoriesSelected}
-                                    categoryItemsSelected={props.categoryItemsSelected}
                                     categoriesVisible={props.categoriesVisible}
-                                    categoryItemsVisible={props.categoryItemsVisible}
                                     handleCategoryClick={props.handleCategoryClick}
                                     handleCategoryItemClick={props.handleCategoryItemClick}
                                     handleOutlinerSort={props.handleOutlinerSort} 

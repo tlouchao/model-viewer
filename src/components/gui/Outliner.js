@@ -37,7 +37,7 @@ const Outliner = (props) => {
                                 data-id={props.actors[x][y].id}
                                 data-actortype={props.actors[x][y].actorType}
                                 data-categorytype={props.actors[x][y].categoryType}
-                                className={`outliner-item ${(props.categoryItemsSelected[x][y]) ? "outliner-item-selected" : ""} ${(props.categoryItemsVisible[x][y]) ? "" : "outliner-hidden"}`}
+                                className={`outliner-item ${(props.actors[x][y].isSelected) ? "outliner-item-selected" : ""} ${(props.actors[x][y].isVisible) ? "" : "outliner-hidden"}`}
                                 onClick={props.handleCategoryItemClick}>
                                 <span>{indent}</span>{props.actors[x][y].name}
                             </li>

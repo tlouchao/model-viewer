@@ -49,20 +49,6 @@ const AppState = () => {
                 [internalId]: buildActor(actorType)
             }
         }))
-        setCategoryItemsSelected(prevState => ({
-            ...prevState,
-            primitives: ({
-                ...prevState.primitives,
-                [internalId]: false
-            })
-        }))
-        setCategoryItemsVisible(prevState => ({
-            ...prevState,
-            primitives: ({
-                ...prevState.primitives,
-                [internalId]: true
-            })
-        }))
         setIsAppStateInitialized(true)
     }, [])
 
@@ -85,19 +71,28 @@ const AppState = () => {
 
         actor = {
             ...actor,
-            id: getActorId(categoryType),
-            name: getActorName(actorType),
+            id: getActorId(categoryType + 's'),
+            name: getActorName(actorType, categoryType + 's'),
             color: (color) ? color : actorColorHelper(),
             actorType: actorType,
             categoryType: categoryType,
+            isSelected: categoriesSelected[categoryType + 's'],
+            isVisible: categoriesVisible[categoryType + 's'],
         }
         return actor
     }
 
-    const getActorName = (actorType) => {
+    const getActorId = (categoryType) => {
+        const actorId = internalId
+        setActorIds(prevState => ({
+            ...prevState,
+            [categoryType]: prevState[categoryType].concat(internalId)
+        }))
+        setInternalId(prevState => prevState + 1)
+        return actorId
+    }
 
-        // get static property of parent
-        const categoryType = Object.getPrototypeOf(actorClasses[actorType]).categoryType + 's'
+    const getActorName = (actorType, categoryType) => {
 
         let num = actorNames[categoryType][actorType]
 
@@ -116,16 +111,6 @@ const AppState = () => {
         }
     }
 
-    const getActorId = (categoryType) => {
-        const actorId = internalId
-        setActorIds(prevState => ({
-            ...prevState,
-            [categoryType + 's']: prevState[categoryType + 's'].concat(internalId)
-        }))
-        setInternalId(prevState => prevState + 1)
-        return actorId
-    }
-
     /*------------------------------------------------------------------------------------------*/
 
     /* Event listeners */
@@ -137,24 +122,10 @@ const AppState = () => {
             if (Object.keys(actors[categoryType]).length < categoryCapacity[categoryType]){
                 setActors(prevActors => ({
                     ...prevActors,
-                    [categoryType]: ({
+                    [categoryType]: {
                         ...prevActors[categoryType],
                     [internalId]: buildActor(actorType)
-                    })
-                }))
-                setCategoryItemsSelected(prevState => ({
-                    ...prevState,
-                    [categoryType]: ({
-                        ...prevState[categoryType],
-                        [internalId]: categoriesSelected[categoryType]
-                    })
-                }))
-                setCategoryItemsVisible(prevState => ({
-                    ...prevState,
-                    [categoryType]: ({
-                        ...prevState[categoryType],
-                        [internalId]: categoriesVisible[categoryType]
-                    })
+                    }
                 }))
             }
         } else {
@@ -170,10 +141,9 @@ const AppState = () => {
             [categoryType]: selected,
         }))
 
-        // build new state for category items
-        let nextState = []
-        const keys = Object.keys(categoryItemsSelected)
-        keys.map(x => {
+        // build new state for actors
+        let nextActors = {...actors}
+        Object.keys(nextActors).forEach(x => {
             let itemSelected
             if (x === categoryType) {
                 // copy currently selected category state
@@ -182,14 +152,9 @@ const AppState = () => {
                 // preserve other category item states
                 itemSelected = categoriesSelected[x]
             }
-            nextState.push([x, Object.fromEntries(
-                Object.keys(categoryItemsSelected[x]).map(y => [y, itemSelected])
-            )])
+            Object.keys(nextActors[x]).forEach(y => nextActors[x][y].isSelected = itemSelected)
         })
-
-        // change into object for setState function
-        nextState = Object.fromEntries(nextState)
-        setCategoryItemsSelected(nextState)
+        setActors(nextActors)
 
         // set previously selected target
         setCurrentSelected(e.target)     
@@ -197,32 +162,32 @@ const AppState = () => {
 
     const handleCategoryItemClick = (e) => {
         const id = e.target.dataset.id
-        const categoryType = e.target.dataset.categorytype
+        const categoryType = e.target.dataset.categorytype + 's'
 
         // if previously selected HTML element is a category, always select the item
         let selected
         if (currentSelected && !currentSelected.hasAttribute("data-actortype")) {
             selected = true
         } else {
-            selected = !categoryItemsSelected[categoryType + 's'][id]
+            selected = !actors[categoryType][id].isSelected
         }
 
         // reset category state
         setCategoriesSelected(categoryMapHelper(false))
 
-        // build new state for category items
-        let nextState = []
-        const keys = Object.keys(categoryItemsSelected)
-        keys.map(x => nextState.push([x, 
-            Object.fromEntries(Object.keys(categoryItemsSelected[x]).map(y => [y, false]))
-        ]))
+        // build new state for actors
+        let nextActors = {...actors}
+        Object.keys(nextActors).forEach(x => {
+            Object.keys(nextActors[x]).forEach(y => {
+                nextActors[x][y].isSelected = false
+            })
+        })
 
         // change into object for setState function
-        nextState = Object.fromEntries(nextState)
-        nextState[categoryType + "s"][id] = selected
+        nextActors[categoryType][id].isSelected = selected
 
         // set the new state
-        setCategoryItemsSelected(nextState)
+        setActors(nextActors)
 
         // set previously selected target
         setCurrentSelected(e.target)
@@ -230,7 +195,6 @@ const AppState = () => {
 
     const handleSort = () => {
         console.log("sort")
-        let nextActorIds = []
     }
 
     const handleVisible = () => {
@@ -242,38 +206,41 @@ const AppState = () => {
     }
 
     const handleVisibilityHelper = (boolValue) => {
-        const keys = Object.keys(categoriesSelected)
-        let nextVisibleState = []
-        let nextVisibleItemsState = []
-        keys.map(x => {
-            nextVisibleState.push([x, categoriesSelected[x] ? boolValue : categoriesVisible[x]])
-            nextVisibleItemsState.push([x, Object.fromEntries(Object.keys(categoryItemsSelected[x]).map(y => 
-                (categoryItemsSelected[x][y]) ? [y, boolValue] : [y, categoryItemsVisible[x][y]]
-            ))])
+        let nextActors = {...actors}
+        let nextVisible = []
+        Object.keys(nextActors).forEach(x => {
+            nextVisible.push([x, (categoriesSelected[x]) ? boolValue : categoriesVisible[x]])
+            Object.keys(nextActors[x]).forEach(y => 
+                nextActors[x][y].isVisible = 
+                    (nextActors[x][y].isSelected) ? boolValue : nextActors[x][y].isVisible
+            )
         })
-        setCategoriesVisible(Object.fromEntries(nextVisibleState))
-        setCategoryItemsVisible(Object.fromEntries(nextVisibleItemsState))
+        nextVisible = Object.fromEntries(nextVisible)
+        setCategoriesVisible(nextVisible)
+        setActors(nextActors)
     }
 
     const handleDelete = () => {
         if (currentSelected && currentSelected.hasAttribute("data-actortype")) {
+
             const id = currentSelected.dataset.id
             const categoryType = currentSelected.dataset.categorytype + 's'
+
+            // delete actor
             let nextActors = {...actors}
-            let nextCategoryItemsSelected = {...categoryItemsSelected} // todo: move into actors
-            let nextCategoryItemsVisible = {...categoryItemsVisible} // todo: move into actors
             delete nextActors[categoryType][id]
-            delete nextCategoryItemsSelected[categoryType][id]
-            delete nextCategoryItemsVisible[categoryType][id]
             setActors(nextActors)
-            setCategoryItemsSelected(nextCategoryItemsSelected)
-            setCategoriesVisible(nextCategoryItemsVisible)
+
+            // delete id from list of ids
             const deleteIdx = actorIds[categoryType].findIndex((x) => x === Number(id))
             setActorIds(prevState => ({
                 ...prevState,
                 [categoryType]: [].concat(prevState[categoryType].slice(0, deleteIdx), 
-                                          prevState[categoryType].slice(deleteIdx + 1, prevState[categoryType].length))
+                                          prevState[categoryType].slice(deleteIdx + 1, 
+                                            prevState[categoryType].length))
             }))
+
+            // no target currently selected
             setCurrentSelected(null)
         }
     }
@@ -303,10 +270,8 @@ const AppState = () => {
                             actorTypes={actorTypes}
                             categoryCapacity={categoryCapacity}
                             categoriesSelected={categoriesSelected}
-                            categoryItemsSelected={categoryItemsSelected}
                             currentSelected={currentSelected}
                             categoriesVisible={categoriesVisible}
-                            categoryItemsVisible={categoryItemsVisible}
                             handleDropdownClick={handleDropdownClick} 
                             handleCategoryClick={handleCategoryClick} 
                             handleCategoryItemClick={handleCategoryItemClick} 
