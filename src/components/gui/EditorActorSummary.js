@@ -39,7 +39,10 @@ const EditorActorSummary = (props) => {
             <div id="editor-actor-summary-header">
                 <div className="editor-item">
                     <img id="editor-thumbnail" src={thumb} alt="actor thumbnail" />
-                    <EditorMatrix />
+                    <EditorMatrix matrix={props.actor.matrix} 
+                                  handleChange={props.handleMatrixChange}
+                                  handleBlur={props.handleMatrixBlur}
+                    />
                 </div>
             </div>
             <div id="editor-actor-summary-attrs">
@@ -75,6 +78,8 @@ const EditorActorSummary = (props) => {
 
 EditorActorSummary.propTypes = {
     actor: PropTypes.object.isRequired,
+    handleMatrixChange: PropTypes.func.isRequired,
+    handleMatrixBlur: PropTypes.func.isRequired,
 }
 
 export default EditorActorSummary

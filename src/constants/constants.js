@@ -1,4 +1,5 @@
 export const MAT_ROW_LEN = 3
+export const MAT_STEP = 10
 
 export const DEF_TRANSLATE = 0
 export const DEF_ROTATE = 0

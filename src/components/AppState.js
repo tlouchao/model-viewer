@@ -5,9 +5,11 @@ import { actorColorHelper,
          categoryTypes, 
          actorTypes, 
          actorClasses,
-         initialActorNames } from "./helpers"
+         initialActorNames, 
+         actorMatrixHelper} from "./helpers"
 import GUILayout from "./gui/GUILayout"
 import ThreeContainer from "./ThreeContainer"
+import { Matrix } from "actors/actors"
 
 const AppState = () => {
 
@@ -44,7 +46,7 @@ const AppState = () => {
             ...prevActors,
             primitives: {
                 ...prevActors.primitives,
-                [internalId]: buildActor(actorType)
+                [internalId]: buildActor(actorType, new Matrix())
             }
         }))
         setIsAppStateInitialized(true)
@@ -60,18 +62,32 @@ const AppState = () => {
 
     /* Helpers */
 
-    const buildActor = (actorType, color=undefined) => {
+    const buildActor = (actorType, matrix=undefined, color=undefined) => {
 
         // get static property of parent
         const categoryType = Object.getPrototypeOf(actorClasses[actorType]).categoryType
 
-        let actor = JSON.parse(JSON.stringify(new actorClasses[actorType]))
+        let actor
+        if (!matrix){
+            if (!color){
+                actor = new actorClasses[actorType](actorMatrixHelper(), actorColorHelper())
+            } else {
+                actor = new actorClasses[actorType](actorMatrixHelper(), color)
+            }
+        } else {
+            if (!color){
+                actor = new actorClasses[actorType](matrix, actorColorHelper())
+            } else {
+                actor = new actorClasses[actorType](matrix, color)
+            }
+        }
 
+        actor = JSON.parse(JSON.stringify(actor))
+        
         actor = {
             ...actor,
             id: getActorId(categoryType + 's'),
             actorName: getActorName(actorType, categoryType + 's'),
-            color: (color) ? color : actorColorHelper(),
             actorType: actorType,
             categoryType: categoryType,
             isSelected: categoriesSelected[categoryType + 's'],
@@ -217,41 +233,38 @@ const AppState = () => {
         }
     }
 
-    const handleVisible = () => {
-        handleVisibilityHelper(true)
-    }
+    const handleVisible = () => handleVisibilityHelper(true)
 
-    const handleHidden = () => {
-        handleVisibilityHelper(false)
-    }
+    const handleHidden = () => handleVisibilityHelper(false)
 
     const handleVisibilityHelper = (boolValue) => {
         let nextActors = {...actors}
         let nextCategoriesVisible = categoryMapHelper(false)
         Object.keys(nextActors).forEach(x => {
-            let isAllItemsHidden = true
+
             nextCategoriesVisible[x] = (categoriesSelected[x]) ? boolValue : categoriesVisible[x]
+            let atLeastOneActorVisible = false
+
             Object.keys(nextActors[x]).forEach(y => {
-                // if at least one item is visible, then category is visible
-                if (nextActors[x][y].isSelected && boolValue){
-                    nextCategoriesVisible[x] = boolValue
-                }
                 // if item is selected, then set to value sent by button click
                 if (nextActors[x][y].isSelected){
                     nextActors[x][y].isVisible = boolValue
                 }
-                // check if at least one item is visible
+                // check if at least one actor is visible
                 if (nextActors[x][y].isVisible){
-                    isAllItemsHidden = false
+                    atLeastOneActorVisible = true
                 }
             })
-            // if all items are hidden, then the category is also hidden
-            if (isAllItemsHidden){
-                nextCategoriesVisible[x] = false
-            }
+            // if at least one actor is visible, then category is also visible
+            nextCategoriesVisible[x] = atLeastOneActorVisible
+
         })
         setCategoriesVisible(nextCategoriesVisible)
         setActors(nextActors)
+    }
+
+    const handleSave = () => {
+        console.log("Save")
     }
 
     const handleDelete = () => {
@@ -312,6 +325,7 @@ const AppState = () => {
                             handleOutlinerSort={handleSort}
                             handleOutlinerVisible={handleVisible}
                             handleOutlinerHidden={handleHidden}
+                            handleEditorSave={handleSave}
                             handleEditorDelete={handleDelete}
                             showGrid={showGrid}
                             showAxes={showAxes}

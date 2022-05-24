@@ -1,6 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { MAT_ROW_LEN } from "../../constants/constants"
+import EditorMatrixElem from "./EditorMatrixElem"
 
 const EditorMatrixRow = (props) => {
 
@@ -8,17 +8,18 @@ const EditorMatrixRow = (props) => {
         <div className="matrix-row-container">
             <p className="matrix-row-name">{props.name}</p>
             <div className="matrix-row-elems">
-                {[...Array(MAT_ROW_LEN)].map((x, i) =>
-                    <div key={i} className="matrix-elem">
-                        <input  onBlur={props.handleBlur}
-                                type="number" 
-                                step="0.01" 
-                                defaultValue={props.defaultValue} 
-                                min={props.min} 
-                                max={props.max}  
-                                required 
-                        />
-                    </div>
+                {Object.keys(props.row).map(k =>
+                    <EditorMatrixElem key={k}
+                        id={`${props.name}-${k}`}
+                        handleChange={props.handleChange}
+                        handleBlur={props.handleBlur}
+                        type="number" 
+                        step="0.01"  
+                        value={props.row[k]}
+                        min={props.min} 
+                        max={props.max}  
+                        required
+                    />
                 )}
             </div>
         </div>
@@ -27,9 +28,10 @@ const EditorMatrixRow = (props) => {
 
 EditorMatrixRow.propTypes = {
     name: PropTypes.string.isRequired,
-    defaultValue: PropTypes.string.isRequired,
     min: PropTypes.string.isRequired,
     max: PropTypes.string.isRequired,
+    row: PropTypes.object.isRequired,
+    handleChange: PropTypes.func.isRequired,
     handleBlur: PropTypes.func.isRequired,
 }
 

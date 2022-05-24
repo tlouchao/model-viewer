@@ -3,24 +3,14 @@ import PropTypes from "prop-types"
 
 const EditorMatrixElem = (props) => {
 
-    const handleBlur = (e) => {
-        const t = e.target
-        if (!t.value){
-            t.value = t.defaultValue
-        } else if (Number(t.value) < t.min){
-            t.value = t.min
-        } else if (Number(t.value) > t.max){
-            t.value = t.max
-        }
-        t.value = parseFloat(t.value).toFixed(2)
-    }
-
     return (
         <div className="matrix-elem">
-            <input  onBlur={handleBlur}
+            <input  id={props.id}
+                    onBlur={props.handleBlur}
+                    onChange={props.handleChange}
                     type="number" 
-                    step="0.01" 
-                    defaultValue={props.defaultValue} 
+                    step="0.01"  
+                    value={props.value}
                     min={props.min} 
                     max={props.max}  
                     required 
@@ -30,9 +20,12 @@ const EditorMatrixElem = (props) => {
 }
 
 EditorMatrixElem.propTypes = {
-    defaultValue: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    value: PropTypes.number.isRequired,
     min: PropTypes.string.isRequired,
     max: PropTypes.string.isRequired,
+    handleChange: PropTypes.func.isRequired,
+    handleBlur: PropTypes.func.isRequired,
 }
 
 export default EditorMatrixElem

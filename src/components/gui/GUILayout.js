@@ -37,6 +37,7 @@ const GUILayout = (props) => {
                 />
                 <EditorContainer actors={props.actors}
                                  currentSelected={props.currentSelected}
+                                 handleEditorSave={props.handleEditorSave}
                                  handleEditorDelete={props.handleEditorDelete}
                  />
             </div>
@@ -78,6 +79,7 @@ GUILayout.propTypes = {
     handleOutlinerSort: PropTypes.func.isRequired,
     handleOutlinerVisible: PropTypes.func.isRequired,
     handleOutlinerHidden: PropTypes.func.isRequired,
+    handleEditorSave: PropTypes.func.isRequired,
     handleEditorDelete: PropTypes.func.isRequired,
     showGrid: PropTypes.bool.isRequired,
     showAxes: PropTypes.bool.isRequired,
