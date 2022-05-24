@@ -105,7 +105,7 @@ class ThreeContainer extends React.Component {
 
     render() {
         return (
-            <div id="three-canvas" ref={this.setCanvasRef} />
+            <div id="three-canvas" tabIndex="0" onBlur={this.props.handleGUIBlur} ref={this.setCanvasRef} />
         )
     }
 }

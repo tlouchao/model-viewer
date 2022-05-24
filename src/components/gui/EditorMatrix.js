@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import EditorMatrixRow from "./EdtiorMatrixRow"
 import {MIN_TRANSLATE, MAX_TRANSLATE,
         MIN_ROTATE, MAX_ROTATE,
-        MIN_SCALE, MAX_SCALE} from "../../constants/constants"
+        MIN_SCALE, MAX_SCALE} from "constants/constants"
 
 const EditorMatrix = (props) => {
 

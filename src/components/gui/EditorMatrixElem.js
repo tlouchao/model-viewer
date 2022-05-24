@@ -21,7 +21,7 @@ const EditorMatrixElem = (props) => {
 
 EditorMatrixElem.propTypes = {
     id: PropTypes.string.isRequired,
-    value: PropTypes.number.isRequired,
+    value: PropTypes.string.isRequired,
     min: PropTypes.string.isRequired,
     max: PropTypes.string.isRequired,
     handleChange: PropTypes.func.isRequired,

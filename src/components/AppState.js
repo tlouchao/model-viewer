@@ -243,24 +243,46 @@ const AppState = () => {
         Object.keys(nextActors).forEach(x => {
 
             nextCategoriesVisible[x] = (categoriesSelected[x]) ? boolValue : categoriesVisible[x]
-            let atLeastOneActorVisible = false
 
-            Object.keys(nextActors[x]).forEach(y => {
-                // if item is selected, then set to value sent by button click
-                if (nextActors[x][y].isSelected){
-                    nextActors[x][y].isVisible = boolValue
-                }
-                // check if at least one actor is visible
-                if (nextActors[x][y].isVisible){
-                    atLeastOneActorVisible = true
-                }
-            })
-            // if at least one actor is visible, then category is also visible
-            nextCategoriesVisible[x] = atLeastOneActorVisible
+            if (Object.keys(nextActors[x]).length != 0) {
 
+                let atLeastOneActorVisible = false
+
+                Object.keys(nextActors[x]).forEach(y => {
+                    // if item is selected, then set to value sent by button click
+                    if (nextActors[x][y].isSelected){
+                        nextActors[x][y].isVisible = boolValue
+                    }
+                    // check if at least one actor is visible
+                    if (nextActors[x][y].isVisible){
+                        atLeastOneActorVisible = true
+                    }
+                })
+                // if at least one actor is visible, then category is also visible
+                nextCategoriesVisible[x] = atLeastOneActorVisible
+            }
         })
         setCategoriesVisible(nextCategoriesVisible)
         setActors(nextActors)
+    }
+
+    const handleGUIBlur = (e) => {
+        console.debug(e.relatedTarget)
+        // do not deselect items if event firing element gains focus
+        if (e.relatedTarget != null){
+            e.stopPropagation()
+        // else, deselect outliner items
+        } else {
+            let nextActors = {...actors}
+            Object.keys(nextActors).forEach(x => {
+                Object.keys(nextActors[x]).forEach(y => {
+                    nextActors[x][y].isSelected = false
+                })
+            })
+            setCategoriesSelected(categoryMapHelper(false))
+            setActors(nextActors)
+            setCurrentSelected(null)
+        }
     }
 
     const handleSave = () => {
@@ -327,12 +349,14 @@ const AppState = () => {
                             handleOutlinerHidden={handleHidden}
                             handleEditorSave={handleSave}
                             handleEditorDelete={handleDelete}
+                            handleGUIBlur={handleGUIBlur}
                             showGrid={showGrid}
                             showAxes={showAxes}
                             showWireframe={showWireframe}
                             handleToggle={handleToggle}
                 />
                 <ThreeContainer actors={actors}
+                                handleGUIBlur={handleGUIBlur}
                                 showGrid={showGrid}
                                 showAxes={showAxes}
                                 showWireframe={showWireframe}

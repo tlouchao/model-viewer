@@ -4,10 +4,11 @@ import PropTypes from "prop-types"
 const Dropdown = (props) => {
     
     return (
-        <div className="dropdown">
+        <div className="dropdown" tabIndex="0">
             <select name={props.name} 
                     data-categorytype={props.categoryType} 
-                    defaultValue="" 
+                    defaultValue=""
+                    onBlur={props.handleGUIBlur}
                     onChange={props.handleChange}
                     required>
                 <option value="" 
@@ -29,6 +30,7 @@ Dropdown.propTypes = {
     optionNames: PropTypes.array.isRequired,
     optionValues: PropTypes.array.isRequired,
     handleChange: PropTypes.func.isRequired,
+    handleGUIBlur: PropTypes.func.isRequired,
 }
 
 export default Dropdown

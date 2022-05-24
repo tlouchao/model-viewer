@@ -18,12 +18,14 @@ const DropdownContainer = (props) => {
             <Dropdown name={props.name}
                 categoryType={props.categoryType}
                 handleChange={handleChange}
+                handleGUIBlur={props.handleGUIBlur}
                 optionValues={props.optionValues}
                 optionNames={props.optionNames} 
             />
             <button data-categorytype={props.categoryType} 
                 value={selectedValue} 
                 onClick={props.handleClick}
+                onBlur={props.handleGUIBlur}
                 disabled={selectedValue === null}>
                 Add
             </button>
@@ -37,6 +39,7 @@ DropdownContainer.propTypes = {
     optionNames: PropTypes.array.isRequired,
     optionValues: PropTypes.array.isRequired,
     handleClick: PropTypes.func.isRequired,
+    handleGUIBlur: PropTypes.func.isRequired,
 }
 
 export default DropdownContainer

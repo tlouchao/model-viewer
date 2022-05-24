@@ -7,7 +7,7 @@
         background-color: map-get(v.$colors, "containviewcolor");
         overflow: auto;
         flex-grow: 1;
-        @media only screen and (max-width: map-get(v.$breakpoints, "phone")) {
+        @media only screen and (max-width: map-get(v.$breakpoints, "tablet")) {
             max-height: 270px;
         }
         .outliner-category, .outliner-item {

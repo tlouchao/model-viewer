@@ -11,10 +11,10 @@
                         minmax(map-get(v.$heights, "togglelayoutheight"), 10vh)
                         auto;
     padding: 2rem 1.5rem;
-    @media only screen and (max-width: map-get(v.$breakpoints, "phone")) {
+    @media only screen and (max-width: map-get(v.$breakpoints, "tablet")) {
         padding: 2rem 1rem;
     }
-    @include v.phone-flex-column(flex-start);
+    @include v.break-flex-column(flex-start);
     #brand {
         color:  map-get(v.$colors, "fontcolor");
         height: map-get(v.$heights, "brandheight");
@@ -22,7 +22,7 @@
         span {
             font-weight: bold;
         }
-        @media only screen and (max-width: map-get(v.$breakpoints, "phone")) {
+        @media only screen and (max-width: map-get(v.$breakpoints, "tablet")) {
             display: flex;
             justify-content: center;
             flex-direction: row;
@@ -33,20 +33,20 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 1rem;
-        @include v.phone-flex-column(center);
+        @include v.break-flex-column(center);
     }
     #gui-browse {
         display: grid;
         grid-template-columns: 1fr 2fr;
         gap: 1rem;
-        @include v.phone-flex-column(center);
+        @include v.break-flex-column(center);
     }
     #gui-toggle-layout {
         min-height: map-get(v.$heights, "togglelayoutheight");
         display: grid;
         grid-template-columns: [grid-empty] 1fr [grid-toggle] 2fr;
         gap: 1rem;
-        @include v.phone-flex-column("center");
+        @include v.break-flex-column("center");
         #gui-toggle {
             grid-column: grid-toggle;
             display: flex;
@@ -57,7 +57,7 @@
             margin-right: 0;
             padding: .5rem 0rem;
             gap: .5rem;
-            @media only screen and (max-width: map-get(v.$breakpoints, "phone")) { 
+            @media only screen and (max-width: map-get(v.$breakpoints, "tablet")) { 
                 margin-right: auto;
             }
         }
@@ -67,7 +67,7 @@
         grid-template-columns: [grid-empty] 1fr [grid-button] 2fr;
         padding: .5rem 0rem;
         gap: 1rem;
-        @include v.phone-flex-column("center");
+        @include v.break-flex-column("center");
         button {
             grid-column: grid-button;
             align-self: stretch;

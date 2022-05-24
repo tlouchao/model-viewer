@@ -4,7 +4,7 @@ import PropTypes from "prop-types"
 const Toggle = (props) => {
 
     return (
-        <div className="toggle">
+        <div className="toggle" tabIndex="0" onBlur={props.handleGUIBlur}>
             <input  type="checkbox"
                     onChange={props.handleChange}
                     id={props.id} 
@@ -21,6 +21,7 @@ Toggle.propTypes = {
     label: PropTypes.string.isRequired,
     checked: PropTypes.bool.isRequired,
     handleChange: PropTypes.func.isRequired,
+    handleGUIBlur: PropTypes.func.isRequired,
 }
 
 export default Toggle

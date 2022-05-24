@@ -43,8 +43,8 @@ $heights: (
     sliderthumbheight: 1.75rem,
 );
 
-@mixin phone-flex-column($justify-content-value) {
-    @media only screen and (max-width: map-get($breakpoints, "phone")) {
+@mixin break-flex-column($justify-content-value) {
+    @media only screen and (max-width: map-get($breakpoints, "tablet")) {
         display: flex;
         justify-content: $justify-content-value;
         flex-direction: column;

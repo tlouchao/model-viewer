@@ -17,6 +17,11 @@ const EditorContainer = (props) => {
             const id = props.currentSelected.dataset.id
             const categoryType = props.currentSelected.dataset.categorytype
             actor = props.actors[categoryType + "s"][id]
+            Object.keys(actor.matrix).forEach(k => {
+                actor.matrix[k].x = parseFloat(actor.matrix[k].x).toFixed(2)
+                actor.matrix[k].y = parseFloat(actor.matrix[k].y).toFixed(2)
+                actor.matrix[k].z = parseFloat(actor.matrix[k].z).toFixed(2)
+            })
         }
         setBufferActor(actor)
     }, [props.currentSelected])
@@ -29,21 +34,19 @@ const EditorContainer = (props) => {
         return (props.currentSelected != null) && (props.currentSelected.hasAttribute("data-actortype"))
     }
 
-    function getEditor() {
+    const getContent = () => {
         if (bufferActor){
-            return <Editor>
-                        <EditorActorSummary
-                            actor={bufferActor}
-                            handleMatrixChange={handleMatrixChange}
-                            handleMatrixBlur={handleMatrixBlur} 
-                        />
-                   </Editor>
+            return (<EditorActorSummary
+                        actor={bufferActor}
+                        handleMatrixChange={handleMatrixChange}
+                        handleMatrixBlur={handleMatrixBlur} 
+                    />
+            )
         } else {
-            return <Editor>
-                        <p id="editor-empty">
-                            Select an actor in the Outliner to view and edit its attributes.
-                        </p>
-                   </Editor>    
+            return (<p id="editor-empty">
+                        Select an actor in the Outliner to view and edit its attributes.
+                    </p>  
+            )
         }
     }
 
@@ -72,10 +75,10 @@ const EditorContainer = (props) => {
     return (
         <div id="editor-container">
             <h2 className="name-container">Editor</h2>
-            {getEditor()}
+            <Editor handleGUIBlur={props.handleGUIBlur} content={getContent()}/>
             <div className="button-group">
-                <button onClick={props.handleEditorSave}>Save</button>
-                <button onClick={props.handleEditorDelete}>Delete</button>
+                <button onBlur={props.handleGUIBlur} onClick={props.handleEditorSave}>Save</button>
+                <button onBlur={props.handleGUIBlur} onClick={props.handleEditorDelete}>Delete</button>
             </div>
         </div>
     )
@@ -86,6 +89,7 @@ EditorContainer.propTypes = {
     currentSelected: PropTypes.instanceOf(Element) || null,
     handleEditorSave: PropTypes.func.isRequired,
     handleEditorDelete: PropTypes.func.isRequired,
+    handleGUIBlur: PropTypes.func.isRequired,
 }
 
 export default EditorContainer

@@ -12,12 +12,13 @@ const OutlinerContainer = (props) => {
                       categoriesSelected={props.categoriesSelected}
                       categoriesVisible={props.categoriesVisible}
                       handleCategoryClick={props.handleCategoryClick}
-                      handleCategoryItemClick={props.handleCategoryItemClick} 
+                      handleCategoryItemClick={props.handleCategoryItemClick}
+                      handleGUIBlur={props.handleGUIBlur}
             />
             <div className="button-group">
-                <button onClick={props.handleOutlinerSort}>Sort</button>
-                <button onClick={props.handleOutlinerVisible}>Show</button>
-                <button onClick={props.handleOutlinerHidden}>Hide</button>
+                <button onBlur={props.handleGUIBlur} onClick={props.handleOutlinerSort}>Sort</button>
+                <button onBlur={props.handleGUIBlur} onClick={props.handleOutlinerVisible}>Show</button>
+                <button onBlur={props.handleGUIBlur} onClick={props.handleOutlinerHidden}>Hide</button>
             </div>
         </div>
     )
@@ -34,6 +35,7 @@ OutlinerContainer.propTypes = {
     handleOutlinerSort: PropTypes.func.isRequired,
     handleOutlinerVisible: PropTypes.func.isRequired,
     handleOutlinerHidden: PropTypes.func.isRequired,
+    handleGUIBlur: PropTypes.func.isRequired,
 }
 
 export default OutlinerContainer

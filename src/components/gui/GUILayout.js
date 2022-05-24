@@ -14,7 +14,8 @@ const GUILayout = (props) => {
                 {props.categoryTypes.map(x => 
                     <DropdownContainer key={`add ${x}`} name={`add ${x}`}
                         categoryType={x}
-                        handleClick={props.handleDropdownClick} 
+                        handleClick={props.handleDropdownClick}
+                        handleGUIBlur={props.handleGUIBlur}
                         optionValues={props.actorTypes[x]} 
                         optionNames={(x != "light") ?
                                       props.actorTypes[x].map(y => y.charAt(0).toUpperCase() + y.slice(1)) :
@@ -33,27 +34,32 @@ const GUILayout = (props) => {
                                     handleCategoryItemClick={props.handleCategoryItemClick}
                                     handleOutlinerSort={props.handleOutlinerSort} 
                                     handleOutlinerVisible={props.handleOutlinerVisible}
-                                    handleOutlinerHidden={props.handleOutlinerHidden} 
+                                    handleOutlinerHidden={props.handleOutlinerHidden}
+                                    handleGUIBlur={props.handleGUIBlur}
                 />
                 <EditorContainer actors={props.actors}
                                  currentSelected={props.currentSelected}
                                  handleEditorSave={props.handleEditorSave}
                                  handleEditorDelete={props.handleEditorDelete}
+                                 handleGUIBlur={props.handleGUIBlur}
                  />
             </div>
             <div id="gui-toggle-layout">
                 <div id="gui-toggle">
                     <Toggle id="show-grid" 
                             label="Show Grid" 
-                            handleChange={props.handleToggle} 
+                            handleChange={props.handleToggle}
+                            handleGUIBlur={props.handleGUIBlur}
                             checked={props.showGrid} />
                     <Toggle id="show-axes" 
                             label="Show Axes" 
-                            handleChange={props.handleToggle} 
+                            handleChange={props.handleToggle}
+                            handleGUIBlur={props.handleGUIBlur}
                             checked={props.showAxes} />
                     <Toggle id="show-wireframe" 
                             label="Show Wireframe" 
-                            handleChange={props.handleToggle} 
+                            handleChange={props.handleToggle}
+                            handleGUIBlur={props.handleGUIBlur}
                             checked={props.showWireframe} />
                 </div>
             </div>
@@ -81,6 +87,7 @@ GUILayout.propTypes = {
     handleOutlinerHidden: PropTypes.func.isRequired,
     handleEditorSave: PropTypes.func.isRequired,
     handleEditorDelete: PropTypes.func.isRequired,
+    handleGUIBlur: PropTypes.func.isRequired,
     showGrid: PropTypes.bool.isRequired,
     showAxes: PropTypes.bool.isRequired,
     showWireframe: PropTypes.bool.isRequired,

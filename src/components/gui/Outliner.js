@@ -19,7 +19,7 @@ const Outliner = (props) => {
     }
 
     return (
-        <div id="outliner">
+        <div id="outliner" tabIndex="0" onBlur={props.handleGUIBlur}>
             <div>
             {Object.keys(props.actors).map((x, i) => 
                 <div key={i}>
@@ -59,6 +59,7 @@ Outliner.propTypes = {
     categoriesVisible: PropTypes.object.isRequired,
     handleCategoryClick: PropTypes.func.isRequired,
     handleCategoryItemClick: PropTypes.func.isRequired,
+    handleGUIBlur: PropTypes.func.isRequired,
 }
 
 export default Outliner

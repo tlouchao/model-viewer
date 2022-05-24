@@ -5,12 +5,12 @@ import EditorMatrixElem from "./EditorMatrixElem"
 const EditorMatrixRow = (props) => {
 
     return (
-        <div className="matrix-row-container">
+        <div className="matrix-row-container" id={`${props.name.toLowerCase()}-row`}>
             <p className="matrix-row-name">{props.name}</p>
             <div className="matrix-row-elems">
                 {Object.keys(props.row).map(k =>
                     <EditorMatrixElem key={k}
-                        id={`${props.name}-${k}`}
+                        id={`${props.name.toLowerCase()}-${k}`}
                         handleChange={props.handleChange}
                         handleBlur={props.handleBlur}
                         type="number" 
