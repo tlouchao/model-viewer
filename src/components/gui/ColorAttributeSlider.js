@@ -1,23 +1,24 @@
 import React, { useState } from "react"
+import PropTypes from "prop-types"
 import chroma from "chroma-js"
 
 const ColorAttributeSlider = (props) => {
     const [actorColor, setActorColor] = useState(props.color)
-    const [actorSat, setActorSat] = useState(chroma(props.color).get('hsl.s'))
-    const [actorHue, setActorHue] = useState(chroma(props.color).get('hsl.h'))
+    const [actorSat, setActorSat] = useState(chroma(props.color).get("hsl.s"))
+    const [actorHue, setActorHue] = useState(chroma(props.color).get("hsl.h"))
 
     const handleColorInput = (e) => {
         setActorColor(e.target.value)
-        setActorSat(chroma(e.target.value).get('hsl.s'))
-        setActorHue(chroma(e.target.value).get('hsl.h'))
+        setActorSat(chroma(e.target.value).get("hsl.s"))
+        setActorHue(chroma(e.target.value).get("hsl.h"))
     }
 
     const handleRangeChange = (e) => {
         setActorColor(prevState => 
             chroma.hsl(actorHue, 
                        e.target.value / 100,
-                       chroma(prevState).get('hsl.l'),
-                       'hsl'
+                       chroma(prevState).get("hsl.l"),
+                       "hsl"
             ).hex()
         )             
         setActorSat(e.target.value / 100)
@@ -39,6 +40,12 @@ const ColorAttributeSlider = (props) => {
             />
         </div>
     )
+}
+
+ColorAttributeSlider.propTypes = {
+    color: PropTypes.string.isRequired,
+    min: PropTypes.string.isRequired,
+    max: PropTypes.string.isRequired,
 }
 
 export default ColorAttributeSlider

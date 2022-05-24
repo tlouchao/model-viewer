@@ -1,4 +1,5 @@
 import React from "react"
+import PropTypes from "prop-types"
 
 const EditorMatrixElem = (props) => {
 
@@ -26,6 +27,12 @@ const EditorMatrixElem = (props) => {
             />
         </div>
     )
+}
+
+EditorMatrixElem.propTypes = {
+    defaultValue: PropTypes.string.isRequired,
+    min: PropTypes.string.isRequired,
+    max: PropTypes.string.isRequired,
 }
 
 export default EditorMatrixElem

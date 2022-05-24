@@ -1,4 +1,5 @@
 import React from "react"
+import PropTypes from "prop-types"
 import Outliner from "./Outliner"
 
 const OutlinerContainer = (props) => {
@@ -20,6 +21,19 @@ const OutlinerContainer = (props) => {
             </div>
         </div>
     )
+}
+
+OutlinerContainer.propTypes = {
+    actors: PropTypes.object.isRequired,
+    actorIds: PropTypes.object.isRequired,
+    categoryCapacity: PropTypes.object.isRequired,
+    categoriesSelected: PropTypes.object.isRequired,
+    categoriesVisible: PropTypes.object.isRequired,
+    handleCategoryClick: PropTypes.func.isRequired,
+    handleCategoryItemClick: PropTypes.func.isRequired,
+    handleOutlinerSort: PropTypes.func.isRequired,
+    handleOutlinerVisible: PropTypes.func.isRequired,
+    handleOutlinerHidden: PropTypes.func.isRequired,
 }
 
 export default OutlinerContainer

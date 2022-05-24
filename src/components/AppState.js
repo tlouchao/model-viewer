@@ -23,9 +23,7 @@ const AppState = () => {
     const [actors, setActors] = useState(categoryMapHelper({}))
 
     const [categoriesSelected, setCategoriesSelected] = useState(categoryMapHelper(false))
-    const [categoryItemsSelected, setCategoryItemsSelected] = useState(categoryMapHelper({}))
     const [categoriesVisible, setCategoriesVisible] = useState(categoryMapHelper(true))
-    const [categoryItemsVisible, setCategoryItemsVisible] = useState(categoryMapHelper({}))
     const [currentSelected, setCurrentSelected] = useState(null)
 
     const [showGrid, setShowGrid] = useState(true)

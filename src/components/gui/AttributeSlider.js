@@ -1,9 +1,10 @@
 import React, { useState } from "react"
+import PropTypes from "prop-types"
 
 const AttributeSlider = (props) => {
 
-    const [numValue, setNumValue] = useState(props.value)
-    const [sliderValue, setSliderValue] = useState(props.value)
+    const [numValue, setNumValue] = useState(parseFloat(props.value).toFixed(2))
+    const [sliderValue, setSliderValue] = useState(parseFloat(props.value).toFixed(2))
 
     const handleNumChange = (e) => {
         setNumValue(e.target.value)
@@ -32,8 +33,7 @@ const AttributeSlider = (props) => {
                     type="number" 
                     onBlur={handleChange}
                     onChange={handleNumChange}
-                    value={parseFloat(numValue).toFixed(2)}
-                    step={props.step} 
+                    value={numValue}
                     min={props.min}  
                     max={props.max} 
                     required 
@@ -48,6 +48,14 @@ const AttributeSlider = (props) => {
             />
         </div>
     )
+}
+
+AttributeSlider.propTypes = {
+    value: PropTypes.number.isRequired,
+    defaultValue: PropTypes.string.isRequired,
+    step: PropTypes.string.isRequired,
+    min: PropTypes.string.isRequired,
+    max: PropTypes.string.isRequired,
 }
 
 export default AttributeSlider

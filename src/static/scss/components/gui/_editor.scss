@@ -23,6 +23,7 @@
             align-items: stretch;
             gap: 1rem;
             @media only screen and (max-width: map-get(v.$breakpoints, "desktop")) {
+                gap: 2rem;
                 height: fit-content;
             }
         }
@@ -30,6 +31,11 @@
             display: flex;
             flex-direction: column;
             gap: .5rem;
+        }
+        #editor-actor-summary-attrs {
+            @media only screen and (min-width: map-get(v.$breakpoints, "desktop")) {
+                padding-bottom: 1em;
+            }
         }
         #editor-thumbnail {
             width: 100%;

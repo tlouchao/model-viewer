@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import PropTypes from "prop-types"
 import Dropdown from "./Dropdown"
 
 const DropdownContainer = (props) => {
@@ -27,6 +28,14 @@ const DropdownContainer = (props) => {
             </button>
         </div>
     )
+}
+
+DropdownContainer.propTypes = {
+    name: PropTypes.string.isRequired,
+    categoryType: PropTypes.string.isRequired,
+    optionNames: PropTypes.array.isRequired,
+    optionValues: PropTypes.array.isRequired,
+    handleClick: PropTypes.func.isRequired,
 }
 
 export default DropdownContainer

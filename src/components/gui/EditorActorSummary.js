@@ -1,4 +1,5 @@
 import React from "react"
+import PropTypes from "prop-types"
 import EditorMatrix from "./EditorMatrix"
 import AttributeSlider from "./AttributeSlider"
 import ColorAttributeSlider from "./ColorAttributeSlider"
@@ -10,27 +11,27 @@ import pointThumb from "static/imgs/point-thumb.png"
 
 const EditorActorSummary = (props) => {
 
-    let thumb;
+    let thumb
     switch(props.actor.actorType){
         case "box":
             thumb=boxThumb
-            break;
+            break
         case "cylinder":
             thumb=cylinderThumb
-            break;
+            break
         case "torus":
             thumb=torusThumb
-            break;
+            break
         case "ambient":
             thumb=ambientThumb
-            break;
+            break
         case "point":
             thumb=pointThumb
-            break;
+            break
         default:
             console.warn("image not available for actor type " + props.actor.actorType)
             thumb=boxThumb
-            break;
+            break
     }
 
     return (
@@ -62,7 +63,7 @@ const EditorActorSummary = (props) => {
                             defaultValue="0.00"
                             name={`${x[0]}-slider`}
                             min="0.00"
-                            max={(x[0] === 'intensity') ? "10.00" : "100.00"}
+                            max={(x[0] === "intensity") ? "10.00" : "100.00"}
                             step="0.01"
                         />
                     </div>
@@ -70,6 +71,10 @@ const EditorActorSummary = (props) => {
             </div>
         </div>
     )
+}
+
+EditorActorSummary.propTypes = {
+    actor: PropTypes.object.isRequired,
 }
 
 export default EditorActorSummary

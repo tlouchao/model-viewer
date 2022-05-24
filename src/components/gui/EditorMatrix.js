@@ -2,7 +2,7 @@ import React from "react"
 import EditorMatrixRow from "./EdtiorMatrixRow"
 import {DEF_TRANSLATE, MIN_TRANSLATE, MAX_TRANSLATE,
         DEF_ROTATE, MIN_ROTATE, MAX_ROTATE,
-        DEF_SCALE, MIN_SCALE, MAX_SCALE} from "../../constants/constants";
+        DEF_SCALE, MIN_SCALE, MAX_SCALE} from "../../constants/constants"
 
 const EditorMatrix = () => {
 

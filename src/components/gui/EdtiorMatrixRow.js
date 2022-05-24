@@ -1,5 +1,6 @@
 import React from "react"
-import { MAT_ROW_LEN } from "../../constants/constants";
+import PropTypes from "prop-types"
+import { MAT_ROW_LEN } from "../../constants/constants"
 
 const EditorMatrixRow = (props) => {
 
@@ -22,6 +23,14 @@ const EditorMatrixRow = (props) => {
             </div>
         </div>
     )
+}
+
+EditorMatrixRow.propTypes = {
+    name: PropTypes.string.isRequired,
+    defaultValue: PropTypes.string.isRequired,
+    min: PropTypes.string.isRequired,
+    max: PropTypes.string.isRequired,
+    handleBlur: PropTypes.func.isRequired,
 }
 
 export default EditorMatrixRow

@@ -1,4 +1,5 @@
 import React from "react"
+import PropTypes from "prop-types"
 
 const Toggle = (props) => {
 
@@ -13,6 +14,13 @@ const Toggle = (props) => {
             <label htmlFor={props.label}>{props.label}</label>
         </div>
     )
+}
+
+Toggle.propTypes = {
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    checked: PropTypes.bool.isRequired,
+    handleChange: PropTypes.func.isRequired,
 }
 
 export default Toggle

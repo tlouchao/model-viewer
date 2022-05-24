@@ -1,4 +1,5 @@
 import React from "react"
+import PropTypes from "prop-types"
 import DropdownContainer from "./DropdownContainer"
 import OutlinerContainer from "./OutlinerContainer"
 import EditorContainer from "./EditorContainer"
@@ -35,7 +36,6 @@ const GUILayout = (props) => {
                                     handleOutlinerHidden={props.handleOutlinerHidden} 
                 />
                 <EditorContainer actors={props.actors}
-                                 actorIds={props.actorIds}
                                  currentSelected={props.currentSelected}
                                  handleEditorDelete={props.handleEditorDelete}
                  />
@@ -61,6 +61,28 @@ const GUILayout = (props) => {
             </div>     
         </div>
     )
+}
+
+GUILayout.propTypes = {
+    currentSelected: PropTypes.instanceOf(Element) || null,
+    actors: PropTypes.object.isRequired,
+    actorIds: PropTypes.object.isRequired,
+    categoryTypes: PropTypes.array.isRequired,
+    actorTypes: PropTypes.object.isRequired,
+    categoryCapacity: PropTypes.object.isRequired,
+    categoriesSelected: PropTypes.object.isRequired,
+    categoriesVisible: PropTypes.object.isRequired,
+    handleDropdownClick: PropTypes.func.isRequired,
+    handleCategoryClick: PropTypes.func.isRequired,
+    handleCategoryItemClick: PropTypes.func.isRequired,
+    handleOutlinerSort: PropTypes.func.isRequired,
+    handleOutlinerVisible: PropTypes.func.isRequired,
+    handleOutlinerHidden: PropTypes.func.isRequired,
+    handleEditorDelete: PropTypes.func.isRequired,
+    showGrid: PropTypes.bool.isRequired,
+    showAxes: PropTypes.bool.isRequired,
+    showWireframe: PropTypes.bool.isRequired,
+    handleToggle: PropTypes.func.isRequired,
 }
 
 export default GUILayout

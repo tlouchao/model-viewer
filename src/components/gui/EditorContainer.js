@@ -1,4 +1,5 @@
 import React from "react"
+import PropTypes from "prop-types"
 import Editor from "./Editor"
 
 const EditorContainer = (props) => {
@@ -12,6 +13,12 @@ const EditorContainer = (props) => {
             </div>
         </div>
     )
+}
+
+EditorContainer.propTypes = {
+    actors: PropTypes.object.isRequired,
+    currentSelected: PropTypes.instanceOf(Element) || null,
+    handleEditorDelete: PropTypes.func.isRequired,
 }
 
 export default EditorContainer
