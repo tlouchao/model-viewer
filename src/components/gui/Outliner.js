@@ -25,7 +25,6 @@ const Outliner = (props) => {
                     <p  key={i}
                         className={`outliner-category ${(props.categoriesSelected[x]) ? "outliner-category-selected" : ""} ${(props.categoriesVisible[x]) ? "" : "outliner-hidden"}`}
                         data-categorytype={x}
-                        data-elemtype="category"
                         onClick={props.handleCategoryClick}>
                         {x}
                         {spanHelper(x, " (Max: ")}
@@ -38,7 +37,6 @@ const Outliner = (props) => {
                                 data-id={props.actors[x][y].id}
                                 data-actortype={props.actors[x][y].actorType}
                                 data-categorytype={props.actors[x][y].categoryType}
-                                data-elemtype="item"
                                 className={`outliner-item ${(props.categoryItemsSelected[x][y]) ? "outliner-item-selected" : ""} ${(props.categoryItemsVisible[x][y]) ? "" : "outliner-hidden"}`}
                                 onClick={props.handleCategoryItemClick}>
                                 <span>{indent}</span>{props.actors[x][y].name}

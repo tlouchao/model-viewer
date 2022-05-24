@@ -23,9 +23,9 @@ const AppState = () => {
     const [actors, setActors] = useState(categoryMapHelper({}))
 
     const [categoriesSelected, setCategoriesSelected] = useState(categoryMapHelper(false))
-    const [categoryItemsSelected, setCategoryItemsSelected] = useState(categoryMapHelper([]))
+    const [categoryItemsSelected, setCategoryItemsSelected] = useState(categoryMapHelper({}))
     const [categoriesVisible, setCategoriesVisible] = useState(categoryMapHelper(true))
-    const [categoryItemsVisible, setCategoryItemsVisible] = useState(categoryMapHelper([]))
+    const [categoryItemsVisible, setCategoryItemsVisible] = useState(categoryMapHelper({}))
     const [currentSelected, setCurrentSelected] = useState(null)
 
     const [showGrid, setShowGrid] = useState(true)
@@ -229,6 +229,7 @@ const AppState = () => {
     }
 
     const handleSort = () => {
+        console.log("sort")
         let nextActorIds = []
     }
 
@@ -250,17 +251,30 @@ const AppState = () => {
                 (categoryItemsSelected[x][y]) ? [y, boolValue] : [y, categoryItemsVisible[x][y]]
             ))])
         })
-        console.log(nextVisibleState)
-        console.log(nextVisibleItemsState)
         setCategoriesVisible(Object.fromEntries(nextVisibleState))
         setCategoryItemsVisible(Object.fromEntries(nextVisibleItemsState))
     }
 
-    const handleDelete = (e) => {
-        const id = e.target.id
-        const categoryType = e.target.dataset.categorytype + 's'
-        if (currentSelected && !currentSelected.hasAttribute("data-actortype")) {
-            console.log("delete me at " + id)
+    const handleDelete = () => {
+        if (currentSelected && currentSelected.hasAttribute("data-actortype")) {
+            const id = currentSelected.dataset.id
+            const categoryType = currentSelected.dataset.categorytype + 's'
+            let nextActors = {...actors}
+            let nextCategoryItemsSelected = {...categoryItemsSelected} // todo: move into actors
+            let nextCategoryItemsVisible = {...categoryItemsVisible} // todo: move into actors
+            delete nextActors[categoryType][id]
+            delete nextCategoryItemsSelected[categoryType][id]
+            delete nextCategoryItemsVisible[categoryType][id]
+            setActors(nextActors)
+            setCategoryItemsSelected(nextCategoryItemsSelected)
+            setCategoriesVisible(nextCategoryItemsVisible)
+            const deleteIdx = actorIds[categoryType].findIndex((x) => x === Number(id))
+            setActorIds(prevState => ({
+                ...prevState,
+                [categoryType]: [].concat(prevState[categoryType].slice(0, deleteIdx), 
+                                          prevState[categoryType].slice(deleteIdx + 1, prevState[categoryType].length))
+            }))
+            setCurrentSelected(null)
         }
     }
 
@@ -299,6 +313,7 @@ const AppState = () => {
                             handleOutlinerSort={handleSort}
                             handleOutlinerVisible={handleVisible}
                             handleOutlinerHidden={handleHidden}
+                            handleEditorDelete={handleDelete}
                             showGrid={showGrid}
                             showAxes={showAxes}
                             showWireframe={showWireframe}

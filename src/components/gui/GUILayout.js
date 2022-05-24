@@ -38,7 +38,9 @@ const GUILayout = (props) => {
                 />
                 <EditorContainer actors={props.actors}
                                  actorIds={props.actorIds}
-                                 currentSelected={props.currentSelected} />
+                                 currentSelected={props.currentSelected}
+                                 handleEditorDelete={props.handleEditorDelete}
+                 />
             </div>
             <div id="gui-toggle-layout">
                 <div id="gui-toggle">

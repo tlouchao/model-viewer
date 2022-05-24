@@ -3,7 +3,7 @@ import EditorActorSummary from "./EditorActorSummary"
 
 const Editor = (props) => {
     let content;
-    if (!props.currentSelected || props.currentSelected.dataset.elemtype === "category") {
+    if (!props.currentSelected || !props.currentSelected.hasAttribute("data-actortype")) {
         content = <p id="editor-empty">
             Select an actor in the Outliner to view and edit its attributes.
             </p>       
