@@ -14,7 +14,7 @@ import { Matrix } from "actors/actors"
 const AppState = () => {
 
     /*------------------------------------------------------------------------------------------*/
-    
+
     /* App state */
     const [isAppStateInitialized, setIsAppStateInitialized] = useState(false)
 
@@ -267,7 +267,6 @@ const AppState = () => {
     }
 
     const handleGUIBlur = (e) => {
-        console.debug(e.relatedTarget)
         // do not deselect items if event firing element gains focus
         if (e.relatedTarget != null){
             e.stopPropagation()
@@ -360,7 +359,6 @@ const AppState = () => {
                                 showGrid={showGrid}
                                 showAxes={showAxes}
                                 showWireframe={showWireframe}
-
                 />
             </div>
         </div>

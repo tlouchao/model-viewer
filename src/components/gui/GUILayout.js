@@ -17,7 +17,7 @@ const GUILayout = (props) => {
                         handleClick={props.handleDropdownClick}
                         handleGUIBlur={props.handleGUIBlur}
                         optionValues={props.actorTypes[x]} 
-                        optionNames={(x != "light") ?
+                        optionNames={(x != "lights") ?
                                       props.actorTypes[x].map(y => y.charAt(0).toUpperCase() + y.slice(1)) :
                                       props.actorTypes[x].map(y => y.charAt(0).toUpperCase() + y.slice(1) + " Light")
                                     }

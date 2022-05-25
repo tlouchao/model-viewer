@@ -11,9 +11,6 @@
                         minmax(map-get(v.$heights, "togglelayoutheight"), 10vh)
                         auto;
     padding: 2rem 1.5rem;
-    @media only screen and (max-width: map-get(v.$breakpoints, "tablet")) {
-        padding: 2rem 1rem;
-    }
     @include v.break-flex-column(flex-start);
     #brand {
         color:  map-get(v.$colors, "fontcolor");

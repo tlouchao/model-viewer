@@ -1,5 +1,12 @@
-#three-canvas, canvas {
+@use "./../variables/variables" as v;
+
+#three-canvas {
     background-color: #e0e0e0; // duplicated in constants.js file
     width: 100%;
-    height: 100%;
+    height: 100vh;
+    @media only screen and (max-width: map-get(v.$breakpoints, "tablet")) {
+        height: 100%;
+    }
 }
+
+
