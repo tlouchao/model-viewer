@@ -35,6 +35,7 @@ export const MAX_SCENE_PRIMS = 16
 export const MSG_ADD = "ADD"
 export const MSG_UPDATE = "UPDATE"
 export const MSG_DELETE = "DELETE"
+export const MSG_RESET = "RESET"
 
 export const TOGGLE_OPTIONS = ["animation", "controls", "grid", "axes"]
 

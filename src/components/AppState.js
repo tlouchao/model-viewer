@@ -11,6 +11,10 @@ import { actorColorHelper,
 import GUILayout from "./gui/GUILayout"
 import ThreeContainer from "./ThreeContainer"
 import { Matrix } from "actors/actors"
+import { MSG_ADD,
+         MSG_DELETE,
+         MSG_UPDATE,
+         MSG_RESET } from "constants/constants"
 
 const AppState = () => {
 
@@ -24,6 +28,7 @@ const AppState = () => {
     const [internalId, setInternalId] = useState(1)
     const [actorIds, setActorIds] = useState(categoryMapHelper([]))
     const [actors, setActors] = useState(categoryMapHelper({}))
+    const [msg, setMsg] = useState(null)
 
     const [categoriesSelected, setCategoriesSelected] = useState(categoryMapHelper(false))
     const [categoriesVisible, setCategoriesVisible] = useState(categoryMapHelper(true))
@@ -99,6 +104,7 @@ const AppState = () => {
             isSelected: categoriesSelected[categoryType + 's'],
             isVisible: categoriesVisible[categoryType + 's'],
         }
+        setMsg({[MSG_ADD]: actor.id})
         return actor
     }
 
@@ -316,6 +322,7 @@ const AppState = () => {
 
             // no target currently selected
             setCurrentSelected(null)
+            setMsg({[MSG_DELETE]: Number(id)})
         }
     }
 
@@ -324,6 +331,10 @@ const AppState = () => {
         let nextToggleOptions = new Map(toggleOptions)
         nextToggleOptions.set(e.target.value, !toggleOptions.get(e.target.value))
         setToggleOptions(nextToggleOptions)
+    }
+
+    const handleResetCamera = () => {
+        setMsg({[MSG_RESET]: 1})
     }
 
     /*------------------------------------------------------------------------------------------*/
@@ -350,10 +361,13 @@ const AppState = () => {
                             handleEditorDelete={handleDelete}
                             handleGUIBlur={handleGUIBlur}
                             handleToggle={handleToggle}
+                            handleResetCamera={handleResetCamera}
                 />
                 <ThreeContainer actors={actors}
+                                msg={msg}
                                 toggleOptions={toggleOptions}
                                 handleGUIBlur={handleGUIBlur}
+
                 />
             </div>
         </div>
