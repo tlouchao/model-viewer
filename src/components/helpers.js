@@ -26,7 +26,11 @@ const actorTypes = Object.fromEntries(categoriesClasses.map(x =>
 ))
 
 // max lights in scene = 8, max prims in scene = 16. HARDCODED AND ORDER DEPENDENT.
-let categoryCapacity = Object.fromEntries(categoryTypes.map((x, i) => [x, [].concat(CONSTS.MAX_SCENE_LIGHTS, CONSTS.MAX_SCENE_PRIMS)[i]]))
+const categoryCapacity = Object.fromEntries(categoryTypes.map((x, i) => [x, [].concat(CONSTS.MAX_SCENE_LIGHTS, CONSTS.MAX_SCENE_PRIMS)[i]]))
+
+// toggle options, remember insertion order
+const initialToggleOptions = new Map()
+CONSTS.TOGGLE_OPTIONS.map(x => initialToggleOptions.set(x, false))
 
 /*------------------------------------------------------------------------------------------*/
 
@@ -67,7 +71,8 @@ export {categoryTypes,
         actorTypes, 
         categoryCapacity, 
         actorClasses, 
-        initialActorNames, 
+        initialActorNames,
+        initialToggleOptions, 
         actorColorHelper, 
         actorMatrixHelper,
         categoryMapHelper }

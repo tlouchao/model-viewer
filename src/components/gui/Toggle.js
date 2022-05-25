@@ -6,6 +6,7 @@ const Toggle = (props) => {
     return (
         <div className="toggle" tabIndex="0" onBlur={props.handleGUIBlur}>
             <input  type="checkbox"
+                    value={props.value}
                     onChange={props.handleChange}
                     id={props.id} 
                     name={props.label}

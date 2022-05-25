@@ -47,6 +47,7 @@
         font-size: 1rem;
         padding: .25rem;
         border: none;
+        text-transform: capitalize;
         &:hover {
             cursor: pointer;
         }
@@ -57,17 +58,13 @@
             color: map-get(v.$colors, "disablecolor");
         }
         option {
+            text-transform: capitalize;
             color: map-get(v.$colors, "fontcolor");
             padding: 0rem;
             &:hover {
                 cursor: pointer;
             }
         }
-    }
-
-    /* Toggle Global */
-    .toggle {
-        min-width: map-get(v.$widths, "togglewidth");
     }
 
     /* Scrollbar Global */

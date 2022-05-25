@@ -14,7 +14,7 @@ const Dropdown = (props) => {
                 <option value="" 
                         disabled 
                         hidden>
-                        - Select -
+                        - select -
                 </option>
                 {props.optionValues.map((x, i) => 
                     <option key={i} value={x}>{props.optionNames[i]}</option>)

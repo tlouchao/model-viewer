@@ -6,6 +6,7 @@ import { actorColorHelper,
          actorTypes, 
          actorClasses,
          initialActorNames, 
+         initialToggleOptions,
          actorMatrixHelper} from "./helpers"
 import GUILayout from "./gui/GUILayout"
 import ThreeContainer from "./ThreeContainer"
@@ -28,9 +29,7 @@ const AppState = () => {
     const [categoriesVisible, setCategoriesVisible] = useState(categoryMapHelper(true))
     const [currentSelected, setCurrentSelected] = useState(null)
 
-    const [showGrid, setShowGrid] = useState(true)
-    const [showAxes, setShowAxes] = useState(true)
-    const [showWireframe, setShowWireframe] = useState(false)
+    const [toggleOptions, setToggleOptions] = useState(initialToggleOptions)
 
     /*------------------------------------------------------------------------------------------*/
 
@@ -49,6 +48,13 @@ const AppState = () => {
                 [internalId]: buildActor(actorType, new Matrix())
             }
         }))
+        // set toggle options
+        let nextToggleOptions = new Map(toggleOptions)
+        nextToggleOptions.set("grid", true)
+        nextToggleOptions.set("axes", true)
+        setToggleOptions(nextToggleOptions)
+
+        // app is initialized
         setIsAppStateInitialized(true)
     }, [])
 
@@ -314,17 +320,10 @@ const AppState = () => {
     }
 
     const handleToggle = (e) => {
-        switch (e.target.id) {
-            case "show-grid":
-                setShowGrid(e.target.checked)
-                break
-            case "show-axes":
-                setShowAxes(e.target.checked)
-                break
-            case "show-wireframe":
-                setShowWireframe(e.target.checked)
-                break
-        }
+        // set toggle options
+        let nextToggleOptions = new Map(toggleOptions)
+        nextToggleOptions.set(e.target.value, !toggleOptions.get(e.target.value))
+        setToggleOptions(nextToggleOptions)
     }
 
     /*------------------------------------------------------------------------------------------*/
@@ -340,6 +339,7 @@ const AppState = () => {
                             categoriesSelected={categoriesSelected}
                             currentSelected={currentSelected}
                             categoriesVisible={categoriesVisible}
+                            toggleOptions={toggleOptions}
                             handleDropdownClick={handleDropdownClick} 
                             handleCategoryClick={handleCategoryClick} 
                             handleCategoryItemClick={handleCategoryItemClick} 
@@ -349,16 +349,11 @@ const AppState = () => {
                             handleEditorSave={handleSave}
                             handleEditorDelete={handleDelete}
                             handleGUIBlur={handleGUIBlur}
-                            showGrid={showGrid}
-                            showAxes={showAxes}
-                            showWireframe={showWireframe}
                             handleToggle={handleToggle}
                 />
                 <ThreeContainer actors={actors}
+                                toggleOptions={toggleOptions}
                                 handleGUIBlur={handleGUIBlur}
-                                showGrid={showGrid}
-                                showAxes={showAxes}
-                                showWireframe={showWireframe}
                 />
             </div>
         </div>

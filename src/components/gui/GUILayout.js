@@ -7,6 +7,8 @@ import Toggle from "./Toggle"
 
 const GUILayout = (props) => {
 
+    const toggleOptionsEntries = Array.from(props.toggleOptions.entries())
+
     return (
         <div id="gui-layout">
             <h1 id="brand"><span>Model</span>Viewer</h1>
@@ -18,8 +20,8 @@ const GUILayout = (props) => {
                         handleGUIBlur={props.handleGUIBlur}
                         optionValues={props.actorTypes[x]} 
                         optionNames={(x != "lights") ?
-                                      props.actorTypes[x].map(y => y.charAt(0).toUpperCase() + y.slice(1)) :
-                                      props.actorTypes[x].map(y => y.charAt(0).toUpperCase() + y.slice(1) + " Light")
+                                      props.actorTypes[x] :
+                                      props.actorTypes[x].map(y => y + " light")
                                     }
                     />
                 )}
@@ -44,34 +46,38 @@ const GUILayout = (props) => {
                                  handleGUIBlur={props.handleGUIBlur}
                  />
             </div>
-            <div id="gui-toggle-layout">
-                <div id="gui-toggle">
-                    <Toggle id="show-grid" 
-                            label="Show Grid" 
-                            handleChange={props.handleToggle}
-                            handleGUIBlur={props.handleGUIBlur}
-                            checked={props.showGrid} />
-                    <Toggle id="show-axes" 
-                            label="Show Axes" 
-                            handleChange={props.handleToggle}
-                            handleGUIBlur={props.handleGUIBlur}
-                            checked={props.showAxes} />
-                    <Toggle id="show-wireframe" 
-                            label="Show Wireframe" 
-                            handleChange={props.handleToggle}
-                            handleGUIBlur={props.handleGUIBlur}
-                            checked={props.showWireframe} />
+            <div id="gui-toggle">
+                <div id="toggle-container">
+                    <div className="toggle-columns">
+                    {[...Array(2)].map((_, i) => 
+                        <div key={i} className="toggle-flex">
+                            {[...Array(2)].map((_, j) =>
+                            <Toggle key={(2 * i) + j}
+                                value={toggleOptionsEntries[(2 * i) + j][0]}
+                                id={`show-${toggleOptionsEntries[(2 * i) + j][0]}`}
+                                label={`show ${toggleOptionsEntries[(2 * i) + j][0]}`}
+                                handleChange={props.handleToggle}
+                                handleGUIBlur={props.handleGUIBlur}
+                                checked={toggleOptionsEntries[(2 * i) + j][1]}
+                            />
+                            )} 
+                        </div>
+                    )}
+                    </div>
                 </div>
             </div>
             <div id="export">
-                <button disabled>Export</button>     
-            </div>     
+                <button id="reset-camera-button">Reset Camera</button>
+                <button id="export-button">Export Scene</button>     
+            </div>
         </div>
     )
 }
 
 GUILayout.propTypes = {
+
     currentSelected: PropTypes.instanceOf(Element) || null,
+
     actors: PropTypes.object.isRequired,
     actorIds: PropTypes.object.isRequired,
     categoryTypes: PropTypes.array.isRequired,
@@ -79,6 +85,8 @@ GUILayout.propTypes = {
     categoryCapacity: PropTypes.object.isRequired,
     categoriesSelected: PropTypes.object.isRequired,
     categoriesVisible: PropTypes.object.isRequired,
+    toggleOptions: PropTypes.object.isRequired,
+
     handleDropdownClick: PropTypes.func.isRequired,
     handleCategoryClick: PropTypes.func.isRequired,
     handleCategoryItemClick: PropTypes.func.isRequired,
@@ -88,9 +96,6 @@ GUILayout.propTypes = {
     handleEditorSave: PropTypes.func.isRequired,
     handleEditorDelete: PropTypes.func.isRequired,
     handleGUIBlur: PropTypes.func.isRequired,
-    showGrid: PropTypes.bool.isRequired,
-    showAxes: PropTypes.bool.isRequired,
-    showWireframe: PropTypes.bool.isRequired,
     handleToggle: PropTypes.func.isRequired,
 }
 

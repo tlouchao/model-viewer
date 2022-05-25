@@ -1,7 +1,6 @@
 @use "./../../variables/variables" as v;
 
 #outliner-container {
-    min-height: map-get(v.$heights, "outlinerheight");
     @include v.container-flex(map-get(v.$heights, "outlinerheight"));
     #outliner {
         background-color: map-get(v.$colors, "containviewcolor");

@@ -1,5 +1,6 @@
-import React, { useRef, useState, useEffect, useMemo } from "react"
+import React, { useRef, useEffect, useMemo } from "react"
 import * as THREE from "three";
+import { categoryMapHelper } from "./helpers";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { THREE_SCENE_COLOR, ACTOR_COLORS } from "./../constants/constants"
 
@@ -7,14 +8,10 @@ const ThreeContainer = (props) => {
 
     /*------------------------------------------------------------------------------------------*/
     
-    const [geometry, setGeometry] = useState([new THREE.BoxGeometry(1,1,1), 
-                                              new THREE.CylinderGeometry(.75, .75, 1.5, 16), 
-                                              new THREE.TorusGeometry(.75, .375, 12, 24)]
-                                              [Math.floor(Math.random() * 3)])
-    const [material, setMaterial] = useState(new THREE.MeshStandardMaterial(
-                                        {color: ACTOR_COLORS[Math.floor(Math.random() * ACTOR_COLORS.length)], 
-                                        wireframe: props.showWireframe})
-                                    )
+    const actorMap = useMemo(() => categoryMapHelper({}), [props.msg])
+    const materialMap = useMemo(() => Object.fromEntries(ACTOR_COLORS.map(c => 
+                                        [c, new THREE.MeshStandardMaterial({color: c})]
+                                )), [])
     
     let camera
     let controls
@@ -27,23 +24,24 @@ const ThreeContainer = (props) => {
 
     /*------------------------------------------------------------------------------------------*/
     
+    // setup after mount
     useEffect(() => {
-        // set up scene objects dependent on width and height
-        const mesh = new THREE.Mesh(geometry, material)
+
+        // setup scene objects dependent on mounted component width and height
         camera = new THREE.PerspectiveCamera( 75, 
                  ref.current.clientWidth/ref.current.clientHeight,
                  0.1, 
-                 1000)
+                 2000)
+
         // setup camera
         camera.position.set(-1.5, 1.5, 3)
         camera.lookAt(0, 0, 0)
 
-        // scene setup
+        // setup scene
         scene.background = new THREE.Color(THREE_SCENE_COLOR)
         scene.add(light)
         scene.add(grid)
         scene.add(axes)
-        scene.add(mesh)
 
         // setup controls
         controls = new OrbitControls(camera, renderer.domElement)
@@ -55,9 +53,8 @@ const ThreeContainer = (props) => {
         renderer.setSize(ref.current.clientWidth, 
             ref.current.clientHeight)
         ref.current.appendChild(renderer.domElement)
-
-        console.log("render")
-        console.log(renderer.info)
+        
+        // anim loop
         renderer.setAnimationLoop(() => {
             renderer.render(scene, camera)
         })
@@ -65,30 +62,42 @@ const ThreeContainer = (props) => {
         // window resize listener
         window.addEventListener('resize', handleResize)
         
+        // if unmount
         return () => {
+
             camera = null
             controls = null
             light = null
             grid = null
             axes = null
             scene = null
-            geometry.forEach(x => x.dispose())
-            material.dispose()
+            Object.keys(materialMap).forEach(m => materialMap[m].dispose())
+            Object.keys(actorMap["primitives"]).forEach(g => actorMap["primitives"][g].dispose())
+            actorMap["lights"] = null
+
+            console.log(renderer.info)
+            renderer = null
+
             if (ref && ref.current){
                 while (ref.current.firstElementChild) {
                     ref.current.firstElementChild.remove()
                 }
             }
+
             window.removeEventListener('resize', handleResize)
+
         }
     }, [])
 
+    // change visibility based on props
     useEffect(() => {
-          grid.visible = props.showGrid    
-          axes.visible = props.showAxes;
-        material.wireframe = props.showWireframe;
-    }, [props.showGrid, props.showAxes, props.showWireframe])
+        grid.visible = props.toggleOptions.get("grid")
+        axes.visible = props.toggleOptions.get("axes")
+    }, [props.toggleOptions])
 
+    /*------------------------------------------------------------------------------------------*/
+
+    // event listeners 
     const handleResize = () => {
         if (ref && ref.current && camera) {
             const canvas = ref.current.firstElementChild
@@ -105,6 +114,9 @@ const ThreeContainer = (props) => {
         }
     }
 
+    /*------------------------------------------------------------------------------------------*/
+
+    // JSX
     return (
         <div id="three-canvas" 
             tabIndex="0" 

@@ -32,6 +32,12 @@ export const POINT_DEF_DISTANCE = 0
 export const MAX_SCENE_LIGHTS = 8
 export const MAX_SCENE_PRIMS = 16
 
+export const MSG_ADD = "ADD"
+export const MSG_UPDATE = "UPDATE"
+export const MSG_DELETE = "DELETE"
+
+export const TOGGLE_OPTIONS = ["animation", "controls", "grid", "axes"]
+
 export const THREE_SCENE_COLOR = "#888888"
 export const LIGHT_COLOR = "#ffffff"
 export const PRIM_COLOR = "#00ff00"
