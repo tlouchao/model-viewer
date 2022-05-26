@@ -65,13 +65,22 @@ function actorColorHelper(){
 }
 
 function actorMatrixHelper(){
+
+    // translate
     const delta = (CONSTS.MAX_TRANSLATE - CONSTS.MIN_TRANSLATE)
     const factor = delta / CONSTS.STEP
     const randTranslateX = (Math.floor(Math.random() * factor) * CONSTS.STEP) + CONSTS.MIN_TRANSLATE
     const randTranslateY = (Math.floor(Math.random() * factor) * .5 * CONSTS.STEP) + (CONSTS.MIN_TRANSLATE * .5)
     const randTranslateZ = (Math.floor(Math.random() * factor) * CONSTS.STEP) + CONSTS.MIN_TRANSLATE
+
+    // rotate
+    const negPos = [1, -1]
+    const rotArr = [90, 180, 270, 360]
+    const randRotateX = rotArr[Math.floor(Math.random() * rotArr.length)] * negPos[Math.floor(Math.random() * negPos.length)]
+    const randRotateY = rotArr[Math.floor(Math.random() * rotArr.length)] * negPos[Math.floor(Math.random() * negPos.length)]
+    const randRotateZ = rotArr[Math.floor(Math.random() * rotArr.length)] * negPos[Math.floor(Math.random() * negPos.length)]
     return new ACTORS.Matrix(new ACTORS.Vector(randTranslateX, randTranslateY, randTranslateZ),
-                             new ACTORS.Vector(CONSTS.DEF_ROTATE, CONSTS.DEF_ROTATE, CONSTS.DEF_ROTATE),
+                             new ACTORS.Vector(randRotateX, randRotateY, randRotateZ),
                              new ACTORS.Vector(CONSTS.DEF_SCALE, CONSTS.DEF_SCALE, CONSTS.DEF_SCALE),
     )
 }

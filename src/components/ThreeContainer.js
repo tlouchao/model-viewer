@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useMemo } from "react"
 import * as THREE from "three";
-import { categoryMapHelper, threeClasses } from "./helpers";
+import { categoryTypes, threeClasses } from "./helpers";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { THREE_SCENE_COLOR, 
          ACTOR_COLORS,
@@ -8,16 +8,17 @@ import { THREE_SCENE_COLOR,
          MSG_DELETE,
          MSG_UPDATE,
          MSG_RESET,
-       } from "./../constants/constants"
+       } from "constants/constants"
 
 const ThreeContainer = (props) => {
 
     /*------------------------------------------------------------------------------------------*/
     
-    const actorMap = useMemo(() => categoryMapHelper({}), [])
-    const materialMap = useMemo(() => Object.fromEntries(ACTOR_COLORS.map(c => 
+    const geometryMap = useMemo(() => new Object(), []) // unique geometry per mesh
+    const materialMap = useMemo(() => Object.fromEntries(ACTOR_COLORS.map(c => // materials are shared
                                       [c, new THREE.MeshStandardMaterial({color: c})])), [])
-    
+    const object3DMap = useMemo(() => Object.fromEntries(categoryTypes.map(x => [x, new Object()])), [])
+
     const scene = useMemo(() => new THREE.Scene(), [])
     const renderer = useMemo(() => new THREE.WebGLRenderer(), [])
     const camera = useMemo(() => new THREE.PerspectiveCamera( 75, 1, 0.1, 1000), [])
@@ -69,8 +70,8 @@ const ThreeContainer = (props) => {
             console.log("unmounting THREE.js container")
             console.log(renderer.info)
 
+            Object.keys(geometryMap).forEach(g => geometryMap[g].dispose())
             Object.keys(materialMap).forEach(m => materialMap[m].dispose())
-            Object.keys(actorMap["primitives"]).forEach(g => actorMap["primitives"][g].dispose())
 
             if (ref && ref.current){
                 while (ref.current.firstElementChild) {
@@ -86,33 +87,71 @@ const ThreeContainer = (props) => {
     // handle messages sent by user input
     useEffect(() => {
         if (props.msg){
+
             const m = props.msg[0]
             const id = props.msg[1]
+
             switch(m){
+
                 case MSG_ADD:
-                    let category
-                    Object.keys(props.actors).forEach(x => 
-                        { if(id in props.actors[x]){ category = x }})
-                    if (!category){
+                {
+                    // get category type
+                    let categoryType
+                    Object.keys(props.actors).forEach(c => 
+                        { if(id in props.actors[c]){categoryType = c}})
+                    if (!categoryType){
                         throw new Error(`actor with id ${id} not found`)
                     }
-                    const actor = props.actors[category][id]
-                    let object3D = new threeClasses[actor.categoryType + 's'][actor.actorType](...Object.values(actor.attributes))
-                    if (actor.categoryType === "primitive"){
-                        let tmp = new THREE.Mesh(object3D, materialMap[actor.color])
-                        object3D = tmp
+
+                    // construct Three.js object3D instance
+                    const actor = props.actors[categoryType][id]
+                    let object3D
+                    if (categoryType === "primitives"){
+                        const geo = new threeClasses[categoryType][actor.actorType]
+                            (...Object.values(actor.attributes))
+                        const mesh = new THREE.Mesh(geo, materialMap[actor.color])
+                        geometryMap[id] = geo
+                        object3D = mesh
                     }
+                    if (categoryType === "lights"){
+                        object3D = new threeClasses[categoryType][actor.actorType]
+                            (actor.color, ...Object.values(actor.attributes))
+                    }
+
+                    // set coords
                     object3D.position.set(...Object.values(actor.matrix.translate))
-                    object3D.rotation.set(...Object.values(actor.matrix.rotate))
+                    object3D.rotation.set(...(Object.values(actor.matrix.rotate)
+                                              .map(r => THREE.MathUtils.degToRad(r))))
                     object3D.scale.set(...Object.values(actor.matrix.scale))
+
+                    // keep ID reference
                     object3D.userData.id = id
-                    actorMap[id] = object3D
+                    object3DMap[categoryType][id] = object3D
                     scene.add(object3D)
+                }
                     break
+
+                case MSG_DELETE:
+                {
+                    // get category type
+                    let categoryType
+                    Object.keys(object3DMap).forEach(c => 
+                        { if(id in object3DMap[c]){categoryType = c}})
+                    if (!categoryType){
+                        throw new Error(`actor with id ${id} not found`)
+                    }
+                    scene.remove(object3DMap[categoryType][id])
+
+                    // dispose unique geometry, keep material
+                    if (categoryType === "primitives") {geometryMap[id].dispose()}
+                }
+                break
+
                 case MSG_RESET:
                     camera.position.set(-1.5, 1.5, 3)
                     camera.lookAt(0, 0, 0)
                     break
+
                 default:
                     console.warn(`message "${m}" not implemented`)
                     break
@@ -140,7 +179,6 @@ const ThreeContainer = (props) => {
             canvas.height = h
             camera.aspect = w / h
             camera.updateProjectionMatrix()
-
             renderer.setSize(w, h)
         }
     }

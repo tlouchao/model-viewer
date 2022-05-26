@@ -187,7 +187,7 @@ const AppState = () => {
     }
 
     const handleCategoryItemClick = (e) => {
-        const id = e.target.dataset.id
+        const id = Number(e.target.dataset.id)
         const categoryType = e.target.dataset.categorytype + 's'
 
         // if previously selected HTML element is a category, always select the item
@@ -303,7 +303,7 @@ const AppState = () => {
     const handleDelete = () => {
         if (currentSelected && currentSelected.hasAttribute("data-actortype")) {
 
-            const id = currentSelected.dataset.id
+            const id = Number(currentSelected.dataset.id)
             const categoryType = currentSelected.dataset.categorytype + 's'
 
             // delete actor
@@ -322,7 +322,7 @@ const AppState = () => {
 
             // no target currently selected
             setCurrentSelected(null)
-            setMsg([MSG_DELETE, Number(id)])
+            setMsg([MSG_DELETE, id])
         }
     }
 
