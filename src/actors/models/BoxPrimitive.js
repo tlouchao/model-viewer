@@ -18,6 +18,7 @@ class BoxPrimitive extends Primitive {
         this.attributes["width"]    = width, 
         this.attributes["height"]   = height, 
         this.attributes["depth"]    = depth
+        this.attributesHelper()
     }
 }
 

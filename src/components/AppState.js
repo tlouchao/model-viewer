@@ -104,6 +104,9 @@ const AppState = () => {
             isSelected: categoriesSelected[categoryType + 's'],
             isVisible: categoriesVisible[categoryType + 's'],
         }
+
+        console.log(actor)
+        
         setMsg([MSG_ADD, actor.id])
         return actor
     }
@@ -279,6 +282,7 @@ const AppState = () => {
     }
 
     const handleGUIBlur = (e) => {
+        /*
         // do not deselect items if event firing element gains focus
         if (e.relatedTarget != null){
             e.stopPropagation()
@@ -294,6 +298,7 @@ const AppState = () => {
             setActors(nextActors)
             setCurrentSelected(null)
         }
+        */
     }
 
     const handleSave = () => {

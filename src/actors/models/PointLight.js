@@ -11,10 +11,11 @@ class PointLight extends Light {
                 color=LIGHT_COLOR,
                 intensity=POINT_DEF_INTENSITY,
                 distance=POINT_DEF_DISTANCE){
-    super(matrix, color)
-    this.actorName="point"
-    this.attributes["intensity"] = intensity
-    this.attributes["distance"] = distance
+        super(matrix, color)
+        this.actorName="point"
+        this.attributes["intensity"] = intensity
+        this.attributes["distance"] = distance
+        this.attributesHelper()
     }
 }
 

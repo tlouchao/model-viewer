@@ -26,6 +26,13 @@ export const TORUS_DEF_TUBE = .375
 export const TORUS_DEF_RADIUS_SEG = 12
 export const TORUS_DEF_TUBE_SEG = 24
 
+export const SEG_MIN = 3
+export const SEG_MAX = 64
+export const SEG_STEP = 1
+export const ATTR_MIN = 1
+export const ATTR_MAX = 10
+export const ATTR_STEP = 0.01
+
 export const AMBIENT_DEF_INTENSITY = 1
 export const POINT_DEF_INTENSITY = 1
 export const POINT_DEF_DISTANCE = 0
@@ -38,7 +45,7 @@ export const MSG_UPDATE = "UPDATE"
 export const MSG_DELETE = "DELETE"
 export const MSG_RESET = "RESET"
 
-export const TOGGLE_OPTIONS = ["bounding box", "controls", "grid", "axes"]
+export const TOGGLE_OPTIONS = ["bounds", "controls", "grid", "axes"]
 
 export const THREE_SCENE_COLOR = "#888888"
 export const LIGHT_COLOR = "#ffffff"

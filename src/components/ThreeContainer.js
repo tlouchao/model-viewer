@@ -87,10 +87,7 @@ const ThreeContainer = (props) => {
     // handle messages sent by user input
     useEffect(() => {
         if (props.msg){
-
-            const m = props.msg[0]
-            const id = props.msg[1]
-
+            const [m, id] = props.msg
             switch(m){
 
                 case MSG_ADD:
@@ -108,21 +105,21 @@ const ThreeContainer = (props) => {
                     let object3D
                     if (categoryType === "primitives"){
                         const geo = new threeClasses[categoryType][actor.actorType]
-                            (...Object.values(actor.attributes))
+                            (...Object.values(actor.attributes).map(v => v.data))
                         const mesh = new THREE.Mesh(geo, materialMap[actor.color])
                         geometryMap[id] = geo
                         object3D = mesh
                     }
                     if (categoryType === "lights"){
                         object3D = new threeClasses[categoryType][actor.actorType]
-                            (actor.color, ...Object.values(actor.attributes))
+                            (actor.color, ...Object.values(actor.attributes).map(v => v.data))
                     }
 
                     // set coords
-                    object3D.position.set(...Object.values(actor.matrix.translate))
-                    object3D.rotation.set(...(Object.values(actor.matrix.rotate)
-                                              .map(r => THREE.MathUtils.degToRad(r))))
-                    object3D.scale.set(...Object.values(actor.matrix.scale))
+                    const mat = actor.matrix
+                    object3D.position.set(...Object.values(mat.translate))
+                    object3D.rotation.set(...(Object.values(mat.rotate).map(r => THREE.MathUtils.degToRad(r))))
+                    object3D.scale.set(...Object.values(mat.scale))
 
                     // keep ID reference
                     object3D.userData.id = id

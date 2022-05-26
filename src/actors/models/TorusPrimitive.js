@@ -15,12 +15,13 @@ class TorusPrimitive extends Primitive {
                 tube=TORUS_DEF_TUBE,
                 radiusSeg=TORUS_DEF_RADIUS_SEG,
                 tubeSeg=TORUS_DEF_TUBE_SEG){
-    super(matrix, color)
-    this.actorName="torus"
-    this.attributes["radius"]   = radius, 
-    this.attributes["tube"]     = tube, 
-    this.attributes["radiusSeg"]   = radiusSeg, 
-    this.attributes["tubeSeg"]     = tubeSeg 
+        super(matrix, color)
+        this.actorName="torus"
+        this.attributes["radius"]           = radius, 
+        this.attributes["tube"]             = tube, 
+        this.attributes["radialSegments"]   = radiusSeg, 
+        this.attributes["tubularSegments"]  = tubeSeg
+        this.attributesHelper()
     }
 }
 

@@ -9,9 +9,10 @@ class AmbientLight extends Light {
     constructor(matrix=new Matrix(), 
                 color=LIGHT_COLOR,
                 intensity=AMBIENT_DEF_INTENSITY){
-    super(matrix, color)
-    this.actorName="ambient"
-    this.attributes["intensity"] = intensity
+        super(matrix, color)
+        this.actorName="ambient"
+        this.attributes["intensity"] = intensity
+        this.attributesHelper()
     }
 }
 

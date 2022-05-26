@@ -11,6 +11,8 @@ import pointThumb from "static/imgs/point-thumb.png"
 
 const EditorActorSummary = (props) => {
 
+    const attributes = Object.entries(props.actor.attributes)
+
     let thumb
     switch(props.actor.actorType){
         case "box":
@@ -57,17 +59,18 @@ const EditorActorSummary = (props) => {
                         step="1"
                     />
                 </div>
-                {Object.entries(props.actor.attributes).map(x => 
-                    <div key={`attr-${x[0]}`} className="editor-item">
-                        <div key={`name-${x[0]}`} className="attr-name">
-                            <label>{x[0]}</label>
+                {attributes.map(([k, v]) => 
+                    <div key={`attr-${k}`} className="editor-item">
+                        <div key={`name-${k}`} className="attr-name">
+                            <label>{k.split(/(?=[A-Z])/).join(" ")}</label>
                         </div>
-                        <AttributeSlider key={`slider-${x[0]}`} value={x[1]}
-                            defaultValue="0.00"
-                            name={`${x[0]}-slider`}
-                            min="0.00"
-                            max={"10.00"}
-                            step="0.01"
+                        <AttributeSlider key={`slider-${k}`}
+                            name={`${k}-slider`}
+                            value={v.data}
+                            defaultValue={v.min}
+                            min={v.min}
+                            max={v.max}
+                            step={v.step}
                         />
                     </div>
                 )}

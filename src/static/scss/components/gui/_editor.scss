@@ -21,18 +21,24 @@
             display: flex;
             flex-direction: column;
             align-items: stretch;
-            gap: 1rem;
+            gap: 1.5rem;
             @media only screen and (max-width: map-get(v.$breakpoints, "desktop")) {
                 gap: 2rem;
                 height: fit-content;
             }
         }
-        #editor-actor-summary-header, #editor-actor-summary-attrs {
+        #editor-actor-summary-attrs, #editor-actor-summary-header {
             display: flex;
             flex-direction: column;
             gap: .5rem;
         }
+        #editor-actor-summary-attrs > .editor-item {
+            @media only screen and (max-width: map-get(v.$breakpoints, "desktop")) {
+                gap: .25rem;
+            }
+        }
         #editor-actor-summary-attrs {
+            gap: 1em;
             @media only screen and (min-width: map-get(v.$breakpoints, "desktop")) {
                 padding-bottom: 1em;
             }
@@ -50,9 +56,15 @@
             grid-template-columns: [grid-thumb] minmax(map-get(v.$heights, "actorthumbheight"), 1fr)  
                                     [grid-rest] 3fr;
             gap: 1rem;
+            font-size: 1em;
             @media only screen and (max-width: map-get(v.$breakpoints, "desktop")) {
                 display: flex;
                 flex-direction: column;
+            }
+            label {
+                text-align: center;
+                word-wrap: break-word;
+                font-size: 1em;
             }
         }
     }
