@@ -1,5 +1,6 @@
 import * as ACTORS from "actors/actors"
 import * as CONSTS from "constants/constants"
+import { BoxGeometry, CylinderGeometry, TorusGeometry, AmbientLight, PointLight } from "three"
 
 // get classes in which actor is direct ancestor
 const categoriesClasses = Object.values(ACTORS).filter(x => Object.getPrototypeOf(x) === ACTORS.Actor)
@@ -26,11 +27,20 @@ const actorTypes = Object.fromEntries(categoriesClasses.map(x =>
 ))
 
 // max lights in scene = 8, max prims in scene = 16. HARDCODED AND ORDER DEPENDENT.
-const categoryCapacity = Object.fromEntries(categoryTypes.map((x, i) => [x, [].concat(CONSTS.MAX_SCENE_LIGHTS, CONSTS.MAX_SCENE_PRIMS)[i]]))
+const categoryCapacity = Object.fromEntries(categoryTypes.map((x, i) => 
+    [x, [].concat(CONSTS.MAX_SCENE_LIGHTS, CONSTS.MAX_SCENE_PRIMS)[i]]))
 
 // toggle options, remember insertion order
 const initialToggleOptions = new Map()
 CONSTS.TOGGLE_OPTIONS.map(x => initialToggleOptions.set(x, false))
+
+// three class constructors also hardcoded
+const threeClasses = nestedMapHelper()
+threeClasses["primitives"]["box"] = BoxGeometry
+threeClasses["primitives"]["cylinder"] = CylinderGeometry
+threeClasses["primitives"]["torus"] = TorusGeometry
+threeClasses["lights"]["ambient"] = AmbientLight
+threeClasses["lights"]["point"] = PointLight
 
 /*------------------------------------------------------------------------------------------*/
 
@@ -56,10 +66,11 @@ function actorColorHelper(){
 
 function actorMatrixHelper(){
     const delta = (CONSTS.MAX_TRANSLATE - CONSTS.MIN_TRANSLATE)
-    const factor = delta / CONSTS.MAT_STEP
-    const randTranslateX = (Math.floor(Math.random() * factor) * CONSTS.MAT_STEP) + CONSTS.MIN_TRANSLATE
-    const randTranslateY = (Math.floor(Math.random() * factor) * CONSTS.MAT_STEP) + CONSTS.MIN_TRANSLATE
-    return new ACTORS.Matrix(new ACTORS.Vector(randTranslateX, randTranslateY, CONSTS.DEF_TRANSLATE),
+    const factor = delta / CONSTS.STEP
+    const randTranslateX = (Math.floor(Math.random() * factor) * CONSTS.STEP) + CONSTS.MIN_TRANSLATE
+    const randTranslateY = (Math.floor(Math.random() * factor) * .5 * CONSTS.STEP) + (CONSTS.MIN_TRANSLATE * .5)
+    const randTranslateZ = (Math.floor(Math.random() * factor) * CONSTS.STEP) + CONSTS.MIN_TRANSLATE
+    return new ACTORS.Matrix(new ACTORS.Vector(randTranslateX, randTranslateY, randTranslateZ),
                              new ACTORS.Vector(CONSTS.DEF_ROTATE, CONSTS.DEF_ROTATE, CONSTS.DEF_ROTATE),
                              new ACTORS.Vector(CONSTS.DEF_SCALE, CONSTS.DEF_SCALE, CONSTS.DEF_SCALE),
     )
@@ -71,6 +82,7 @@ export {categoryTypes,
         actorTypes, 
         categoryCapacity, 
         actorClasses, 
+        threeClasses,
         initialActorNames,
         initialToggleOptions, 
         actorColorHelper, 

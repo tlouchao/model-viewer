@@ -1,6 +1,7 @@
 import {PRIM_COLOR, 
         CYLINDER_DEF_HEIGHT,
-        CYLINDER_DEF_RADIUS } 
+        CYLINDER_DEF_RADIUS,
+        CYLINDER_DEF_RADIUS_SEG } 
 from "constants/constants.js"
 import Primitive from "./Primitive"
 import Matrix from "./Matrix"
@@ -9,12 +10,16 @@ class CylinderPrimitive extends Primitive {
     static actorType = "cylinder"
     constructor(matrix=new Matrix(),
                 color=PRIM_COLOR,
-                radius=CYLINDER_DEF_RADIUS,
-                height=CYLINDER_DEF_HEIGHT){
+                radiusTop=CYLINDER_DEF_RADIUS,
+                radiusBot=CYLINDER_DEF_RADIUS,
+                height=CYLINDER_DEF_HEIGHT,
+                radiusSeg=CYLINDER_DEF_RADIUS_SEG){
     super(matrix, color)
     this.actorName="cylinder"
-    this.attributes["radius"]   = radius,
-    this.attributes["height"]   = height 
+    this.attributes["radiusTop"]   = radiusTop,
+    this.attributes["radiusBot"]   = radiusBot,
+    this.attributes["height"]      = height,
+    this.attributes["radiusSeg"]   = radiusSeg 
     }
 }
 

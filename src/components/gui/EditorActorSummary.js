@@ -66,7 +66,7 @@ const EditorActorSummary = (props) => {
                             defaultValue="0.00"
                             name={`${x[0]}-slider`}
                             min="0.00"
-                            max={(x[0] === "intensity") ? "10.00" : "100.00"}
+                            max={"10.00"}
                             step="0.01"
                         />
                     </div>

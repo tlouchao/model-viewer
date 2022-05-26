@@ -104,7 +104,7 @@ const AppState = () => {
             isSelected: categoriesSelected[categoryType + 's'],
             isVisible: categoriesVisible[categoryType + 's'],
         }
-        setMsg({[MSG_ADD]: actor.id})
+        setMsg([MSG_ADD, actor.id])
         return actor
     }
 
@@ -322,7 +322,7 @@ const AppState = () => {
 
             // no target currently selected
             setCurrentSelected(null)
-            setMsg({[MSG_DELETE]: Number(id)})
+            setMsg([MSG_DELETE, Number(id)])
         }
     }
 
@@ -334,7 +334,7 @@ const AppState = () => {
     }
 
     const handleResetCamera = () => {
-        setMsg({[MSG_RESET]: 1})
+        setMsg([MSG_RESET, 1])
     }
 
     /*------------------------------------------------------------------------------------------*/

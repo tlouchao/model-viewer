@@ -7,7 +7,7 @@
     display: grid;
     grid-template-rows: min-content
                         min-content
-                        minmax(map-get(v.$heights, "outlinerheight"), 40vh)
+                        minmax(map-get(v.$heights, "outlinerheight"), 50vh)
                         min-content
                         min-content;
     padding: 2rem 1.5rem;

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useMemo } from "react"
 import * as THREE from "three";
-import { categoryMapHelper } from "./helpers";
+import { categoryMapHelper, threeClasses } from "./helpers";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { THREE_SCENE_COLOR, 
          ACTOR_COLORS,
@@ -14,21 +14,23 @@ const ThreeContainer = (props) => {
 
     /*------------------------------------------------------------------------------------------*/
     
-    const actorMap = useMemo(() => categoryMapHelper({}), [props.msg])
+    const actorMap = useMemo(() => categoryMapHelper({}), [])
     const materialMap = useMemo(() => Object.fromEntries(ACTOR_COLORS.map(c => 
-        [c, new THREE.MeshStandardMaterial({color: c})])), [])
+                                      [c, new THREE.MeshStandardMaterial({color: c})])), [])
     
-    const ref = useRef(null)
-    const camera = useMemo(() => new THREE.PerspectiveCamera( 75, 1, 0.1, 2000), [])
-    const renderer = useMemo(() => new THREE.WebGLRenderer(), [])
     const scene = useMemo(() => new THREE.Scene(), [])
+    const renderer = useMemo(() => new THREE.WebGLRenderer(), [])
+    const camera = useMemo(() => new THREE.PerspectiveCamera( 75, 1, 0.1, 1000), [])
+    const controls = useMemo(() => new OrbitControls(camera, renderer.domElement), [])
     const light = useMemo(() => new THREE.HemisphereLight(0xFFFFFF, 0x404040, 1), [])
     const grid = useMemo(() =>new THREE.GridHelper ( 20, 20, 0x444444, 0x444444 ), [])
     const axes = useMemo(() => new THREE.AxesHelper( 1000 ), [])
 
+    const ref = useRef(null)
+
     /*------------------------------------------------------------------------------------------*/
     
-    // setup after mount
+    // setup DOM elem reliant properties after mount
     useEffect(() => {
 
         // setup scene
@@ -44,7 +46,6 @@ const ThreeContainer = (props) => {
         camera.lookAt(0, 0, 0)
 
         // setup controls
-        const controls = new OrbitControls(camera, renderer.domElement)
         controls.enableZoom = true
         controls.enablePan = false
         controls.maxDistance = 50
@@ -64,17 +65,12 @@ const ThreeContainer = (props) => {
         
         // if unmount
         return () => {
-            camera = null
-            light = null
-            grid = null
-            axes = null
-            scene = null
+
+            console.log("unmounting THREE.js container")
+            console.log(renderer.info)
+
             Object.keys(materialMap).forEach(m => materialMap[m].dispose())
             Object.keys(actorMap["primitives"]).forEach(g => actorMap["primitives"][g].dispose())
-            actorMap["lights"] = null
-
-            console.log(renderer.info)
-            renderer = null
 
             if (ref && ref.current){
                 while (ref.current.firstElementChild) {
@@ -87,17 +83,38 @@ const ThreeContainer = (props) => {
         }
     }, [])
 
+    // handle messages sent by user input
     useEffect(() => {
         if (props.msg){
-            switch(Object.keys(props.msg)[0]){
-                case MSG_RESET:
-                    if (camera){
-                        camera.position.set(-1.5, 1.5, 3) // mutate state directly
-                        camera.lookAt(0, 0, 0) // mutate state directly
+            const m = props.msg[0]
+            const id = props.msg[1]
+            switch(m){
+                case MSG_ADD:
+                    let category
+                    Object.keys(props.actors).forEach(x => 
+                        { if(id in props.actors[x]){ category = x }})
+                    if (!category){
+                        throw new Error(`actor with id ${id} not found`)
                     }
+                    const actor = props.actors[category][id]
+                    let object3D = new threeClasses[actor.categoryType + 's'][actor.actorType](...Object.values(actor.attributes))
+                    if (actor.categoryType === "primitive"){
+                        let tmp = new THREE.Mesh(object3D, materialMap[actor.color])
+                        object3D = tmp
+                    }
+                    object3D.position.set(...Object.values(actor.matrix.translate))
+                    object3D.rotation.set(...Object.values(actor.matrix.rotate))
+                    object3D.scale.set(...Object.values(actor.matrix.scale))
+                    object3D.userData.id = id
+                    actorMap[id] = object3D
+                    scene.add(object3D)
+                    break
+                case MSG_RESET:
+                    camera.position.set(-1.5, 1.5, 3)
+                    camera.lookAt(0, 0, 0)
                     break
                 default:
-                    console.warn("msg not implemented")
+                    console.warn(`message "${m}" not implemented`)
                     break
             }
         }
