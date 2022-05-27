@@ -10,6 +10,9 @@ import {DEF_TRANSLATE, MIN_TRANSLATE, MAX_TRANSLATE,
 const EditorContainer = (props) => {
 
     const [bufferActor, setBufferActor] = useState(null)
+    const [bufferNumValue, setBufferNumValue] = useState(null)
+    const [bufferSliderValue, setBufferSliderValue] = useState(null)
+    const [editAttrName, setEditAttrName] = useState(null)
 
     /*------------------------------------------------------------------------------------------*/
 
@@ -36,7 +39,24 @@ const EditorContainer = (props) => {
     /* Helpers */
 
     function isCurrentlySelectedActor() {
-        return (props.currentSelected != null) && (props.currentSelected.hasAttribute("data-actortype"))
+        return (props.currentSelected != null) && 
+            (props.currentSelected.hasAttribute("data-actortype"))
+    }
+
+    function formatValueHelper(v, tmin, tmax, tstep){
+        v = Number(v)
+        if (v === ""){
+            v = tmin
+        } else if (v < tmin){
+            v = tmin
+        } else if (v > tmax){
+            v = tmax
+        }
+        if (tstep == 1){
+            return parseInt(v)
+        } else {
+            return parseFloat(v).toFixed(2)
+        }
     }
 
     function setMatrixHelper(row, col, val) {
@@ -50,22 +70,6 @@ const EditorContainer = (props) => {
                 })
             })
         }))
-    }
-
-    const getContent = () => {
-        if (bufferActor){
-            return (<EditorActorSummary
-                        actor={bufferActor}
-                        handleMatrixChange={handleMatrixChange}
-                        handleMatrixBlur={handleMatrixBlur} 
-                    />
-            )
-        } else {
-            return (<p id="editor-empty">
-                        Select an actor in the Outliner to view and edit its attributes.
-                    </p>  
-            )
-        }
     }
 
     /*------------------------------------------------------------------------------------------*/
@@ -89,16 +93,67 @@ const EditorContainer = (props) => {
         } else {
             throw new Error(`${row} is not a property in actor matrix`)
         }
+        let v = formatValueHelper(v, tmin, tmax, 0.01)
+        setMatrixHelper(row, col, v)
+    }
+
+    const setAttributeHelper = (e, val) => {
         let t = e.target
-        if (!t.value){
-            t.value = tdef
-        } else if (t.value < tmin){
-            t.value = tmin
-        } else if (t.value > tmax){
-            t.value = tmax
+        let v = formatValueHelper(val, t.min, t.max, t.step)
+        setBufferActor(() => ({
+            ...bufferActor,
+            attributes: ({
+                ...bufferActor.attributes,
+                [e.target.name]: ({
+                    ...bufferActor.attributes[e.target.name],
+                    data: Number(v),
+                })
+            })
+        }))
+    }
+
+    const handleNumBlur = (e) => {
+        setEditAttrName(null)
+        setAttributeHelper(e, bufferNumValue)
+    }
+
+    const handleNumChange = (e) => {
+        if (editAttrName === null){ setEditAttrName(e.target.name)}
+        let t = e.target
+        let formatted = formatValueHelper(t.value, t.min, t.max, t.step)
+        setBufferNumValue(t.value) // unformatted
+        setBufferSliderValue(formatted)
+    }
+
+    const handleSliderChange = (e) => {
+        if (editAttrName !== null){ setEditAttrName(null)}
+        setAttributeHelper(e, e.target.value)
+    }
+
+    /*------------------------------------------------------------------------------------------*/
+
+    // JSX helper
+    const getContent = () => {
+        if (bufferActor){
+            return (<EditorActorSummary
+                        actor={bufferActor}
+                        bufferNumValue={bufferNumValue}
+                        bufferSliderValue={bufferSliderValue}
+                        editAttrName={editAttrName}
+                        handleMatrixChange={handleMatrixChange}
+                        handleMatrixBlur={handleMatrixBlur}
+                        handleNumBlur={handleNumBlur}
+                        handleNumChange={handleNumChange}
+                        handleSliderChange={handleSliderChange}
+                        formatValueHelper={formatValueHelper}
+                    />
+            )
+        } else {
+            return (<p id="editor-empty">
+                        Select an actor in the Outliner to view and edit its attributes.
+                    </p>  
+            )
         }
-        t.value = parseFloat(t.value).toFixed(2)
-        setMatrixHelper(row, col, t.value)
     }
 
     /*------------------------------------------------------------------------------------------*/
@@ -108,8 +163,14 @@ const EditorContainer = (props) => {
             <h2 className="name-container">Editor</h2>
             <Editor handleGUIBlur={props.handleGUIBlur} content={getContent()}/>
             <div className="button-group">
-                <button onBlur={props.handleGUIBlur} onClick={props.handleEditorSave}>Save</button>
-                <button onBlur={props.handleGUIBlur} onClick={props.handleEditorDelete}>Delete</button>
+                <button onBlur={props.handleGUIBlur} 
+                        onClick={props.handleEditorSave}>
+                        Save
+                </button>
+                <button onBlur={props.handleGUIBlur} 
+                        onClick={props.handleEditorDelete}>
+                        Delete
+                </button>
             </div>
         </div>
     )

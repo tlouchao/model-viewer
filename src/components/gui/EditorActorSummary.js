@@ -65,12 +65,19 @@ const EditorActorSummary = (props) => {
                             <label>{k.split(/(?=[A-Z])/).join(" ")}</label>
                         </div>
                         <AttributeSlider key={`slider-${k}`}
-                            name={`${k}-slider`}
-                            value={v.data}
+                            name={k}
+                            value={String(v.data)}
                             defaultValue={v.min}
                             min={v.min}
                             max={v.max}
                             step={v.step}
+                            bufferNumValue={props.bufferNumValue}
+                            bufferSliderValue={props.bufferSliderValue}
+                            editAttrName={props.editAttrName}
+                            handleNumBlur={props.handleNumBlur}
+                            handleNumChange={props.handleNumChange}
+                            handleSliderChange={props.handleSliderChange}
+                            formatValueHelper={props.formatValueHelper}
                         />
                     </div>
                 )}
@@ -81,8 +88,15 @@ const EditorActorSummary = (props) => {
 
 EditorActorSummary.propTypes = {
     actor: PropTypes.object.isRequired,
+    bufferNumValue: PropTypes.string || null,
+    bufferSliderValue: PropTypes.string || null,
+    editAttrName: PropTypes.string || null,
     handleMatrixChange: PropTypes.func.isRequired,
     handleMatrixBlur: PropTypes.func.isRequired,
+    handleNumBlur: PropTypes.func.isRequired,
+    handleNumChange: PropTypes.func.isRequired,
+    handleSliderChange: PropTypes.func.isRequired,
+    formatValueHelper: PropTypes.func.isRequired,
 }
 
 export default EditorActorSummary

@@ -1,48 +1,29 @@
-import React, { useState } from "react"
+import React from "react"
 import PropTypes from "prop-types"
 
 const AttributeSlider = (props) => {
 
-    const [numValue, setNumValue] = useState(parseFloat(props.value).toFixed(2))
-    const [sliderValue, setSliderValue] = useState(parseFloat(props.value).toFixed(2))
-
-    const handleNumChange = (e) => {
-        setNumValue(e.target.value)
-        setSliderValue(formatAttr(Number(e.target.value)))
-    }
-
-    const handleChange = (e) => {
-        setNumValue(formatAttr(Number(e.target.value)))
-        setSliderValue(formatAttr(Number(e.target.value)))
-    }
-
-    const formatAttr = (v) => {
-        if (!v){
-            v = props.defaultValue
-        } else if (v < props.min){
-            v = props.min
-        } else if (v > props.max){
-            v = props.max
-        }
-        return(parseFloat(v).toFixed(2))
-    }
-
     return (
         <div className="attr-slider">
             <input  className="attr-num"
+                    id={`num-${props.name}`}
+                    name={props.name}
                     type="number" 
-                    onBlur={handleChange}
-                    onChange={handleNumChange}
-                    value={numValue}
+                    onBlur={props.handleNumBlur}
+                    onChange={props.handleNumChange}
+                    value={(props.editAttrName === props.name) ? props.bufferNumValue : props.value}
+                    step={props.step}
                     min={props.min}  
                     max={props.max} 
                     required 
             />
             <input  className="attr-slider-range" 
+                    id={`range-${props.name}`}
+                    name={props.name}
                     type="range" 
-                    onChange={handleChange}
-                    value={sliderValue} 
-                    step={props.step} 
+                    onChange={props.handleSliderChange}
+                    value={(props.editAttrName ===props.name) ? props.bufferSliderValue : props.value}
+                    step={props.step}
                     min={props.min}  
                     max={props.max} 
             />
@@ -51,11 +32,19 @@ const AttributeSlider = (props) => {
 }
 
 AttributeSlider.propTypes = {
-    value: PropTypes.number.isRequired,
-    defaultValue: PropTypes.string.isRequired,
-    step: PropTypes.string.isRequired,
-    min: PropTypes.string.isRequired,
-    max: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired,
+    defaultValue: PropTypes.number.isRequired,
+    step: PropTypes.number.isRequired,
+    min: PropTypes.number.isRequired,
+    max: PropTypes.number.isRequired,
+    bufferNumValue: PropTypes.string || null,
+    bufferSliderValue: PropTypes.string || null,
+    editAttrName: PropTypes.string || null,
+    handleSliderChange: PropTypes.func.isRequired,
+    handleNumChange: PropTypes.func.isRequired,
+    handleNumBlur: PropTypes.func.isRequired,
+    formatValueHelper: PropTypes.func.isRequired,
 }
 
 export default AttributeSlider

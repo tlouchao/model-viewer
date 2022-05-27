@@ -195,7 +195,8 @@ const AppState = () => {
 
         // if previously selected HTML element is a category, always select the item
         let selected
-        if (currentSelected && !currentSelected.hasAttribute("data-actortype")) {
+        if (currentSelected === null ||
+            !currentSelected.hasAttribute("data-actortype")) {
             selected = true
         } else {
             selected = !actors[categoryType][id].isSelected

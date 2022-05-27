@@ -21,8 +21,8 @@ export const CYLINDER_DEF_RADIUS = .75
 export const CYLINDER_DEF_HEIGHT = 1.5
 export const CYLINDER_DEF_RADIUS_SEG = 24
 
-export const TORUS_DEF_RADIUS = .75
-export const TORUS_DEF_TUBE = .375
+export const TORUS_DEF_RADIUS = .6
+export const TORUS_DEF_TUBE = .3
 export const TORUS_DEF_RADIUS_SEG = 12
 export const TORUS_DEF_TUBE_SEG = 24
 
