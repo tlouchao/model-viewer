@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
+import chroma from "chroma-js"
 import Editor from "./Editor"
 import EditorActorSummary from "./EditorActorSummary"
 import {DEF_TRANSLATE, MIN_TRANSLATE, MAX_TRANSLATE,
@@ -12,7 +13,28 @@ const EditorContainer = (props) => {
     const [bufferActor, setBufferActor] = useState(null)
     const [bufferNumValue, setBufferNumValue] = useState(null)
     const [bufferSliderValue, setBufferSliderValue] = useState(null)
+    const [bufferHSL, setBufferHSL] = useState(null)
     const [editAttrName, setEditAttrName] = useState(null)
+
+    const handleColorInput = (e) => {
+        setBufferActor(() => ({
+            ...bufferActor,
+            color: e.target.value
+        }))
+        setBufferHSL(chroma(e.target.value).hsl())
+    }
+
+    const handleColorSliderChange = (e) => {
+        setBufferActor(() => ({
+            ...bufferActor,
+            color: chroma(bufferHSL[0], 
+                          bufferHSL[1], 
+                          e.target.value / 100, 
+                          "hsl").hex()
+        }))
+        setBufferHSL(() => [bufferHSL[0], bufferHSL[1], e.target.value / 100]
+        )
+    }
 
     /*------------------------------------------------------------------------------------------*/
 
@@ -23,14 +45,26 @@ const EditorContainer = (props) => {
             const id = Number(props.currentSelected.dataset.id)
             const categoryType = props.currentSelected.dataset.categorytype
             const actor = props.actors[categoryType + "s"][id]
-            Object.keys(actor.matrix).forEach(k => {
-                actor.matrix[k].x = parseFloat(actor.matrix[k].x).toFixed(2)
-                actor.matrix[k].y = parseFloat(actor.matrix[k].y).toFixed(2)
-                actor.matrix[k].z = parseFloat(actor.matrix[k].z).toFixed(2)
+            Object.keys(actor.matrix).forEach(row => {
+                Object.keys(actor.matrix[row]).forEach(col => 
+                    actor.matrix[row][col] = 
+                        String(parseFloat(actor.matrix[row][col]).toFixed(2))
+                )
+            })
+            Object.keys(actor.attributes).forEach(k => {
+                if (k.includes("Seg")){
+                    actor.attributes[k].data = 
+                        String(parseInt(actor.attributes[k].data))
+                } else {
+                    actor.attributes[k].data = 
+                        String(parseFloat(actor.attributes[k].data).toFixed(2))
+                }
             })
             setBufferActor(actor)
+            setBufferHSL(chroma(actor.color).hsl())
         } else {
             setBufferActor(null)
+            setBufferHSL(null)
         }
     }, [props.currentSelected])
 
@@ -43,19 +77,19 @@ const EditorContainer = (props) => {
             (props.currentSelected.hasAttribute("data-actortype"))
     }
 
-    function formatValueHelper(v, tmin, tmax, tstep){
+    function formatValueHelper(v, tdef, tmin, tmax, tstep){
         v = Number(v)
-        if (v === ""){
-            v = tmin
+        if (!v){
+            v = tdef
         } else if (v < tmin){
             v = tmin
         } else if (v > tmax){
             v = tmax
         }
         if (tstep == 1){
-            return parseInt(v)
+            return String(parseInt(v))
         } else {
-            return parseFloat(v).toFixed(2)
+            return String(parseFloat(v).toFixed(2))
         }
     }
 
@@ -93,39 +127,41 @@ const EditorContainer = (props) => {
         } else {
             throw new Error(`${row} is not a property in actor matrix`)
         }
-        let v = formatValueHelper(v, tmin, tmax, 0.01)
+        let v = formatValueHelper(e.target.value, tdef, tmin, tmax, 0.01)
         setMatrixHelper(row, col, v)
     }
 
     const setAttributeHelper = (e, val) => {
         let t = e.target
-        let v = formatValueHelper(val, t.min, t.max, t.step)
+        let v = formatValueHelper(val, t.min, t.min, t.max, t.step)
         setBufferActor(() => ({
             ...bufferActor,
             attributes: ({
                 ...bufferActor.attributes,
                 [e.target.name]: ({
                     ...bufferActor.attributes[e.target.name],
-                    data: Number(v),
+                    data: v,
                 })
             })
         }))
     }
 
     const handleNumBlur = (e) => {
-        setEditAttrName(null)
         setAttributeHelper(e, bufferNumValue)
+        setEditAttrName(null)
+        setBufferNumValue(null)
+        setBufferSliderValue(null)
     }
 
     const handleNumChange = (e) => {
         if (editAttrName === null){ setEditAttrName(e.target.name)}
         let t = e.target
-        let formatted = formatValueHelper(t.value, t.min, t.max, t.step)
+        let formatted = formatValueHelper(t.value, t.min, t.min, t.max, t.step)
         setBufferNumValue(t.value) // unformatted
         setBufferSliderValue(formatted)
     }
 
-    const handleSliderChange = (e) => {
+    const handleNumSliderChange = (e) => {
         if (editAttrName !== null){ setEditAttrName(null)}
         setAttributeHelper(e, e.target.value)
     }
@@ -137,20 +173,23 @@ const EditorContainer = (props) => {
         if (bufferActor){
             return (<EditorActorSummary
                         actor={bufferActor}
+                        bufferHSL={bufferHSL}
                         bufferNumValue={bufferNumValue}
                         bufferSliderValue={bufferSliderValue}
                         editAttrName={editAttrName}
                         handleMatrixChange={handleMatrixChange}
                         handleMatrixBlur={handleMatrixBlur}
+                        handleColorInput={handleColorInput}
+                        handleColorSliderChange={handleColorSliderChange}
                         handleNumBlur={handleNumBlur}
                         handleNumChange={handleNumChange}
-                        handleSliderChange={handleSliderChange}
+                        handleNumSliderChange={handleNumSliderChange}
                         formatValueHelper={formatValueHelper}
                     />
             )
         } else {
             return (<p id="editor-empty">
-                        Select an actor in the Outliner to view and edit its attributes.
+                        Select an object in the Outliner to view and edit its attributes.
                     </p>  
             )
         }

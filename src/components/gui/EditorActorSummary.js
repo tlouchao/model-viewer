@@ -52,11 +52,14 @@ const EditorActorSummary = (props) => {
                     <div className="attr-name">
                         <label>Color</label>
                     </div>
-                    <ColorAttributeSlider key={props.actor.color} color={props.actor.color}
+                    <ColorAttributeSlider color={props.actor.color}
                         name="color-slider"
                         min="0"
                         max="100"
                         step="1"
+                        bufferHSL={props.bufferHSL}
+                        handleColorInput={props.handleColorInput}
+                        handleColorSliderChange={props.handleColorSliderChange}
                     />
                 </div>
                 {attributes.map(([k, v]) => 
@@ -66,7 +69,7 @@ const EditorActorSummary = (props) => {
                         </div>
                         <AttributeSlider key={`slider-${k}`}
                             name={k}
-                            value={String(v.data)}
+                            value={v.data}
                             defaultValue={v.min}
                             min={v.min}
                             max={v.max}
@@ -76,7 +79,7 @@ const EditorActorSummary = (props) => {
                             editAttrName={props.editAttrName}
                             handleNumBlur={props.handleNumBlur}
                             handleNumChange={props.handleNumChange}
-                            handleSliderChange={props.handleSliderChange}
+                            handleNumSliderChange={props.handleNumSliderChange}
                             formatValueHelper={props.formatValueHelper}
                         />
                     </div>
@@ -88,14 +91,17 @@ const EditorActorSummary = (props) => {
 
 EditorActorSummary.propTypes = {
     actor: PropTypes.object.isRequired,
+    bufferHSL: PropTypes.array.isRequired,
     bufferNumValue: PropTypes.string || null,
     bufferSliderValue: PropTypes.string || null,
     editAttrName: PropTypes.string || null,
     handleMatrixChange: PropTypes.func.isRequired,
     handleMatrixBlur: PropTypes.func.isRequired,
+    handleColorInput: PropTypes.func.isRequired,
+    handleColorSliderChange: PropTypes.func.isRequired,
     handleNumBlur: PropTypes.func.isRequired,
     handleNumChange: PropTypes.func.isRequired,
-    handleSliderChange: PropTypes.func.isRequired,
+    handleNumSliderChange: PropTypes.func.isRequired,
     formatValueHelper: PropTypes.func.isRequired,
 }
 

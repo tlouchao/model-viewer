@@ -12,22 +12,22 @@ const EditorMatrix = (props) => {
             <EditorMatrixRow name="Translate"
                 handleChange={props.handleChange}
                 handleBlur={props.handleBlur}
-                min={parseFloat(MIN_TRANSLATE).toFixed(2)} 
-                max={parseFloat(MAX_TRANSLATE).toFixed(2)} 
+                min={MIN_TRANSLATE} 
+                max={MAX_TRANSLATE} 
                 row={props.matrix.translate} 
             />
             <EditorMatrixRow name="Rotate"
                 handleChange={props.handleChange}
                 handleBlur={props.handleBlur}
-                min={parseFloat(MIN_ROTATE).toFixed(2)} 
-                max={parseFloat(MAX_ROTATE).toFixed(2)} 
+                min={MIN_ROTATE} 
+                max={MAX_ROTATE} 
                 row={props.matrix.rotate} 
             />
             <EditorMatrixRow name="Scale"
                 handleChange={props.handleChange}
                 handleBlur={props.handleBlur}
-                min={parseFloat(MIN_SCALE).toFixed(2)} 
-                max={parseFloat(MAX_SCALE).toFixed(2)} 
+                min={MIN_SCALE} 
+                max={MAX_SCALE} 
                 row={props.matrix.scale} 
             />
         </div>

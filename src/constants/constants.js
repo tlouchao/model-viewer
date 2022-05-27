@@ -7,11 +7,11 @@ export const DEF_SCALE= 1
 
 export const MAX_TRANSLATE = 10
 export const MAX_ROTATE = 360
-export const MAX_SCALE= 10
+export const MAX_SCALE = 10
 
 export const MIN_TRANSLATE = -10
 export const MIN_ROTATE = -360
-export const MIN_SCALE= 0
+export const MIN_SCALE = 0
 
 export const BOX_DEF_WIDTH = 1
 export const BOX_DEF_HEIGHT = 1
@@ -29,7 +29,7 @@ export const TORUS_DEF_TUBE_SEG = 24
 export const SEG_MIN = 3
 export const SEG_MAX = 64
 export const SEG_STEP = 1
-export const ATTR_MIN = 1
+export const ATTR_MIN = 0
 export const ATTR_MAX = 10
 export const ATTR_STEP = 0.01
 

@@ -21,7 +21,7 @@ const AttributeSlider = (props) => {
                     id={`range-${props.name}`}
                     name={props.name}
                     type="range" 
-                    onChange={props.handleSliderChange}
+                    onChange={props.handleNumSliderChange}
                     value={(props.editAttrName ===props.name) ? props.bufferSliderValue : props.value}
                     step={props.step}
                     min={props.min}  
@@ -41,7 +41,7 @@ AttributeSlider.propTypes = {
     bufferNumValue: PropTypes.string || null,
     bufferSliderValue: PropTypes.string || null,
     editAttrName: PropTypes.string || null,
-    handleSliderChange: PropTypes.func.isRequired,
+    handleNumSliderChange: PropTypes.func.isRequired,
     handleNumChange: PropTypes.func.isRequired,
     handleNumBlur: PropTypes.func.isRequired,
     formatValueHelper: PropTypes.func.isRequired,
