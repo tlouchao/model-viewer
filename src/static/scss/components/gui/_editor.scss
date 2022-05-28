@@ -43,12 +43,36 @@
                 padding-bottom: 1em;
             }
         }
-        #editor-thumbnail {
-            width: 100%;
-            height: auto;
+        #editor-thumbnail-background {
+            width: fit-content;
+            height: fit-content;
+            line-height: 0;
             align-self: center;
+            background-color: white;
             @media only screen and (max-width: map-get(v.$breakpoints, "desktop")) {
                 width: map-get(v.$heights, "actorthumbheight")
+            }
+            #editor-thumbnail-blend {
+                position: relative;
+                width: 100%;
+                mix-blend-mode: normal;
+                //mask-image: url("./../imgs/box-thumb.png");
+                //-webkit-mask-box-image: url("./../imgs/box-thumb.png");
+                #editor-thumbnail-base {
+                    position: relative;
+                    width: 100%;
+                    height: auto;
+                    mix-blend-mode: multiply;
+                    opacity: 50%;
+                }
+                #editor-thumbnail {
+                    position: absolute;
+                    width: 100%;
+                    top: 0;
+                    left: 0;
+                    mix-blend-mode: hard-light;
+                    opacity: 50%;
+                }
             }
         }
         .editor-item {

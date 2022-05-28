@@ -16,26 +16,6 @@ const EditorContainer = (props) => {
     const [bufferHSL, setBufferHSL] = useState(null)
     const [editAttrName, setEditAttrName] = useState(null)
 
-    const handleColorInput = (e) => {
-        setBufferActor(() => ({
-            ...bufferActor,
-            color: e.target.value
-        }))
-        setBufferHSL(chroma(e.target.value).hsl())
-    }
-
-    const handleColorSliderChange = (e) => {
-        setBufferActor(() => ({
-            ...bufferActor,
-            color: chroma(bufferHSL[0], 
-                          bufferHSL[1], 
-                          e.target.value / 100, 
-                          "hsl").hex()
-        }))
-        setBufferHSL(() => [bufferHSL[0], bufferHSL[1], e.target.value / 100]
-        )
-    }
-
     /*------------------------------------------------------------------------------------------*/
 
     /* Side effects */
@@ -129,6 +109,26 @@ const EditorContainer = (props) => {
         }
         let v = formatValueHelper(e.target.value, tdef, tmin, tmax, 0.01)
         setMatrixHelper(row, col, v)
+    }
+
+    const handleColorInput = (e) => {
+        setBufferActor(() => ({
+            ...bufferActor,
+            color: e.target.value
+        }))
+        setBufferHSL(chroma(e.target.value).hsl())
+    }
+
+    const handleColorSliderChange = (e) => {
+        setBufferActor(() => ({
+            ...bufferActor,
+            color: chroma(bufferHSL[0], 
+                          bufferHSL[1], 
+                          e.target.value / 100, 
+                          "hsl").hex()
+        }))
+        setBufferHSL(() => [bufferHSL[0], bufferHSL[1], e.target.value / 100]
+        )
     }
 
     const setAttributeHelper = (e, val) => {

@@ -13,34 +13,28 @@ const EditorActorSummary = (props) => {
 
     const attributes = Object.entries(props.actor.attributes)
 
-    let thumb
-    switch(props.actor.actorType){
-        case "box":
-            thumb=boxThumb
-            break
-        case "cylinder":
-            thumb=cylinderThumb
-            break
-        case "torus":
-            thumb=torusThumb
-            break
-        case "ambient":
-            thumb=ambientThumb
-            break
-        case "point":
-            thumb=pointThumb
-            break
-        default:
-            console.warn("image not available for actor type " + props.actor.actorType)
-            thumb=boxThumb
-            break
+    const blendStyle = {
+        backgroundColor: props.actor.color,
+        maskImage: `url("assets/${props.actor.actorType}-thumb.png")`,
+        WebkitMaskBoxImage: `url("assets/${props.actor.actorType}-thumb.png")`,
     }
 
     return (
         <div id="editor-actor-summary">
             <div id="editor-actor-summary-header">
                 <div className="editor-item">
-                    <img id="editor-thumbnail" src={thumb} alt="actor thumbnail" />
+                    <div id="editor-thumbnail-background">
+                        <div id="editor-thumbnail-blend" 
+                             style={blendStyle}>
+                            <img id="editor-thumbnail-base" 
+                                 src={`assets/${props.actor.actorType}-thumb.png`} 
+                                 alt="editor thumbnail"/>
+                            <img id="editor-thumbnail" 
+                                 src={`assets/${props.actor.actorType}-thumb.png`} 
+                                 alt="editor thumbnail"/>
+                            
+                        </div>
+                    </div>
                     <EditorMatrix matrix={props.actor.matrix} 
                                   handleChange={props.handleMatrixChange}
                                   handleBlur={props.handleMatrixBlur}
