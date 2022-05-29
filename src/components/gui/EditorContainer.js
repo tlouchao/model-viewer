@@ -11,9 +11,9 @@ import {DEF_TRANSLATE, MIN_TRANSLATE, MAX_TRANSLATE,
 const EditorContainer = (props) => {
 
     const [bufferActor, setBufferActor] = useState(null)
+    const [bufferHSL, setBufferHSL] = useState(null)
     const [bufferNumValue, setBufferNumValue] = useState(null)
     const [bufferSliderValue, setBufferSliderValue] = useState(null)
-    const [bufferHSL, setBufferHSL] = useState(null)
     const [editAttrName, setEditAttrName] = useState(null)
 
     /*------------------------------------------------------------------------------------------*/
@@ -24,22 +24,8 @@ const EditorContainer = (props) => {
         if (isCurrentlySelectedActor()) {
             const id = Number(props.currentSelected.dataset.id)
             const categoryType = props.currentSelected.dataset.categorytype
-            const actor = props.actors[categoryType + "s"][id]
-            Object.keys(actor.matrix).forEach(row => {
-                Object.keys(actor.matrix[row]).forEach(col => 
-                    actor.matrix[row][col] = 
-                        String(parseFloat(actor.matrix[row][col]).toFixed(2))
-                )
-            })
-            Object.keys(actor.attributes).forEach(k => {
-                if (k.includes("Seg")){
-                    actor.attributes[k].data = 
-                        String(parseInt(actor.attributes[k].data))
-                } else {
-                    actor.attributes[k].data = 
-                        String(parseFloat(actor.attributes[k].data).toFixed(2))
-                }
-            })
+            let actor = JSON.parse(JSON.stringify(props.actors[categoryType + "s"][id]))
+            actor = convertBufferHelper(actor, "to")
             setBufferActor(actor)
             setBufferHSL(chroma(actor.color).hsl())
         } else {
@@ -66,11 +52,30 @@ const EditorContainer = (props) => {
         } else if (v > tmax){
             v = tmax
         }
-        if (tstep == 1){
-            return String(parseInt(v))
-        } else {
-            return String(parseFloat(v).toFixed(2))
-        }
+        return parseValueHelper(v, tstep)
+    }
+
+    function parseValueHelper(v, step){
+        return (step === 1) ? String(parseInt(v)) : String(parseFloat(v).toFixed(2))
+    }
+
+    function convertBufferHelper(actor, mode){
+        Object.keys(actor.matrix).forEach(row => Object.keys(actor.matrix[row]).forEach(col => {
+            if (mode == "to"){
+                actor.matrix[row][col] = parseValueHelper(Number(actor.matrix[row][col]), 0.01)
+            } else if (mode == "from"){
+                actor.matrix[row][col] = Number(actor.matrix[row][col])
+            }
+        }))
+        Object.keys(actor.attributes).forEach(k => {
+            if (mode == "to"){
+                actor.attributes[k].data = parseValueHelper(Number(actor.attributes[k].data), 
+                                                            Number(actor.attributes[k].step))
+            } else if (mode == "from"){
+                actor.attributes[k].data = Number(actor.attributes[k].data)
+            }
+        })
+        return actor
     }
 
     function setMatrixHelper(row, col, val) {
@@ -166,6 +171,12 @@ const EditorContainer = (props) => {
         setAttributeHelper(e, e.target.value)
     }
 
+    const handleEditorSaveWrapper = () => {
+        let saveActor = JSON.parse(JSON.stringify(bufferActor))
+        saveActor = convertBufferHelper(saveActor, "from")
+        props.handleEditorSave(saveActor)
+    }
+
     /*------------------------------------------------------------------------------------------*/
 
     // JSX helper
@@ -184,7 +195,6 @@ const EditorContainer = (props) => {
                         handleNumBlur={handleNumBlur}
                         handleNumChange={handleNumChange}
                         handleNumSliderChange={handleNumSliderChange}
-                        formatValueHelper={formatValueHelper}
                     />
             )
         } else {
@@ -203,7 +213,7 @@ const EditorContainer = (props) => {
             <Editor handleGUIBlur={props.handleGUIBlur} content={getContent()}/>
             <div className="button-group">
                 <button onBlur={props.handleGUIBlur} 
-                        onClick={props.handleEditorSave}>
+                        onClick={handleEditorSaveWrapper}>
                         Save
                 </button>
                 <button onBlur={props.handleGUIBlur} 

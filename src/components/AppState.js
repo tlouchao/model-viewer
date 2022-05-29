@@ -34,6 +34,7 @@ const AppState = () => {
     const [categoriesVisible, setCategoriesVisible] = useState(categoryMapHelper(true))
     const [currentSelected, setCurrentSelected] = useState(null)
 
+    const [saveActor, setSaveActor] = useState(null)
     const [toggleOptions, setToggleOptions] = useState(initialToggleOptions)
 
     /*------------------------------------------------------------------------------------------*/
@@ -302,8 +303,17 @@ const AppState = () => {
         */
     }
 
-    const handleSave = () => {
-        console.log("Save")
+    const handleSave = (actor) => {
+        const id = actor.id
+        const categoryType = actor.categoryType + 's'
+        setActors(prevActors => ({
+            ...prevActors,
+            [categoryType]: ({
+                ...prevActors[categoryType],
+                [id]: actor,
+            })
+        }))
+        setMsg([MSG_UPDATE, id])
     }
 
     const handleDelete = () => {

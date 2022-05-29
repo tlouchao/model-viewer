@@ -91,58 +91,17 @@ const ThreeContainer = (props) => {
             switch(m){
 
                 case MSG_ADD:
-                {
-                    // get category type
-                    let categoryType
-                    Object.keys(props.actors).forEach(c => 
-                        { if(id in props.actors[c]){categoryType = c}})
-                    if (!categoryType){
-                        throw new Error(`actor with id ${id} not found`)
-                    }
-
-                    // construct Three.js object3D instance
-                    const actor = props.actors[categoryType][id]
-                    let object3D
-                    if (categoryType === "primitives"){
-                        const geo = new threeClasses[categoryType][actor.actorType]
-                            (...Object.values(actor.attributes).map(v => v.data))
-                        const mesh = new THREE.Mesh(geo, materialMap[actor.color])
-                        geometryMap[id] = geo
-                        object3D = mesh
-                    }
-                    if (categoryType === "lights"){
-                        object3D = new threeClasses[categoryType][actor.actorType]
-                            (actor.color, ...Object.values(actor.attributes).map(v => v.data))
-                    }
-
-                    // set coords
-                    const mat = actor.matrix
-                    object3D.position.set(...Object.values(mat.translate))
-                    object3D.rotation.set(...(Object.values(mat.rotate).map(r => THREE.MathUtils.degToRad(r))))
-                    object3D.scale.set(...Object.values(mat.scale))
-
-                    // keep ID reference
-                    object3D.userData.id = id
-                    object3DMap[categoryType][id] = object3D
-                    scene.add(object3D)
-                }
+                    addHelper(id)
                     break
 
                 case MSG_DELETE:
-                {
-                    // get category type
-                    let categoryType
-                    Object.keys(object3DMap).forEach(c => 
-                        { if(id in object3DMap[c]){categoryType = c}})
-                    if (!categoryType){
-                        throw new Error(`actor with id ${id} not found`)
-                    }
-                    scene.remove(object3DMap[categoryType][id])
+                    deleteHelper(id)
+                    break
 
-                    // dispose unique geometry, keep material
-                    if (categoryType === "primitives") {geometryMap[id].dispose()}
-                }
-                break
+                case MSG_UPDATE:
+                    deleteHelper(id)
+                    addHelper(id)
+                    break
 
                 case MSG_RESET:
                     camera.position.set(-1.5, 1.5, 3)
@@ -161,6 +120,67 @@ const ThreeContainer = (props) => {
         grid.visible = props.toggleOptions.get("grid")
         axes.visible = props.toggleOptions.get("axes")
     }, [props.toggleOptions])
+
+
+    /*------------------------------------------------------------------------------------------*/
+
+    /* helpers */
+
+    const addHelper = (id) => {
+        // get category type
+        let categoryType
+        Object.keys(props.actors).forEach(c => 
+            { if(id in props.actors[c]){categoryType = c}})
+        if (!categoryType){
+            throw new Error(`actor with id ${id} not found`)
+        }
+
+        // construct Three.js object3D instance
+        const actor = props.actors[categoryType][id]
+        let object3D
+        if (categoryType === "primitives"){
+            const geo = new threeClasses[categoryType][actor.actorType]
+                (...Object.values(actor.attributes).map(v => v.data))
+
+            // create material if does not exist
+            if (!(actor.color in materialMap)){
+                materialMap[actor.color] = new THREE.MeshStandardMaterial({color: actor.color})
+            }
+
+            const mesh = new THREE.Mesh(geo, materialMap[actor.color])
+            geometryMap[id] = geo
+            object3D = mesh
+        }
+        if (categoryType === "lights"){
+            object3D = new threeClasses[categoryType][actor.actorType]
+                (actor.color, ...Object.values(actor.attributes).map(v => v.data))
+        }
+
+        // set coords
+        const mat = actor.matrix
+        object3D.position.set(...Object.values(mat.translate))
+        object3D.rotation.set(...(Object.values(mat.rotate).map(r => THREE.MathUtils.degToRad(r))))
+        object3D.scale.set(...Object.values(mat.scale))
+
+        // keep ID reference
+        object3D.userData.id = id
+        object3DMap[categoryType][id] = object3D
+        scene.add(object3D)
+    }
+
+    const deleteHelper = (id) => {
+        // get category type
+        let categoryType
+        Object.keys(object3DMap).forEach(c => 
+            { if(id in object3DMap[c]){categoryType = c}})
+        if (!categoryType){
+            throw new Error(`object3D with id ${id} not found`)
+        }
+        scene.remove(object3DMap[categoryType][id])
+
+        // dispose unique geometry, keep material
+        if (categoryType === "primitives") {geometryMap[id].dispose()}
+    }
 
     /*------------------------------------------------------------------------------------------*/
 

@@ -3,6 +3,9 @@ import PropTypes from "prop-types"
 
 const AttributeSlider = (props) => {
 
+    const numValue = (props.editAttrName === props.name) ? props.bufferNumValue : props.value
+    const sliderValue = (props.editAttrName ===props.name) ? props.bufferSliderValue : props.value
+
     return (
         <div className="attr-slider">
             <input  className="attr-num"
@@ -11,7 +14,7 @@ const AttributeSlider = (props) => {
                     type="number" 
                     onBlur={props.handleNumBlur}
                     onChange={props.handleNumChange}
-                    value={(props.editAttrName === props.name) ? props.bufferNumValue : props.value}
+                    value={numValue}
                     step={props.step}
                     min={props.min}  
                     max={props.max} 
@@ -22,7 +25,7 @@ const AttributeSlider = (props) => {
                     name={props.name}
                     type="range" 
                     onChange={props.handleNumSliderChange}
-                    value={(props.editAttrName ===props.name) ? props.bufferSliderValue : props.value}
+                    value={sliderValue}
                     step={props.step}
                     min={props.min}  
                     max={props.max} 
@@ -44,7 +47,6 @@ AttributeSlider.propTypes = {
     handleNumSliderChange: PropTypes.func.isRequired,
     handleNumChange: PropTypes.func.isRequired,
     handleNumBlur: PropTypes.func.isRequired,
-    formatValueHelper: PropTypes.func.isRequired,
 }
 
 export default AttributeSlider

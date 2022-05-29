@@ -74,7 +74,6 @@ const EditorActorSummary = (props) => {
                             handleNumBlur={props.handleNumBlur}
                             handleNumChange={props.handleNumChange}
                             handleNumSliderChange={props.handleNumSliderChange}
-                            formatValueHelper={props.formatValueHelper}
                         />
                     </div>
                 )}
@@ -96,7 +95,6 @@ EditorActorSummary.propTypes = {
     handleNumBlur: PropTypes.func.isRequired,
     handleNumChange: PropTypes.func.isRequired,
     handleNumSliderChange: PropTypes.func.isRequired,
-    formatValueHelper: PropTypes.func.isRequired,
 }
 
 export default EditorActorSummary
