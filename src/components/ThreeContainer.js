@@ -14,9 +14,13 @@ const ThreeContainer = (props) => {
 
     /*------------------------------------------------------------------------------------------*/
     
-    const geometryMap = useMemo(() => new Object(), []) // unique geometry per mesh
-    const materialMap = useMemo(() => Object.fromEntries(ACTOR_COLORS.map(c => // materials are shared
+    const stdMaterialMap = useMemo(() => Object.fromEntries(ACTOR_COLORS.map(c => // standard materials are shared
                                       [c, new THREE.MeshStandardMaterial({color: c})])), [])
+    const wireMaterialMap = useMemo(() => Object.fromEntries(ACTOR_COLORS.map(c => // wire materials are shared
+                                      [c, new THREE.MeshBasicMaterial({color: c, wireframe: true})])), [])
+
+    const geometryMap = useMemo(() => new Object(), []) // unique geometry per mesh
+    const boundsMap = useMemo(() => new Object(), []) // light bounding box helpers
     const object3DMap = useMemo(() => Object.fromEntries(categoryTypes.map(x => [x, new Object()])), [])
 
     const scene = useMemo(() => new THREE.Scene(), [])
@@ -70,9 +74,22 @@ const ThreeContainer = (props) => {
             console.log("unmounting THREE.js container")
             console.log(renderer.info)
 
-            Object.keys(geometryMap).forEach(g => geometryMap[g].dispose())
-            Object.keys(materialMap).forEach(m => materialMap[m].dispose())
+            // remove object3Ds from scene
+            Object.keys(object3DMap).forEach(categoryType =>
+                Object.keys(object3DMap[categoryType]).forEach(id => 
+                    removeWrapper(object3DMap[categoryType], id)
+                )
+            )
+            Object.keys(boundsMap).forEach(id => 
+                removeWrapper(boundsMap, id)
+            )
 
+            // dispose geometry and materials
+            Object.keys(geometryMap).forEach(g => disposeWrapper(geometryMap, g))
+            Object.keys(stdMaterialMap).forEach(m => disposeWrapper(stdMaterialMap, m))
+            Object.keys(wireMaterialMap).forEach(m => disposeWrapper(wireMaterialMap, m))
+
+            // remove canvas element
             if (ref && ref.current){
                 while (ref.current.firstElementChild) {
                     ref.current.firstElementChild.remove()
@@ -80,6 +97,9 @@ const ThreeContainer = (props) => {
             }
 
             window.removeEventListener('resize', handleResize)
+
+            console.log("dispose geometry and materials")
+            console.log(renderer.info)
 
         }
     }, [])
@@ -126,6 +146,23 @@ const ThreeContainer = (props) => {
 
     /* helpers */
 
+    function disposeWrapper(obj, key){
+        obj[key].dispose()
+        delete obj[key]
+    }
+
+    function removeWrapper(obj, key){
+        scene.remove(obj[key])
+        delete obj[key]
+    }
+
+    function matrixHelper(object3D, mat){
+        object3D.scale.set(...Object.values(mat.scale))
+        object3D.position.set(...Object.values(mat.translate))
+        object3D.rotation.set(...(Object.values(mat.rotate)
+            .map(r => THREE.MathUtils.degToRad(r))))
+    }
+
     const addHelper = (id) => {
         // get category type
         let categoryType
@@ -137,49 +174,78 @@ const ThreeContainer = (props) => {
 
         // construct Three.js object3D instance
         const actor = props.actors[categoryType][id]
+        const mat = actor.matrix
+
+        let geo
         let object3D
         if (categoryType === "primitives"){
-            const geo = new threeClasses[categoryType][actor.actorType]
+            geo = new threeClasses[categoryType][actor.actorType]
                 (...Object.values(actor.attributes).map(v => v.data))
+            geometryMap[id] = geo
 
-            // create material if does not exist
-            if (!(actor.color in materialMap)){
-                materialMap[actor.color] = new THREE.MeshStandardMaterial({color: actor.color})
+            // create standard material if does not exist
+            if (!(actor.color in stdMaterialMap)){
+                stdMaterialMap[actor.color] = 
+                    new THREE.MeshStandardMaterial({color: actor.color})
             }
 
-            const mesh = new THREE.Mesh(geo, materialMap[actor.color])
-            geometryMap[id] = geo
+            const mesh = new THREE.Mesh(geo, stdMaterialMap[actor.color])
             object3D = mesh
         }
         if (categoryType === "lights"){
             object3D = new threeClasses[categoryType][actor.actorType]
                 (actor.color, ...Object.values(actor.attributes).map(v => v.data))
+
+            // bounding box helper
+            geo = new THREE.SphereGeometry(1, 4, 2)
+            geometryMap[id] = geo
+
+            // create wire material if does not exist
+            if (!(actor.color in wireMaterialMap)){
+                wireMaterialMap[actor.color] = 
+                    new THREE.MeshBasicMaterial({color: actor.color, wireframe: true})
+            }
+
+            const bounds = new THREE.Mesh(geo, wireMaterialMap[actor.color])
+
+            // set coords
+            matrixHelper(bounds, mat)
+
+            // keep ID reference
+            boundsMap[id] = bounds
+            scene.add(bounds)
         }
 
         // set coords
-        const mat = actor.matrix
-        object3D.position.set(...Object.values(mat.translate))
-        object3D.rotation.set(...(Object.values(mat.rotate).map(r => THREE.MathUtils.degToRad(r))))
-        object3D.scale.set(...Object.values(mat.scale))
+        matrixHelper(object3D, mat)
 
         // keep ID reference
-        object3D.userData.id = id
         object3DMap[categoryType][id] = object3D
         scene.add(object3D)
     }
 
     const deleteHelper = (id) => {
-        // get category type
+        // get types
         let categoryType
         Object.keys(object3DMap).forEach(c => 
-            { if(id in object3DMap[c]){categoryType = c}})
+            { if(id in object3DMap[c]){
+                categoryType = c
+            }}
+        )
         if (!categoryType){
             throw new Error(`object3D with id ${id} not found`)
         }
-        scene.remove(object3DMap[categoryType][id])
+
+        removeWrapper(object3DMap[categoryType], id)
 
         // dispose unique geometry, keep material
-        if (categoryType === "primitives") {geometryMap[id].dispose()}
+        disposeWrapper(geometryMap, id)
+
+        if (categoryType === "lights") {
+            removeWrapper(boundsMap, id)
+        }
+
+        console.log(renderer.info)
     }
 
     /*------------------------------------------------------------------------------------------*/

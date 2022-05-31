@@ -56,7 +56,7 @@ const EditorContainer = (props) => {
     }
 
     function parseValueHelper(v, step){
-        return (step === 1) ? String(parseInt(v)) : String(parseFloat(v).toFixed(2))
+        return (step == 1) ? String(parseInt(v)) : String(parseFloat(v).toFixed(2))
     }
 
     function convertBufferHelper(actor, mode){
