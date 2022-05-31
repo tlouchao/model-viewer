@@ -32,7 +32,7 @@ const categoryCapacity = Object.fromEntries(categoryTypes.map((x, i) =>
 
 // toggle options, remember insertion order
 const initialToggleOptions = new Map()
-CONSTS.TOGGLE_OPTIONS.map(x => initialToggleOptions.set(x, false))
+CONSTS.TOGGLE_OPTIONS.map(x => initialToggleOptions.set(x, true))
 
 // three class constructors also hardcoded
 const threeClasses = nestedMapHelper()

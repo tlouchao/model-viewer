@@ -34,7 +34,6 @@ const AppState = () => {
     const [categoriesVisible, setCategoriesVisible] = useState(categoryMapHelper(true))
     const [currentSelected, setCurrentSelected] = useState(null)
 
-    const [saveActor, setSaveActor] = useState(null)
     const [toggleOptions, setToggleOptions] = useState(initialToggleOptions)
 
     /*------------------------------------------------------------------------------------------*/
@@ -54,11 +53,6 @@ const AppState = () => {
                 [internalId]: buildActor(actorType, new Matrix())
             }
         }))
-        // set toggle options
-        let nextToggleOptions = new Map(toggleOptions)
-        nextToggleOptions.set("grid", true)
-        nextToggleOptions.set("axes", true)
-        setToggleOptions(nextToggleOptions)
 
         // app is initialized
         setIsAppStateInitialized(true)

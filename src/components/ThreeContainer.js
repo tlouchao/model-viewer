@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo } from "react"
+import React, { useRef, useState, useEffect, useMemo } from "react"
 import * as THREE from "three";
 import { categoryTypes, threeClasses } from "./helpers";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -11,6 +11,11 @@ import { THREE_SCENE_COLOR,
        } from "constants/constants"
 
 const ThreeContainer = (props) => {
+
+    /*------------------------------------------------------------------------------------------*/
+
+    const ctrl1 = "Scroll to ZOOM."
+    const ctrl2 = "Drag to ROTATE."
 
     /*------------------------------------------------------------------------------------------*/
     
@@ -30,6 +35,9 @@ const ThreeContainer = (props) => {
     const light = useMemo(() => new THREE.HemisphereLight(0xFFFFFF, 0x404040, 1), [])
     const grid = useMemo(() =>new THREE.GridHelper ( 20, 20, 0x444444, 0x444444 ), [])
     const axes = useMemo(() => new THREE.AxesHelper( 1000 ), [])
+
+    const [zoomText, setZoomText] = useState(ctrl1)
+    const [rotateText, setRotateText] = useState(ctrl2)
 
     const ref = useRef(null)
 
@@ -137,23 +145,25 @@ const ThreeContainer = (props) => {
 
     // change visibility based on props
     useEffect(() => {
+        Object.keys(boundsMap).forEach(id => boundsMap[id].visible = props.toggleOptions.get("bounds"))
         grid.visible = props.toggleOptions.get("grid")
         axes.visible = props.toggleOptions.get("axes")
+        setZoomText((props.toggleOptions.get("controls")) ? ctrl1 : "")
+        setRotateText((props.toggleOptions.get("controls")) ? ctrl2 : "")
     }, [props.toggleOptions])
-
 
     /*------------------------------------------------------------------------------------------*/
 
     /* helpers */
 
     function disposeWrapper(obj, key){
-        obj[key].dispose()
-        delete obj[key]
+        obj[key].dispose() // free geometry/material
+        delete obj[key] // remove ref
     }
 
     function removeWrapper(obj, key){
-        scene.remove(obj[key])
-        delete obj[key]
+        scene.remove(obj[key]) // remove from scene
+        delete obj[key] // remove ref
     }
 
     function matrixHelper(object3D, mat){
@@ -270,10 +280,16 @@ const ThreeContainer = (props) => {
 
     // JSX
     return (
-        <div id="three-canvas" 
-            tabIndex="0" 
-            onBlur={props.handleGUIBlur} 
-            ref={ref}>
+        <div id="three-container">
+            <div id="three-controls">
+                <p>{zoomText}</p>
+                <p>{rotateText}</p>
+            </div>
+            <div id="three-canvas" 
+                 tabIndex="0" 
+                 onBlur={props.handleGUIBlur}
+                 ref={ref} 
+            />
         </div>
     )
 }

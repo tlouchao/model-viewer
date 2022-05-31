@@ -1,6 +1,29 @@
 @use "./../variables/variables" as v;
 
+#three-container {
+    position: relative;
+}
+#three-controls {
+    z-index: 1;
+    position: absolute;
+    text-align: center;
+    margin-bottom: 24px;
+    margin-left: auto;
+    margin-right: auto;
+    bottom: 0;
+    left: 1rem;
+    right: 1rem;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: .5rem;
+    p {
+        font-weight: bold;
+    }
+}
+
 #three-canvas {
+    z-index: 0;
     background-color: #e0e0e0; // duplicated in constants.js file
     width: 100%;
     height: 100vh;
