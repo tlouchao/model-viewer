@@ -15,9 +15,12 @@ const categoryActorClassMap = nestedMapHelper()
 const initialActorNames = nestedMapHelper(0)
 
 // flattened concrete class map
-const actorClasses = Object.fromEntries(Object.keys(categoryActorClassMap).reduce((acc, x) =>
-    acc.concat(Object.keys(categoryActorClassMap[x]).map(y => [y, categoryActorClassMap[x][y]])), []
-))
+const actorClasses = Object.fromEntries(
+    Object.keys(categoryActorClassMap).reduce((acc, x) =>
+        acc.concat(Object.keys(categoryActorClassMap[x]).map(y => 
+            [y, categoryActorClassMap[x][y]]
+        )), [])
+    )
 
 // nested actor types
 const actorTypes = Object.fromEntries(categoriesClasses.map(x => 

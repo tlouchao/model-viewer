@@ -14,6 +14,7 @@ import { Matrix } from "actors/actors"
 import { MSG_ADD,
          MSG_DELETE,
          MSG_UPDATE,
+         MSG_VISIBLE,
          MSG_RESET } from "constants/constants"
 
 const AppState = () => {
@@ -21,6 +22,7 @@ const AppState = () => {
     /*------------------------------------------------------------------------------------------*/
 
     /* App state */
+
     const [isAppStateInitialized, setIsAppStateInitialized] = useState(false)
 
     // auto-increment ID
@@ -61,6 +63,7 @@ const AppState = () => {
     // Debug log after initialization
     useEffect(() => {
         if (isAppStateInitialized){
+            // logs
         }
     }, [isAppStateInitialized, actors])
 
@@ -131,7 +134,8 @@ const AppState = () => {
         if (num === 0) {
             return actorType 
         } else {
-            return actorType + "_" + String(actorNames[categoryType][actorType]).padStart(2, "0")
+            return actorType + "_" + 
+                String(actorNames[categoryType][actorType]).padStart(2, "0")
         }
     }
 
@@ -176,7 +180,8 @@ const AppState = () => {
                 // preserve other category item states
                 itemSelected = categoriesSelected[x]
             }
-            Object.keys(nextActors[x]).forEach(y => nextActors[x][y].isSelected = itemSelected)
+            Object.keys(nextActors[x]).forEach(y => 
+                nextActors[x][y].isSelected = itemSelected)
         })
         setActors(nextActors)
 
@@ -276,8 +281,8 @@ const AppState = () => {
         })
         setCategoriesVisible(nextCategoriesVisible)
         setActors(nextActors)
+        setMsg([MSG_VISIBLE, 1])
     }
-
     const handleGUIBlur = (e) => {
         /*
         // do not deselect items if event firing element gains focus
@@ -305,7 +310,11 @@ const AppState = () => {
             ...prevActors,
             [categoryType]: ({
                 ...prevActors[categoryType],
-                [id]: actor,
+                [id]: ({
+                    ...actor,
+                    isSelected: prevActors[categoryType][id].isSelected,
+                    isVisible: prevActors[categoryType][id].isVisible,
+                })
             })
         }))
         setMsg([MSG_UPDATE, id])
@@ -328,7 +337,7 @@ const AppState = () => {
                 ...prevState,
                 [categoryType]: [].concat(prevState[categoryType].slice(0, deleteIdx), 
                                           prevState[categoryType].slice(deleteIdx + 1, 
-                                            prevState[categoryType].length))
+                                          prevState[categoryType].length))
             }))
 
             // no target currently selected
@@ -376,6 +385,8 @@ const AppState = () => {
                 />
                 <ThreeContainer actors={actors}
                                 msg={msg}
+                                categoriesSelected={categoriesSelected}
+                                categoriesVisible={categoriesVisible}
                                 toggleOptions={toggleOptions}
                                 handleGUIBlur={handleGUIBlur}
 

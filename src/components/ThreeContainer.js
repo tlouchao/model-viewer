@@ -1,12 +1,16 @@
 import React, { useRef, useState, useEffect, useMemo } from "react"
 import * as THREE from "three";
-import { categoryTypes, threeClasses } from "./helpers";
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { categoryTypes, threeClasses } from "./helpers"
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass.js'
 import { THREE_SCENE_COLOR, 
          ACTOR_COLORS,
          MSG_ADD,
          MSG_DELETE,
          MSG_UPDATE,
+         MSG_VISIBLE,
          MSG_RESET,
        } from "constants/constants"
 
@@ -29,9 +33,11 @@ const ThreeContainer = (props) => {
     const object3DMap = useMemo(() => Object.fromEntries(categoryTypes.map(x => [x, new Object()])), [])
 
     const scene = useMemo(() => new THREE.Scene(), [])
-    const renderer = useMemo(() => new THREE.WebGLRenderer(), [])
     const camera = useMemo(() => new THREE.PerspectiveCamera( 75, 1, 0.1, 1000), [])
+    const renderer = useMemo(() => new THREE.WebGLRenderer(), [])
+    const composer = useMemo(() => new EffectComposer(renderer), [])
     const controls = useMemo(() => new OrbitControls(camera, renderer.domElement), [])
+
     const light = useMemo(() => new THREE.HemisphereLight(0xFFFFFF, 0x404040, 1), [])
     const grid = useMemo(() =>new THREE.GridHelper ( 20, 20, 0x444444, 0x444444 ), [])
     const axes = useMemo(() => new THREE.AxesHelper( 1000 ), [])
@@ -46,6 +52,8 @@ const ThreeContainer = (props) => {
     // setup DOM elem reliant properties after mount
     useEffect(() => {
 
+        const [w, h] = [ref.current.clientWidth, ref.current.clientHeight]
+
         // setup scene
         scene.background = new THREE.Color(THREE_SCENE_COLOR)
         scene.add(light)
@@ -53,7 +61,7 @@ const ThreeContainer = (props) => {
         scene.add(axes)
 
         // setup camera
-        camera.aspect = ref.current.clientWidth/ref.current.clientHeight
+        camera.aspect = w / h
         camera.updateProjectionMatrix()
         camera.position.set(-1.5, 1.5, 3)
         camera.lookAt(0, 0, 0)
@@ -64,14 +72,18 @@ const ThreeContainer = (props) => {
         controls.maxDistance = 50
 
         // append canvas element to DOM
-        renderer.setSize(ref.current.clientWidth, 
-            ref.current.clientHeight)
+        renderer.setSize(w, h)
         ref.current.appendChild(renderer.domElement)
+
+        composer.setSize(w, h)
+
+        const renderPass = new RenderPass(scene, camera)
+        composer.addPass(renderPass)
         
-        // anim loop
-        renderer.setAnimationLoop(() => {
-            renderer.render(scene, camera)
-        })
+        const outlinePass = new OutlinePass(new THREE.Vector2(w, h), scene, camera)
+		composer.addPass(outlinePass)
+        
+        animate()
 
         // window resize listener
         window.addEventListener('resize', handleResize)
@@ -131,6 +143,10 @@ const ThreeContainer = (props) => {
                     addHelper(id)
                     break
 
+                case MSG_VISIBLE:
+                    visibilityHelper()
+                    break
+
                 case MSG_RESET:
                     camera.position.set(-1.5, 1.5, 3)
                     camera.lookAt(0, 0, 0)
@@ -143,6 +159,23 @@ const ThreeContainer = (props) => {
         }
     }, [props.msg])
 
+    // show outline based on selection state
+    useEffect(() => {
+        let selectedObjectsArr = []
+        const cs = props.categoriesSelected
+        if (Object.keys(cs).every(k => cs[k] == false)) {
+            const flattened = Object.keys(props.actors).reduce((acc, x) => 
+                acc.concat(Object.keys(props.actors[x]).map(y => [y, props.actors[x][y]])), [])
+            const mesh = flattened.find(x => x[1].isSelected)
+            if (mesh){
+                const categoryType = mesh[1].categoryType + 's'
+                const id = mesh[0]
+                selectedObjectsArr.push(object3DMap[categoryType][id])        
+            } 
+        }
+        composer.passes[1].selectedObjects = selectedObjectsArr
+    }, [props.actors])
+
     // change visibility based on props
     useEffect(() => {
         Object.keys(boundsMap).forEach(id => boundsMap[id].visible = props.toggleOptions.get("bounds"))
@@ -151,6 +184,16 @@ const ThreeContainer = (props) => {
         setZoomText((props.toggleOptions.get("controls")) ? ctrl1 : "")
         setRotateText((props.toggleOptions.get("controls")) ? ctrl2 : "")
     }, [props.toggleOptions])
+
+    /*------------------------------------------------------------------------------------------*/
+
+    /* animate */
+
+    function animate() {
+        requestAnimationFrame(animate)
+        controls.update()
+		composer.render()
+    }
 
     /*------------------------------------------------------------------------------------------*/
 
@@ -231,7 +274,16 @@ const ThreeContainer = (props) => {
 
         // keep ID reference
         object3DMap[categoryType][id] = object3D
+        object3D.visible = actor.isVisible
         scene.add(object3D)
+    }
+
+    const visibilityHelper = () => {
+        Object.keys(object3DMap).forEach(categoryType => 
+            Object.keys(object3DMap[categoryType]).forEach(id => {
+                object3DMap[categoryType][id].visible = 
+                    props.actors[categoryType][id].isVisible
+            }))
     }
 
     const deleteHelper = (id) => {
@@ -273,6 +325,7 @@ const ThreeContainer = (props) => {
             camera.aspect = w / h
             camera.updateProjectionMatrix()
             renderer.setSize(w, h)
+            composer.setSize(w, h)
         }
     }
 
@@ -280,14 +333,14 @@ const ThreeContainer = (props) => {
 
     // JSX
     return (
-        <div id="three-container">
+        <div id="three-container"
+             tabIndex="0"
+             onBlur={props.handleGUIBlur}>
             <div id="three-controls">
                 <p>{zoomText}</p>
                 <p>{rotateText}</p>
             </div>
-            <div id="three-canvas" 
-                 tabIndex="0" 
-                 onBlur={props.handleGUIBlur}
+            <div id="three-canvas"  
                  ref={ref} 
             />
         </div>
