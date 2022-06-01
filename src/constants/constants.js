@@ -45,6 +45,7 @@ export const MSG_UPDATE = "UPDATE"
 export const MSG_DELETE = "DELETE"
 export const MSG_RESET = "RESET"
 export const MSG_VISIBLE = "VISIBLE"
+export const MSG_EXPORT = "EXPORT"
 
 export const TOGGLE_OPTIONS = ["bounds", "controls", "grid", "axes"]
 

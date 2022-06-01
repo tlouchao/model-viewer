@@ -59,3 +59,20 @@ $heights: (
     padding: .5rem 0rem;
     gap: .5rem;
 }
+
+@mixin button-style() {
+    background-color: map-get($colors, "buttoncolor");
+    min-width: map-get($widths, "buttonwidth");
+    height: map-get($heights, "buttonheight");
+    line-height:  map-get($heights, "buttonheight");
+    text-align: center;
+    border: none;
+    font-size: 1rem;
+    box-shadow: 2px 2px 4px grey;
+    &:hover {
+        cursor: pointer;
+    }
+    &:active {
+        transform: translate(0px, 1px);
+    }
+}

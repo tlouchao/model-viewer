@@ -15,7 +15,9 @@ import { MSG_ADD,
          MSG_DELETE,
          MSG_UPDATE,
          MSG_VISIBLE,
-         MSG_RESET } from "constants/constants"
+         MSG_RESET,
+         MSG_EXPORT,
+        } from "constants/constants"
 
 const AppState = () => {
 
@@ -357,6 +359,10 @@ const AppState = () => {
         setMsg([MSG_RESET, 1])
     }
 
+    const handleExport = () => {
+        setMsg([MSG_EXPORT, 1])
+    }
+
     /*------------------------------------------------------------------------------------------*/
 
     return (
@@ -382,6 +388,7 @@ const AppState = () => {
                             handleGUIBlur={handleGUIBlur}
                             handleToggle={handleToggle}
                             handleResetCamera={handleResetCamera}
+                            handleExport={handleExport}
                 />
                 <ThreeContainer actors={actors}
                                 msg={msg}

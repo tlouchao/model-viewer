@@ -1,16 +1,18 @@
 import React, { useRef, useState, useEffect, useMemo } from "react"
-import * as THREE from "three";
+import * as THREE from "three"
 import { categoryTypes, threeClasses } from "./helpers"
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass.js'
+import { OBJExporter } from 'three/examples/jsm/exporters/OBJExporter.js'
 import { THREE_SCENE_COLOR, 
          ACTOR_COLORS,
          MSG_ADD,
          MSG_DELETE,
          MSG_UPDATE,
          MSG_VISIBLE,
+         MSG_EXPORT,
          MSG_RESET,
        } from "constants/constants"
 
@@ -45,6 +47,7 @@ const ThreeContainer = (props) => {
     const [zoomText, setZoomText] = useState(ctrl1)
     const [rotateText, setRotateText] = useState(ctrl2)
 
+    const exporter = useMemo(() => new OBJExporter(), [])
     const ref = useRef(null)
 
     /*------------------------------------------------------------------------------------------*/
@@ -150,6 +153,18 @@ const ThreeContainer = (props) => {
                 case MSG_RESET:
                     camera.position.set(-1.5, 1.5, 3)
                     camera.lookAt(0, 0, 0)
+                    break
+
+                case MSG_EXPORT:
+                    const parsed = exporter.parse(scene)
+                    const blob = new Blob([parsed], {type: "text/plain"})
+                    const link = document.createElement('a')
+                    link.setAttribute('target', '_self')
+                    link.setAttribute('href', URL.createObjectURL(blob))
+                    link.setAttribute('download', "scene.obj")
+                    document.body.appendChild(link)
+                    link.click()
+                    link.remove()
                     break
 
                 default:

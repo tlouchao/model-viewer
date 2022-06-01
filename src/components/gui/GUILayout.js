@@ -68,7 +68,7 @@ const GUILayout = (props) => {
             </div>
             <div id="export">
                 <button id="reset-camera-button" onClick={props.handleResetCamera}>Reset Camera</button>
-                <button id="export-button">Export Scene</button>     
+                <a id="export-button" onClick={props.handleExport}>Export Scene</a>
             </div>
         </div>
     )

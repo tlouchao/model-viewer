@@ -26,19 +26,7 @@
         gap: .5rem;
     }
     button {
-        background-color: map-get(v.$colors, "buttoncolor");
-        min-width: map-get(v.$widths, "buttonwidth");
-        height: map-get(v.$heights, "buttonheight");
-        line-height:  map-get(v.$heights, "buttonheight");
-        border: none;
-        font-size: 1rem;
-        box-shadow: 2px 2px 4px grey;
-        &:hover {
-            cursor: pointer;
-        }
-        &:active {
-            transform: translate(0px, 1px);
-        }
+        @include v.button-style();
     }
 
     /* Dropdown Global */

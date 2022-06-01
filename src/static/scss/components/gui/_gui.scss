@@ -58,5 +58,15 @@
                 align-self: stretch;
             }
         }
+        a {
+            -webkit-appearance: button;
+            -moz-appearance: button;
+            appearance: button;
+            @include v.button-style();
+            align-self: center;
+            @media only screen and (max-width: map-get(v.$breakpoints, "tablet")){
+                align-self: stretch;
+            } 
+        }
     }
 }
